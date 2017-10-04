@@ -7,7 +7,7 @@ from os.path import splitext, dirname, abspath
 import sqlite3
 
 app = Flask(__name__)
-DATABASE = abspath(dirname(__file__))+'imagedb.db'
+DATABASE = abspath(dirname(__file__))+'/imagedb.db'
 PHOTOS = 'img/photos/'
 DRAWINGS = 'img/drawings/'
 LOGOS = 'img/logos/'
