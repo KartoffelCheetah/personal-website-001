@@ -4,8 +4,8 @@
 I uploaded my first website so you can have a look at it or do what you want with it.
 Feel free to use it for your own website if you like. I already added some images as placeholders.
 
-Please note that the server is set in development mode. Not ready for production! This is intentional, because it is likely that future users will first want to develop.
-**Before going into production please switch to production mode!**
+Please note that the server is set in development mode. Do not run it directly in production environment. This is intentional, because it is likely that future users will first want to develop.
+**Before going into production please switch to production mode! Or (better) use some production ready WSGI server on top like described below.**
 
 ## Dependencies:
 
