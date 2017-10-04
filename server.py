@@ -5,7 +5,6 @@ from flask import Flask, render_template, url_for, g, abort, redirect
 import os, pathlib, base64
 from os.path import splitext
 import sqlite3
-import db # cant be from db import something because of circular import
 
 app = Flask(__name__)
 DATABASE = 'imagedb.db'
@@ -16,6 +15,7 @@ THUMBNAILS = PHOTOS+'_thumbnails/'
 THUMBNAILS_DR = DRAWINGS+'_thumbnails/'
 IMGEXT = ['jpg', 'jpeg', 'png', 'svg', 'gif']
 IMGEXT = tuple(list(map( lambda x:x.upper(), IMGEXT))+IMGEXT)
+import db # cant be from db import something because of circular import
 #////////////////////////////////////
 
 ## ROUTES ##
