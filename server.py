@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 #-*- coding:utf-8 -*-
 
-from flask import Flask, render_template, url_for, g, abort, redirect
-import os, pathlib, base64
-from os.path import splitext
+from flask import Flask, render_template, g, abort, redirect
+import os, pathlib
+from os.path import splitext, dirname, abspath
 import sqlite3
 
 app = Flask(__name__)
-DATABASE = 'imagedb.db'
+DATABASE = abspath(dirname(__file__))+'imagedb.db'
 PHOTOS = 'img/photos/'
 DRAWINGS = 'img/drawings/'
 LOGOS = 'img/logos/'
