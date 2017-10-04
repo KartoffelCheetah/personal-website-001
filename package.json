@@ -1,16 +1,20 @@
 {
-  "name": "mysite001",
+  "name": "personal-website-001",
   "version": "1.0.0",
-  "description": "Application for the development of my site 001.",
+  "description": "Application for the development of my website.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "styl": "./node_modules/.bin/stylus -w ./static/css/master.styl -o ./static/css/master.css"
   },
   "keywords": [
-    "mysite001"
+    "personal", "website", "site", "001"
   ],
-  "author": "Koós András",
+  "author": "KartoffelCheetah",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KartoffelCheetah/personal-website-001"
+  },
   "license": "MIT",
   "devDependencies": {
     "stylus": "^0.54.5"
