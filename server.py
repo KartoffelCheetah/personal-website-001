@@ -65,6 +65,7 @@ def photogallery():
 #------------------------------------------------
 @app.route('/about')#----------------------------
 def about():
+    logos = getLogos()
     return render_template('about.html.j2', techs=logos)
 #------------------------------------------------
 #------------------------------------------------
@@ -145,7 +146,6 @@ def get_db():
 
 #////////////////////////////////////
 if __name__=='__main__':
-    logos = getLogos()
     app.run(
         debug=True,
         threaded=True
