@@ -1,0 +1,22 @@
+{% extends "layout.html.j2"%}
+{%block TITLE%}
+ 	Art Gallery {{super()}}
+{%endblock%}
+{%block MAIN%}
+<div class="photogallery">
+    {% for url,title in photos %}
+        <figure class="photo">
+            <div class="setHeight">
+                <a class="photo-image" href="/drawings/{{url}}">
+                    <img src="{{staticPATH+THUMBNAILS+url}}" alt="{{title or 'Gallery Image'}}">
+                </a>
+            </div>
+            <figcaption class="photo-title">
+                <a href="/drawings/{{url}}">
+                    {{title}}
+                </a>
+            </figcaption>
+        </figure>
+    {% endfor %}
+</div>
+{%endblock%}
