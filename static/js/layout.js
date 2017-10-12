@@ -32,3 +32,13 @@ function markCurrentUrl(){
 		}
 	});
 }
+function touchSupport(){
+	// Adds class to html element non-touch or touch.
+	var touchsupport = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+	if (!touchsupport){ // browser doesn't support touch
+		$('html').addClass("non-touch");
+	} else {
+		$('html').addClass('touch');
+	}
+	return touchsupport;
+}

@@ -85,6 +85,10 @@ footer nav a:hover,
   background-color: #392e21;
   color: #d2d2d2;
 }
+.touch footer nav a:hover {
+  background-color: #d2d2d2;
+  color: #392e21;
+}
 #mainNav a.selected {
   -webkit-transition: background-color 0s, color 0s;
   transition: background-color 0s color 0s;
