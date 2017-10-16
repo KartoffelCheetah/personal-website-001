@@ -1,12 +1,29 @@
 {% extends "layout.html.j2"%}
 {%block TITLE%}
- 	Contact {{super()}}
+	Contact {{super()}}
 {%endblock%}
+{% block STYLE %}
+    <link rel="stylesheet" href="{{staticPATH}}css/contact.css">
+{% endblock %}
 {%block MAIN%}
-	<!-- <address>
-        myaddress here
-    </address> -->
-    <div class="text-centered">
-        <h2>Nothing here for now :)</h2>
-    </div>
+<div class="wheel">
+		<div id="a" class="wheel-segment">
+			    You can find me on ...
+		</div>
+		<a id="b" class="wheel-segment" target="_blank" href="https://www.codewars.com/users/Reimar">
+			<div class="">
+				Codewars
+			</div>
+		</a>
+		<a id="c" class="wheel-segment" target="_blank" href="https://github.com/KartoffelCheetah">
+			<div class="">
+				GitHub
+			</div>
+		</a>
+		<a id="d" class="wheel-segment" target="_blank" href="https://kartoffelcheetah.deviantart.com/">
+			<div class="">
+				Deviantart
+			</div>
+		</a>
+	</div>
 {%endblock%}

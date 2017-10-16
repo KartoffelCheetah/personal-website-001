@@ -1,0 +1,56 @@
+/*Contact.styl*/
+#a {
+  background-image: linear-gradient(to right, #ffa500 100%, #ffa500 100%), url("../img/notebook-paper-texture.jpg");
+}
+#b {
+  background-image: linear-gradient(to right, #ee82ee 100%, #ee82ee 100%), url("../img/notebook-paper-texture.jpg");
+}
+#c {
+  background-image: linear-gradient(to right, #669fe2 100%, #669fe2 100%), url("../img/notebook-paper-texture.jpg");
+}
+#d {
+  background-image: linear-gradient(to right, #69ad50 100%, #69ad50 100%), url("../img/notebook-paper-texture.jpg");
+}
+main {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+.wheel {
+  border: 10px solid #000;
+  background-color: rgba(255,255,255,0.5);
+  border-radius: 50%;
+  display: inline-flex;
+  flex-direction: column;
+  padding: 0 0.8rem;
+}
+.wheel-segment {
+  padding: 0.8rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 40% 10%;
+  font-weight: bold;
+  background-size: cover;
+  background-blend-mode: color;
+  filter: grayscale(80%);
+}
+.wheel-segment div {
+  border-bottom: 3px solid #ffa500;
+  width: 100%;
+}
+.wheel-segment:hover,
+#a {
+  filter: grayscale(0%);
+}
+.wheel-segment:nth-child(2n+1) {
+  border-radius: 10% 40%;
+}
+@supports (clip-path: polygon(0 0, 15% 100%, 85% 100%, 100% 0%)) {
+  .wheel-segment {
+    clip-path: polygon(0 0, 15% 100%, 85% 100%, 100% 0%);
+  }
+  .wheel {
+    padding: 0;
+  }
+}
