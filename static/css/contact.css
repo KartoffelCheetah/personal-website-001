@@ -1,15 +1,15 @@
 /*Contact.styl*/
-#a {
-  background-image: linear-gradient(to right, #ffa500 100%, #ffa500 100%), url("../img/notebook-paper-texture.jpg");
-}
-#b {
+#b:hover {
   background-image: linear-gradient(to right, #ee82ee 100%, #ee82ee 100%), url("../img/notebook-paper-texture.jpg");
+  color: #213c5b;
 }
-#c {
+#c:hover {
   background-image: linear-gradient(to right, #669fe2 100%, #669fe2 100%), url("../img/notebook-paper-texture.jpg");
+  color: #213c5b;
 }
-#d {
+#d:hover {
   background-image: linear-gradient(to right, #69ad50 100%, #69ad50 100%), url("../img/notebook-paper-texture.jpg");
+  color: #213c5b;
 }
 main {
   display: flex;
@@ -17,40 +17,41 @@ main {
   align-items: flex-start;
 }
 .wheel {
-  border: 10px solid #000;
-  background-color: rgba(255,255,255,0.5);
+  background-color: #ffa500;
   border-radius: 50%;
   display: inline-flex;
   flex-direction: column;
   padding: 0 0.8rem;
+  border: 10px groove #392e21;
+  box-shadow: 0 0 0 10px #392e21, inset 0 0 2rem 2rem #392e21;
 }
 .wheel-segment {
+  background-image: linear-gradient(to right, #ffa500 100%, #ffa500 100%), url("../img/notebook-paper-texture.jpg");
   padding: 0.8rem 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 40% 10%;
   font-weight: bold;
   background-size: cover;
   background-blend-mode: color;
-  filter: grayscale(80%);
+  border-left: 10px dotted #2f4f4f;
 }
 .wheel-segment div {
-  border-bottom: 3px solid #ffa500;
+  border-bottom: 3px dotted #392e21;
   width: 100%;
 }
-.wheel-segment:hover,
-#a {
-  filter: grayscale(0%);
+.wheel-segment:nth-child(4n+1) {
+  border-radius: 50% 50% 0 0;
 }
-.wheel-segment:nth-child(2n+1) {
-  border-radius: 10% 40%;
+.wheel-segment:nth-child(4n+2) {
+  border-radius: 0 0 0 0;
 }
-@supports (clip-path: polygon(0 0, 15% 100%, 85% 100%, 100% 0%)) {
-  .wheel-segment {
-    clip-path: polygon(0 0, 15% 100%, 85% 100%, 100% 0%);
-  }
-  .wheel {
-    padding: 0;
-  }
+.wheel-segment:nth-child(4n+3) {
+  border-radius: 0 0 0 0;
+}
+.wheel-segment:nth-child(4n+0) {
+  border-radius: 0 0 50% 50%;
+}
+a.wheel-segment:active {
+  filter: grayscale(80%);
 }
