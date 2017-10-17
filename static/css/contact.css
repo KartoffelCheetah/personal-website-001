@@ -1,8 +1,6 @@
 /*Contact.styl*/
-main {
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
+section.contact {
+  margin: 0.7rem;
 }
 .wheel {
   text-shadow: 0 0 1px #000;
@@ -10,6 +8,7 @@ main {
   color: #dec3a4;
   font-weight: bold;
   display: inline-flex;
+  width: 100%;
   flex-direction: row;
   border: 3px solid #d2d2d2;
   box-shadow: 0 0 0 3px #393939;
@@ -20,14 +19,15 @@ main {
   }
 }
 .wheel-segment {
-  margin: 1rem;
+  margin: 0.7rem;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
 }
 .wheel-segment a {
-  margin: 0.7rem;
+  margin-left: 0.7rem;
+  margin-top: 0.2rem;
   border-radius: 2px;
   border: 2px solid #d2d2d2;
   background-color: #393939;

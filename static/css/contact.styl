@@ -1,17 +1,14 @@
 /*Contact.styl*/
-// notebook-paper-texture.jpg is in public domain
-// http://www.photos-public-domain.com/2010/12/31/notebook-paper-texture/
 @import 'variables.styl'
-main
-    display: flex
-    justify-content: flex-end
-    align-items: flex-start
+section.contact
+    margin: mediumWidth
 .wheel
     text-shadow: 0 0 1px black
     background-color: primaryColorD3
     color: secondaryColor
     font-weight: bold
     display: inline-flex
+    width: 100%
     flex-direction: row
     border: 3px solid primaryColor
     box-shadow:
@@ -20,13 +17,14 @@ main
     .wheel
         flex-direction: column
 .wheel-segment
-    margin: 1rem
+    margin: mediumWidth
     display: flex
     flex-direction: row
     flex-wrap: wrap
     justify-content:space-around
     a
-        margin: mediumWidth
+        margin-left: mediumWidth
+        margin-top: .2rem
         border-radius: 2px
         border: 2px solid primaryColor
         background-color: primaryColorD3
