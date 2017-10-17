@@ -17,27 +17,25 @@
         <a target="_blank" href="https://github.com/KartoffelCheetah" title="GitHub">
             <img src="{{staticPATH}}img/social/github-mark.svg" alt="GitHub">
         </a>
-    </div>
-    <div class="wheel-segment">
-        <a target="_blank" href="https://kartoffelcheetah.deviantart.com/" title="Deviantart">
+		<a target="_blank" href="https://kartoffelcheetah.deviantart.com/" title="Deviantart">
             <img src="{{staticPATH}}img/social/deviantart-mark.svg" alt="Deviantart">
         </a>
     </div>
-	<script>
-		$('.wheel-segment img').each(function(){
-			var
-				img = $(this),
-				imgURL = img.attr('src')
-			;
-			$.get(imgURL, function(data){
-				var
-					svg = $(data).find('svg')
-				;
-				svg.addClass(img.attr('class'));
-
-				img.replaceWith(svg);
-			});
-		});
-	</script>
 </div>
+<script>
+	$('.wheel-segment img').each(function(){
+		var
+			img = $(this),
+			imgURL = img.attr('src')
+		;
+		$.get(imgURL, function(data){
+			var
+				svg = $(data).find('svg')
+			;
+			svg.addClass(img.attr('class'));
+
+			img.replaceWith(svg);
+		});
+	});
+</script>
 {%endblock%}
