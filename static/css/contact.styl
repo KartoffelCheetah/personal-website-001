@@ -1,0 +1,43 @@
+/*Contact.styl*/
+@import 'variables.styl'
+section.contact
+    margin: mediumWidth
+.wheel
+    text-shadow: 0 0 1px black
+    background-color: primaryColorD3
+    color: secondaryColor
+    font-weight: bold
+    display: inline-flex
+    width: 100%
+    flex-direction: row
+    border: 3px solid primaryColor
+    box-shadow:
+        0 0 0 3px primaryColorD3;
+@media (max-width: 500px)
+    .wheel
+        flex-direction: column
+.wheel-segment
+    margin: mediumWidth
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
+    justify-content:space-around
+    a
+        margin-left: mediumWidth
+        margin-top: .2rem
+        border-radius: 2px
+        border: 2px solid primaryColor
+        background-color: primaryColorD3
+        box-shadow: 1px 1px 3px black
+        img,svg
+            display: block
+            margin: 1rem
+            filter: blur(.7px)
+        svg path
+            fill: secondaryColor!important
+    a:hover
+        box-shadow: -1px -1px 3px black
+        img,svg
+            filter: blur(0)
+    a:active
+        background-color: primaryTextColor

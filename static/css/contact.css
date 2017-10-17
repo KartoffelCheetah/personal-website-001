@@ -1,0 +1,54 @@
+/*Contact.styl*/
+section.contact {
+  margin: 0.7rem;
+}
+.wheel {
+  text-shadow: 0 0 1px #000;
+  background-color: #393939;
+  color: #dec3a4;
+  font-weight: bold;
+  display: inline-flex;
+  width: 100%;
+  flex-direction: row;
+  border: 3px solid #d2d2d2;
+  box-shadow: 0 0 0 3px #393939;
+}
+@media (max-width: 500px) {
+  .wheel {
+    flex-direction: column;
+  }
+}
+.wheel-segment {
+  margin: 0.7rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.wheel-segment a {
+  margin-left: 0.7rem;
+  margin-top: 0.2rem;
+  border-radius: 2px;
+  border: 2px solid #d2d2d2;
+  background-color: #393939;
+  box-shadow: 1px 1px 3px #000;
+}
+.wheel-segment a img,
+.wheel-segment a svg {
+  display: block;
+  margin: 1rem;
+  filter: blur(0.7px);
+}
+.wheel-segment a svg path {
+  fill: #dec3a4 !important;
+}
+.wheel-segment a:hover {
+  box-shadow: -1px -1px 3px #000;
+}
+.wheel-segment a:hover img,
+.wheel-segment a:hover svg {
+  filter: blur(0);
+}
+.wheel-segment a:active {
+  background-color: #392e21;
+}

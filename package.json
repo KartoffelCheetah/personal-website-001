@@ -1,11 +1,11 @@
 {
   "name": "personal-website-001",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "description": "Application for the development of my website.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "styl": "./node_modules/.bin/stylus -w ./static/css/master.styl -o ./static/css/master.css"
+    "styl": "./node_modules/.bin/stylus -w ./static/css/master.styl -o ./static/css/master.css ./static/css/contact.styl -o ./static/css/contact.css"
   },
   "keywords": [
     "personal", "website", "site", "001"
