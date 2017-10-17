@@ -1,57 +1,48 @@
 /*Contact.styl*/
-#b:hover {
-  background-image: linear-gradient(to right, #ee82ee 100%, #ee82ee 100%), url("../img/notebook-paper-texture.jpg");
-  color: #213c5b;
-}
-#c:hover {
-  background-image: linear-gradient(to right, #669fe2 100%, #669fe2 100%), url("../img/notebook-paper-texture.jpg");
-  color: #213c5b;
-}
-#d:hover {
-  background-image: linear-gradient(to right, #69ad50 100%, #69ad50 100%), url("../img/notebook-paper-texture.jpg");
-  color: #213c5b;
-}
 main {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
 }
 .wheel {
-  background-color: #ffa500;
-  border-radius: 50%;
-  display: inline-flex;
+  text-shadow: 0 0 1px #000;
+  background-color: #393939;
+  color: #dec3a4;
+  font-weight: bold;
+  border-radius: 5% 0%;
+  display: flex;
+  width: 100%;
   flex-direction: column;
-  padding: 0 0.8rem;
-  border: 10px groove #392e21;
-  box-shadow: 0 0 0 10px #392e21, inset 0 0 2rem 2rem #392e21;
+  border: 10px solid #d2d2d2;
+  box-shadow: 0 0 0 10px #5a544e;
 }
 .wheel-segment {
-  background-image: linear-gradient(to right, #ffa500 100%, #ffa500 100%), url("../img/notebook-paper-texture.jpg");
-  padding: 0.8rem 2rem;
+  margin: 2rem;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  background-size: cover;
-  background-blend-mode: color;
-  border-left: 10px dotted #2f4f4f;
+  flex-direction: row;
+  justify-content: space-around;
 }
-.wheel-segment div {
-  border-bottom: 3px dotted #392e21;
-  width: 100%;
+.wheel-segment a {
+  margin: 0.7rem;
+  border-radius: 2px;
+  border: 2px solid #d2d2d2;
+  background-color: #393939;
+  box-shadow: 1px 1px 3px #000;
 }
-.wheel-segment:nth-child(4n+1) {
-  border-radius: 50% 50% 0 0;
+.wheel-segment a img,
+.wheel-segment a svg {
+  display: block;
+  margin: 1rem 1rem;
+  filter: blur(1px);
 }
-.wheel-segment:nth-child(4n+2) {
-  border-radius: 0 0 0 0;
+.wheel-segment a svg path {
+  fill: #dec3a4 !important;
 }
-.wheel-segment:nth-child(4n+3) {
-  border-radius: 0 0 0 0;
+.wheel-segment a:hover {
+  box-shadow: -1px -1px 3px #000;
 }
-.wheel-segment:nth-child(4n+0) {
-  border-radius: 0 0 50% 50%;
+.wheel-segment a:hover img,
+.wheel-segment a:hover svg {
+  filter: blur(0);
 }
-a.wheel-segment:active {
-  filter: grayscale(80%);
+.wheel-segment a:active {
+  background-color: #392e21;
 }

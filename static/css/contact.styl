@@ -2,56 +2,42 @@
 // notebook-paper-texture.jpg is in public domain
 // http://www.photos-public-domain.com/2010/12/31/notebook-paper-texture/
 @import 'variables.styl'
-#b:hover
-    background-image: linear-gradient(to right, violet 100%, violet 100%),
-        url("../img/notebook-paper-texture.jpg");
-    color: invert(secondaryColor)
-
-#c:hover
-    background-image: linear-gradient(to right, rgb(102, 159, 226) 100%, rgb(102, 159, 226) 100%),
-        url("../img/notebook-paper-texture.jpg");
-    color: invert(secondaryColor)
-#d:hover
-    background-image: linear-gradient(to right, rgb(105, 173, 80) 100%, rgb(105, 173, 80) 100%),
-        url("../img/notebook-paper-texture.jpg");
-    color: invert(secondaryColor)
 main
     display: flex
-    justify-content: center;
-    align-items: flex-start;
+    // justify-content: center;
+    // align-items: flex-start;
 .wheel
-    background-color: orange
-    border-radius: 50%
-    display: inline-flex
-    flex-direction: column
-    padding: 0 .8rem
-    border: 10px groove primaryTextColor
-    box-shadow:
-        0 0 0 10px primaryTextColor,
-        inset 0 0 2rem 2rem primaryTextColor;
-
-.wheel-segment
-    background-image: linear-gradient(to right, orange 100%, orange 100%),
-        url("../img/notebook-paper-texture.jpg");
-    padding: .8rem 2rem
-    display: flex
-    justify-content: center
-    align-items: center
+    text-shadow: 0 0 1px black
+    background-color: primaryColorD3
+    color: secondaryColor
     font-weight: bold
-    background-size: cover
-    background-blend-mode: color;
-    border-left: 10px dotted linkColor
-    div
-        border-bottom: 3px dotted primaryTextColor
-        width: 100%
-
-.wheel-segment:nth-child(4n+1)
-    border-radius: 50% 50% 0 0
-.wheel-segment:nth-child(4n+2)
-    border-radius: 0 0 0 0
-.wheel-segment:nth-child(4n+3)
-    border-radius: 0 0 0 0
-.wheel-segment:nth-child(4n+0)
-    border-radius: 0 0 50% 50%
-a.wheel-segment:active
-    filter: grayscale(80%)
+    border-radius: 5% 0%
+    display: flex
+    width: 100%
+    flex-direction: column
+    border: 10px solid primaryColor
+    box-shadow:
+        0 0 0 10px mix(secondaryColor, primaryColorD3, 20%);
+.wheel-segment
+    margin: 2rem
+    display: flex
+    flex-direction: row
+    justify-content:space-around
+    a
+        margin: mediumWidth
+        border-radius: 2px
+        border: 2px solid primaryColor
+        background-color: primaryColorD3
+        box-shadow: 1px 1px 3px black
+        img,svg
+            display: block
+            margin: 1rem 1rem
+            filter: blur(1px)
+        svg path
+            fill: secondaryColor!important
+    a:hover
+        box-shadow: -1px -1px 3px black
+        img,svg
+            filter: blur(0)
+    a:active
+        background-color: primaryTextColor

@@ -7,23 +7,37 @@
 {% endblock %}
 {%block MAIN%}
 <div class="wheel">
-		<div id="a" class="wheel-segment">
-			    You can find me on ...
-		</div>
-		<a id="b" class="wheel-segment" target="_blank" href="https://www.codewars.com/users/Reimar">
-			<div class="">
-				Codewars
-			</div>
-		</a>
-		<a id="c" class="wheel-segment" target="_blank" href="https://github.com/KartoffelCheetah">
-			<div class="">
-				GitHub
-			</div>
-		</a>
-		<a id="d" class="wheel-segment" target="_blank" href="https://kartoffelcheetah.deviantart.com/">
-			<div class="">
-				Deviantart
-			</div>
-		</a>
+	<div class="wheel-segment">
+		<b>You can find me on ...</b>
 	</div>
+    <div class="wheel-segment">
+        <a target="_blank" href="https://www.codewars.com/users/Reimar" title="Codewars">
+            <img src="{{staticPATH}}img/social/codewars-mark.svg" alt="Codewars">
+        </a>
+        <a target="_blank" href="https://github.com/KartoffelCheetah" title="GitHub">
+            <img src="{{staticPATH}}img/social/github-mark.svg" alt="GitHub">
+        </a>
+    </div>
+    <div class="wheel-segment">
+        <a target="_blank" href="https://kartoffelcheetah.deviantart.com/" title="Deviantart">
+            <img src="{{staticPATH}}img/social/deviantart-mark.svg" alt="Deviantart">
+        </a>
+    </div>
+	<script>
+		$('.wheel-segment img').each(function(){
+			var
+				img = $(this),
+				imgURL = img.attr('src')
+			;
+			$.get(imgURL, function(data){
+				var
+					svg = $(data).find('svg')
+				;
+				svg.addClass(img.attr('class'));
+
+				img.replaceWith(svg);
+			});
+		});
+	</script>
+</div>
 {%endblock%}
