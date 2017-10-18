@@ -79,7 +79,7 @@ def create_db():
 def insert_photo(url, title, desc, license=None):
     """Inserts drawing into the database"""
     image = Image.open(app.static_folder + url)
-    datetimeoriginal = image._getexif()[36867]
+    datetimeoriginal = image._getexif()[36867].replace(':', '-', 2)
     image = orientate(image)
     create_thumbnail(image, url)
     if license:
@@ -122,9 +122,7 @@ def select_a_photo(session, url):
 def insert_drawing(url, title, desc, createDate, license=None):
     """Inserts drawing into the database"""
     image = Image.open(app.static_folder + url)
-    # datetimeoriginal = image._getexif()[36867]
-    datetimeoriginal = createDate
-    # image = orientate(image)
+    datetimeoriginal = createDate.replace(':', '-', 2)
     create_thumbnail_DR(image, url)
     if license:
         drawings.execute("""
