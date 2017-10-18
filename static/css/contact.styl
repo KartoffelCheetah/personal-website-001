@@ -16,6 +16,9 @@ section.contact
 @media (max-width: 500px)
     .wheel
         flex-direction: column
+.non-touch .wheel-segment a
+    img,svg
+        filter: blur(.7px)
 .wheel-segment
     margin: mediumWidth
     display: flex
@@ -32,7 +35,6 @@ section.contact
         img,svg
             display: block
             margin: 1rem
-            filter: blur(.7px)
         svg path
             fill: secondaryColor!important
     a:hover

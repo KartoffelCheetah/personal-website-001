@@ -18,6 +18,10 @@ section.contact {
     flex-direction: column;
   }
 }
+.non-touch .wheel-segment a img,
+.non-touch .wheel-segment a svg {
+  filter: blur(0.7px);
+}
 .wheel-segment {
   margin: 0.7rem;
   display: flex;
@@ -37,7 +41,6 @@ section.contact {
 .wheel-segment a svg {
   display: block;
   margin: 1rem;
-  filter: blur(0.7px);
 }
 .wheel-segment a svg path {
   fill: #dec3a4 !important;
