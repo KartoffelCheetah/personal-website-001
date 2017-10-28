@@ -13,14 +13,16 @@ section.contact
     border: 3px solid primaryColor
     box-shadow:
         0 0 0 3px primaryColorD3;
-@media (max-width: 500px)
-    .wheel
-        flex-direction: column
+    background-repeat: no-repeat
+    background-size: cover
+    background-position: left center
+    background-image: url("../img/cheetah001_002.png")
+    background-blend-mode: luminosity
 .non-touch .wheel-segment a
     img,svg
         filter: blur(.7px)
 .wheel-segment
-    margin: mediumWidth
+    margin: mediumWidth +1rem
     display: flex
     flex-direction: row
     flex-wrap: wrap

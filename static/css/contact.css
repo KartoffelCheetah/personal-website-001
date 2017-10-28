@@ -12,18 +12,18 @@ section.contact {
   flex-direction: row;
   border: 3px solid #d2d2d2;
   box-shadow: 0 0 0 3px #393939;
-}
-@media (max-width: 500px) {
-  .wheel {
-    flex-direction: column;
-  }
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: left center;
+  background-image: url("../img/cheetah001_002.png");
+  background-blend-mode: luminosity;
 }
 .non-touch .wheel-segment a img,
 .non-touch .wheel-segment a svg {
   filter: blur(0.7px);
 }
 .wheel-segment {
-  margin: 0.7rem;
+  margin: 1.7rem;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
