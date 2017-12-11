@@ -56,9 +56,10 @@ Then use `npm run styl` to run the compiler from the main directory. For details
 **Set up database:**
 1. Put your drawigns inside [static/img/drawings/](./static/img/drawings)
 2. Put your photos inside [static/img/photos/](./static/img/photos/)<some_subdir>/
-3. Run [main.py](./main.py) and select Create databases
-4. Run [main.py](./main.py) and selecet Populate drawings
-5. Run [main.py](./main.py) and selecet Populate photos
+3. Edit both files in [database operations](./database_operations)
+4. Run [main.py](./main.py) and select Create databases
+5. Run [main.py](./main.py) and select Populate drawings
+6. Run [main.py](./main.py) and select Populate photos
 
 To run the development server just run [server.py](./server.py).
 
