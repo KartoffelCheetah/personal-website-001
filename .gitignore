@@ -3,3 +3,5 @@ node_modules
 imagedb.db
 static/fonts/peppercarrot_fonts
 static/js/JavaScript-Load-Image
+static/img/drawings
+static/img/photos
