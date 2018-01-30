@@ -7,7 +7,7 @@ from server import app, DATABASE, PHOTOS, DRAWINGS, THUMBNAILS, THUMBNAILS_DR, S
 
 """This program creates the photos- and drawings Cursor objects,
 contains the basic functions to operate the SQLite db.
-It's separate from database_operations, which use this module through the main module's interface."""
+Use this module through the main module's interface or from the server itself."""
 
 
 # create/connect db, # autocommit

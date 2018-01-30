@@ -1,6 +1,6 @@
 #! /usr/bin/python3
-"""You can run here the database_operations or anything really.
-Just select the proper operation number."""
+"""This file is to run frequently used scripts.
+Just select the proper operation number to run it."""
 
 if __name__=='__main__':
     import sys, os, re, json
