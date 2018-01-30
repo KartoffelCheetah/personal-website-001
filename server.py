@@ -15,6 +15,7 @@ THUMBNAILS = PHOTOS+'_thumbnails/'
 THUMBNAILS_DR = DRAWINGS+'_thumbnails/'
 IMGEXT = ['jpg', 'jpeg', 'png', 'svg', 'gif']
 IMGEXT = tuple(list(map( lambda x:x.upper(), IMGEXT))+IMGEXT)
+STAGING_AREA = './staging_area'
 import db # cant be from db import something because of circular import
 #////////////////////////////////////
 

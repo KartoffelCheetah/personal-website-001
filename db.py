@@ -2,8 +2,8 @@
 
 import sqlite3
 from PIL import Image
-import io
-from server import app, DATABASE, PHOTOS, DRAWINGS, THUMBNAILS, THUMBNAILS_DR # Flask app, database
+import io, os
+from server import app, DATABASE, PHOTOS, DRAWINGS, THUMBNAILS, THUMBNAILS_DR, STAGING_AREA # Flask app, database
 
 """This program creates the photos- and drawings Cursor objects,
 contains the basic functions to operate the SQLite db.
@@ -37,6 +37,8 @@ def create_thumbnail(image, url):
         THUMBNAILS,
         url.split(PHOTOS, maxsplit=1)[1]
     )
+    if not os.path.exists(os.path.split(new_url)[0]):
+        os.makedirs(os.path.split(new_url)[0])
     image.save(new_url, format='JPEG', resample=Image.ANTIALIAS)
 def create_thumbnail_DR(image, url):
     """Creates thumbnail, be aware
@@ -47,6 +49,8 @@ def create_thumbnail_DR(image, url):
         THUMBNAILS_DR,
         url.split(DRAWINGS, maxsplit=1)[1]
     )
+    if not os.path.exists(os.path.split(new_url)[0]):
+        os.makedirs(os.path.split(new_url)[0])
     image.save(new_url, format='PNG', resample=Image.ANTIALIAS)
 # ---------------------------------------------------
 # DB FUNCTIONS
@@ -76,22 +80,23 @@ def create_db():
 # ---------------------------------------------------
 # PHOTOS
 # ---------------------------------------------------
-def insert_photo(url, title, desc, license=None):
+def insert_photo(url, title, desc, createDate, license=None, **kwargs):
     """Inserts drawing into the database"""
-    image = Image.open(app.static_folder + url)
-    datetimeoriginal = image._getexif()[36867].replace(':', '-', 2)
+    # image = Image.open(app.static_folder + url)
+    staged_url = STAGING_AREA+url.replace('/img','',1)
+    image = Image.open(staged_url)
     image = orientate(image)
     create_thumbnail(image, url)
     if license:
         drawings.execute("""
         INSERT INTO photos
         (url, description, datetimeoriginal, title, license) VALUES (?,?,?,?,?)
-        """, (url, desc, datetimeoriginal, title, license))
+        """, (url, desc, createDate, title, license))
     else:
         drawings.execute("""
         INSERT INTO photos
         (url, description, datetimeoriginal, title) VALUES (?,?,?,?)
-        """, (url, desc, datetimeoriginal, title))
+        """, (url, desc, createDate, title))
 # ---------------------------------------------------
 # def select_all_photo(session):
 #     """Get a list of all images from db"""
@@ -119,21 +124,22 @@ def select_a_photo(session, url):
 # ---------------------------------------------------
 # DRAWINGS
 # ---------------------------------------------------
-def insert_drawing(url, title, desc, createDate, license=None):
+def insert_drawing(url, title, desc, createDate, license=None, **kwargs):
     """Inserts drawing into the database"""
-    image = Image.open(app.static_folder + url)
-    datetimeoriginal = createDate.replace(':', '-', 2)
+    # image = Image.open(app.static_folder + url)
+    staged_url = STAGING_AREA+url.replace('/img','',1)
+    image = Image.open(staged_url)
     create_thumbnail_DR(image, url)
     if license:
         drawings.execute("""
         INSERT INTO drawings
         (url, description, datetimeoriginal, title, license) VALUES (?,?,?,?,?)
-        """, (url, desc, datetimeoriginal, title, license))
+        """, (url, desc, createDate, title, license))
     else:
         drawings.execute("""
         INSERT INTO drawings
         (url, description, datetimeoriginal, title) VALUES (?,?,?,?)
-        """, (url, desc, datetimeoriginal, title))
+        """, (url, desc, createDate, title))
 # ---------------------------------------------------
 # def select_all_drawing(session):
 #     """Get a list of all images from db"""
