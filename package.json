@@ -8,7 +8,10 @@
     "styl": "./node_modules/.bin/stylus -w ./static/css/master.styl -o ./static/css/master.css ./static/css/contact.styl -o ./static/css/contact.css"
   },
   "keywords": [
-    "personal", "website", "site", "001"
+    "personal",
+    "website",
+    "site",
+    "001"
   ],
   "author": "KartoffelCheetah",
   "repository": {
