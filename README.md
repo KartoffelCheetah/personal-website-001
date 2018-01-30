@@ -35,8 +35,8 @@ personal-website-001
 │  README.md
 └───templates
           # jinja templates
-└───database_operations
-          # common tasks, feel free to change them
+└───staging_area
+          # place here images before making them public
 └───static
           # static files to serve
 ```
@@ -54,12 +54,12 @@ If you prefer to use Stylus instead of pure CSS install npm and Node.
 Then use `npm run styl` to run the compiler from the main directory. For details check the [package.json](./package.json) file.
 
 **Set up database:**
-1. Put your drawigns inside [static/img/drawings/](./static/img/drawings)
-2. Put your photos inside [static/img/photos/](./static/img/photos/)<some_subdir>/
-3. Edit both files in [database operations](./database_operations)
-4. Run [main.py](./main.py) and select Create databases
-5. Run [main.py](./main.py) and select Populate drawings
-6. Run [main.py](./main.py) and select Populate photos
+1. Put your drawigns inside [staging_area/drawings/](./staging_area/drawings)
+2. Put your photos inside [staging_area/photos/](./staging_area/photos/)<some_subdir>/
+3. Run [main.py](./main.py) and select Create database
+4. Run [main.py](./main.py) and select Create Staging file
+5. Edit the staing file
+6. Run [main.py](./main.py) and select Use Staging file
 
 To run the development server just run [server.py](./server.py).
 
