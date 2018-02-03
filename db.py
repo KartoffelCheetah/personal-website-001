@@ -26,7 +26,10 @@ photosDict.connection.isolation_level, drawingsDict.connection.isolation_level =
 # ---------------------------------------------------
 def orientate(image):
     """Rotates an image based on it's Orientation exif tag"""
-    orientation = image._getexif()[274]
+    try:
+        orientation = image._getexif()[274] if hasattr(image, '_getexif') else None
+    except IndexError:
+        orientation = None
     if orientation == 3 :
         image = image.rotate(180, expand=True)
     elif orientation == 6 :
