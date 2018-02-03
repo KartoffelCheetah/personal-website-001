@@ -147,3 +147,4 @@ if __name__=='__main__':
         # in case of error print the error in red
         print(red, e, normal)
         print(red, 'Finished operation!', normal)
+        raise e
