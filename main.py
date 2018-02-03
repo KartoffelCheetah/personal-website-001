@@ -7,11 +7,14 @@ if __name__=='__main__':
     from PIL import Image
     from server import STAGING_AREA as staging_area
     from server import app, DATABASE, DRAWINGS, PHOTOS
-    from db import drawings, insert_drawing, create_db, photos, insert_photo
+    from db import create_db, drawings, photos, photosDict, drawingsDict
+    from db import insert_photo, insert_drawing
+    from db import select_all_photos, select_all_drawings, print_table, dict_from_row
     green = '\x1b[32m'
     yellow = '\x1b[33m'
     normal = '\x1b[0m'
     red = '\x1b[31m'
+    magenta = '\x1b[35m'
 
     print("""
     For more info use help('main') in the python console.
@@ -21,6 +24,8 @@ if __name__=='__main__':
     2: Create Staging file
     3: Use Staging file
     4: Print Size of images
+    5: Select all images
+    6: Create Staging file from db
     anything else will exit
     """)
     try:
@@ -106,6 +111,30 @@ if __name__=='__main__':
                 ['du', '-sh', DATABASE]
             ).split()[0].decode('utf-8')
             print(yellow+'Size of directories:\n drawings: {}\n photos: {}\n database: {}'.format(size_of_drawings,size_of_photos,size_of_database)+normal)
+        elif op == 5 :
+            selected_drawings = select_all_drawings(drawingsDict)
+            selected_photos = select_all_photos(photosDict)
+            print('DRAWINGS ˇ')
+            print_table(selected_drawings)
+            print('PHOTOS ˇ')
+            print_table(selected_photos)
+        elif op == 6 :
+            selected_drawings = dict_from_row(select_all_drawings(drawingsDict))
+            selected_photos = dict_from_row(select_all_photos(photosDict))
+            for i in selected_drawings:
+                i.update({'tableType':'drawings'})
+            for i in selected_photos:
+                i.update({'tableType':'photos'})
+            j = (json.dumps(selected_photos+selected_drawings, indent=2)
+            .replace('\"datetimeoriginal\":', '\"createDate\":')
+            .replace('\"description\":', '\"desc\":'))
+            print(j)
+            clear_staging = input('I need to overwrite the staging file. Are you okay with this? (yes/y): ').lower() in ('yes', 'y')
+            if not clear_staging:
+                sys.exit('Aborting... Kept staging file.')
+            with open(os.path.join(staging_area,'staging.json'), 'w') as staging_file:
+                print('Overwriting staging file...')
+                staging_file.write(j)
         else:
             sys.exit(green+'exit'+normal)
         # being here means total success

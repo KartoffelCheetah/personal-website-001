@@ -16,6 +16,12 @@ imagedb = sqlite3.connect(DATABASE)
 photos, drawings = imagedb.cursor(), imagedb.cursor()
 photos.connection.isolation_level, drawings.connection.isolation_level = None, None
 # ---------------------------------------------------
+# ---------------------------------------------------
+imagedbDict = sqlite3.connect(DATABASE)
+imagedbDict.row_factory = sqlite3.Row
+photosDict, drawingsDict = imagedbDict.cursor(), imagedbDict.cursor()
+photosDict.connection.isolation_level, drawingsDict.connection.isolation_level = None, None
+# ---------------------------------------------------
 # HELPER FUNCTIONS
 # ---------------------------------------------------
 def orientate(image):
@@ -97,13 +103,13 @@ def insert_photo(url, title, desc, createDate, license=None, **kwargs):
         (url, description, datetimeoriginal, title) VALUES (?,?,?,?)
         """, (url, desc, createDate, title))
 # ---------------------------------------------------
-# def select_all_photo(session):
-#     """Get a list of all images from db"""
-#     session.execute("""
-#     SELECT url, description, datetimeoriginal,
-#            uploaddate, title FROM photos
-#     """)
-#     return session.fetchall()
+def select_all_photos(session):
+    """Get a list of all images from db"""
+    session.execute("""
+    SELECT id, url, description, datetimeoriginal,
+           uploaddate, title FROM photos
+    """)
+    return session.fetchall()
 # ---------------------------------------------------
 def select_all_photo_thumbnail(session):
     """Get a list of all image thumbnails from db"""
@@ -139,13 +145,13 @@ def insert_drawing(url, title, desc, createDate, license=None, **kwargs):
         (url, description, datetimeoriginal, title) VALUES (?,?,?,?)
         """, (url, desc, createDate, title))
 # ---------------------------------------------------
-# def select_all_drawing(session):
-#     """Get a list of all images from db"""
-#     session.execute("""
-#     SELECT url, description, datetimeoriginal,
-#            uploaddate, title FROM drawings
-#     """)
-#     return session.fetchall()
+def select_all_drawings(session):
+    """Get a list of all images from db"""
+    session.execute("""
+    SELECT id, url, description, datetimeoriginal,
+           uploaddate, title FROM drawings
+    """)
+    return session.fetchall()
 # ---------------------------------------------------
 def select_all_drawing_thumbnail(session):
     """Get a list of all image thumbnails from db"""
@@ -162,4 +168,21 @@ def select_a_drawing(session, url):
            WHERE url = ? LIMIT 1
     """, (url,))
     return session.fetchone()
+# ---------------------------------------------------
+def print_table(selected_table):
+    """Receives a list of sqlite3.Row objects and print all of them to stdout"""
+    yellow = '\x1b[33m'
+    normal = '\x1b[0m'
+    magenta = '\x1b[35m'
+    for row in selected_table:
+        print('-------------')
+        for k,v in zip(row.keys(), row):
+            print(yellow+str(k)+': '+magenta+str(v)+normal)
+# ---------------------------------------------------
+def dict_from_row(row):
+    """Transforms an sqlite3.Row object to a dictionary"""
+    if type(row)==sqlite3.Row :
+        return dict(zip(row.keys(), row))
+    else :
+        return [dict(zip(r.keys(), r)) for r in row]
 # ---------------------------------------------------
