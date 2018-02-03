@@ -82,7 +82,6 @@ def create_db():
 # ---------------------------------------------------
 def insert_photo(url, title, desc, createDate, license=None, **kwargs):
     """Inserts drawing into the database"""
-    # image = Image.open(app.static_folder + url)
     staged_url = STAGING_AREA+url.replace('/img','',1)
     image = Image.open(staged_url)
     image = orientate(image)
@@ -126,7 +125,6 @@ def select_a_photo(session, url):
 # ---------------------------------------------------
 def insert_drawing(url, title, desc, createDate, license=None, **kwargs):
     """Inserts drawing into the database"""
-    # image = Image.open(app.static_folder + url)
     staged_url = STAGING_AREA+url.replace('/img','',1)
     image = Image.open(staged_url)
     create_thumbnail_DR(image, url)

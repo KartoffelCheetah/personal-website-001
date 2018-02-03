@@ -3,9 +3,10 @@
 Just select the proper operation number to run it."""
 
 if __name__=='__main__':
-    import sys, os, re, json
+    import sys, os, re, json, subprocess
     from PIL import Image
-    from server import STAGING_AREA as staging_area, app
+    from server import STAGING_AREA as staging_area
+    from server import app, DATABASE, DRAWINGS, PHOTOS
     from db import drawings, insert_drawing, create_db, photos, insert_photo
     green = '\x1b[32m'
     yellow = '\x1b[33m'
@@ -19,6 +20,7 @@ if __name__=='__main__':
     1: Create database
     2: Create Staging file
     3: Use Staging file
+    4: Print Size of images
     anything else will exit
     """)
     try:
@@ -93,6 +95,17 @@ if __name__=='__main__':
                         os.makedirs(os.path.split(public_url)[0])
                     os.rename(staged_url, public_url)
                 print('Photos are live now.')
+        elif op == 4 :
+            size_of_drawings = subprocess.check_output(
+                ['du', '-sh', os.path.join(app.static_folder, DRAWINGS)]
+            ).split()[0].decode('utf-8')
+            size_of_photos = subprocess.check_output(
+                ['du', '-sh', os.path.join(app.static_folder, PHOTOS)]
+            ).split()[0].decode('utf-8')
+            size_of_database = subprocess.check_output(
+                ['du', '-sh', DATABASE]
+            ).split()[0].decode('utf-8')
+            print(yellow+'Size of directories:\n drawings: {}\n photos: {}\n database: {}'.format(size_of_drawings,size_of_photos,size_of_database)+normal)
         else:
             sys.exit(green+'exit'+normal)
         # being here means total success
