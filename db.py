@@ -109,7 +109,7 @@ def insert_photo(url, title, desc, createDate, license=None, **kwargs):
 def select_all_photos(session):
     """Get a list of all images from db"""
     session.execute("""
-    SELECT * title FROM photos
+    SELECT * FROM photos
     """)
     return session.fetchall()
 # ---------------------------------------------------
