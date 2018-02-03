@@ -3,12 +3,14 @@
  	{{img[-1]}} {{super()}}
 {%endblock%}
 {%block MAIN%}
-<!-- JS Script by bluimp to orientate images-->
-    <script src="{{staticPATH}}js/JavaScript-Load-Image/js/load-image.all.min.js"></script>
-    <div id="modal100" class="hidden"></div>
+    <div id="modal100" class="hidden">
+        <img src="{{staticPATH[:-1]+img.0}}" alt="{{img[-1]}}" title="Click to change the View">
+    </div>
     <div class="wrap-photos">
         <header>{{img[-1]}}</header>
-        <div id="TheImage"></div>
+        <div id="TheImage">
+            <img src="{{staticPATH[:-1]+img.0}}" alt="{{img[-1]}}" title="Click to change the View">
+        </div>
         <div class="photo-main">
             <div class="photo-slider">
                 {% for url,title in photos %}
@@ -21,10 +23,10 @@
             </div>
             <div class="photo-info">
                 <header>{{img[-1]}}</header>
-                <div class="photo-desc hidden">
+                <div class="photo-desc">
                     {{img.1}}
                 </div>
-                <div class="photo-meta hidden">
+                <div class="photo-meta">
                     <b>Date of creation:</b> {{img.2 or "Not known"}}<br>
                     <b>Upload date:</b> {{img.3 or "Not known"}}<br>
                     <b>License:</b> {{img.4 or "Not known"}}
@@ -32,27 +34,6 @@
             </div>
         </div>
     </div>
-    <script>
-        // loads image into canvases
-        // then orientates them
-        // loadImage is bluimp's function
-        loadImage(
-            '{{staticPATH[:-1]+img.0}}',
-            function(imgElem){
-                $(imgElem).css('max-width', '100%');
-                $(imgElem).css('max-height', '100%');
-                CLONEimgElem = imgElem.cloneNode();
-                CLONEimgElem.getContext('2d').drawImage(imgElem,0,0);
-                $('#modal100').html(imgElem);
-                $('#TheImage').html(CLONEimgElem);
-                $('.photo-desc, .photo-meta').removeClass('hidden');
-                CLONEimgElem.title = "Click to change the View"
-                imgElem.title = "Click to change the View"
-            },
-            {orientation: true}
-        )
-
-    </script>
     <script>
         // toggles between display or hide modal
         $('#TheImage').click(function(){

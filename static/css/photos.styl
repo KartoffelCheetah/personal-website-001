@@ -32,17 +32,20 @@
 .photo-slider,
 #TheImage
 	border: 2px solid primaryColorD3
-	canvas
-		display: block
-		margin: auto
-		padding: 2px
-		border: 2px solid primaryColor
 	header
 		color: secondaryColor
 		background-color: primaryColorD3
 		padding: mediumWidth
 		border: 2px solid primaryColor
 		font-weight: bold
+#TheImage
+	canvas,img
+		max-width: 100%
+		max-height: 100%
+		display: block
+		margin: auto
+		padding: 2px
+		border: 2px solid primaryColor
 .photo-desc,
 .photo-meta
 	padding: mediumWidth
@@ -71,6 +74,8 @@
 	justify-content: center
 	canvas,
 	img
+		max-width: 100%
+		max-height: 100%
 		box-shadow: 0 0 50px 12px black
 		cursor: pointer
 #TheImage
