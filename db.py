@@ -109,8 +109,7 @@ def insert_photo(url, title, desc, createDate, license=None, **kwargs):
 def select_all_photos(session):
     """Get a list of all images from db"""
     session.execute("""
-    SELECT id, url, description, datetimeoriginal,
-           uploaddate, title FROM photos
+    SELECT * title FROM photos
     """)
     return session.fetchall()
 # ---------------------------------------------------
@@ -151,8 +150,7 @@ def insert_drawing(url, title, desc, createDate, license=None, **kwargs):
 def select_all_drawings(session):
     """Get a list of all images from db"""
     session.execute("""
-    SELECT id, url, description, datetimeoriginal,
-           uploaddate, title FROM drawings
+    SELECT * FROM drawings
     """)
     return session.fetchall()
 # ---------------------------------------------------
