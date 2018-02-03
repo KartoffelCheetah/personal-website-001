@@ -8,7 +8,7 @@ if __name__=='__main__':
     from server import STAGING_AREA as staging_area
     from server import app, DATABASE, DRAWINGS, PHOTOS
     from db import create_db, drawings, photos, photosDict, drawingsDict
-    from db import insert_photo, insert_drawing
+    from db import insert_photo, insert_drawing, orientate
     from db import select_all_photos, select_all_drawings, print_table, dict_from_row
     green = '\x1b[32m'
     yellow = '\x1b[33m'
@@ -87,7 +87,9 @@ if __name__=='__main__':
                     public_url = app.static_folder+sd['url']
                     if not os.path.exists(os.path.split(public_url)[0]):
                         os.makedirs(os.path.split(public_url)[0])
-                    os.rename(staged_url, public_url)
+                    image = Image.open(staged_url)
+                    image = orientate(image).save(public_url)
+                    os.remove(staged_url)
                 print('Drawings are live now.')
                 photos.execute('BEGIN')
                 for sp in staged_photos:
@@ -98,7 +100,9 @@ if __name__=='__main__':
                     public_url = app.static_folder+sf['url']
                     if not os.path.exists(os.path.split(public_url)[0]):
                         os.makedirs(os.path.split(public_url)[0])
-                    os.rename(staged_url, public_url)
+                    image = Image.open(staged_url)
+                    image = orientate(image).save(public_url)
+                    os.remove(staged_url)
                 print('Photos are live now.')
         elif op == 4 :
             size_of_drawings = subprocess.check_output(
