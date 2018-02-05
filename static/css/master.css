@@ -256,6 +256,12 @@ body {
   box-shadow: 0 0 50px 12px #000;
   cursor: pointer;
 }
+.touch #modal100 {
+  bottom: 0;
+  right: 0;
+  width: auto;
+  height: auto;
+}
 #TheImage {
   cursor: pointer;
   background-color: #393939;

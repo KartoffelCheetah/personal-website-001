@@ -34,22 +34,5 @@
             </div>
         </div>
     </div>
-    <script>
-        // toggles between display or hide modal
-        $('#TheImage').click(function(){
-            $('#modal100').removeClass('hidden');
-        })
-        $('#modal100').click(function(){
-            $('#modal100').addClass('hidden');
-        })
-    </script>
-    <script>
-        // adding .overflowed class to element
-        var /*global variable for toggleOverflow*/
-            photoSlider = $('.photo-slider')
-        ;
-
-        $(toggleOverflow.bind(window, photoSlider)); //on ready
-        $(window).resize(toggleOverflow.bind(window, photoSlider)); //on resize
-    </script>
+    <script src="{{staticPATH}}js/photos_drawings.js"></script>
 {%endblock%}
