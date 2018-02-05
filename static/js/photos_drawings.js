@@ -4,9 +4,11 @@ $(function getFullscreen(){
 	// https://davidwalsh.name/fullscreen
 	var
 		modal100 = $('.non-touch #modal100'),
-		modal100van = document.getElementById('.non-touch modal100')
+		theImage = $('.non-touch #TheImage')
 	;
-	$('#TheImage').click(function(){
+	modal100.find('img').prop('title', 'Click to change the View');
+	theImage.find('img').prop('title', 'Click to change the View');
+	theImage.click(function(){
 		modal100.removeClass('hidden');
 		// modal100van['requestFullscreen'] = modal100van.requestFullscreen || modal100van.mozRequestFullScreen || modal100van.webkitRequestFullscreen || modal100van.msRequestFullscreen;
 		// if (modal100van.requestFullscreen) modal100van.requestFullscreen();
