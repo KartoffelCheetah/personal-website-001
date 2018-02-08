@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/python3.5
 """This file is to run frequently used scripts.
 Just select the proper operation number to run it."""
 

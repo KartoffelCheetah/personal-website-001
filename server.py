@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.5
 #-*- coding:utf-8 -*-
 
 from flask import Flask, render_template, g, abort, redirect
