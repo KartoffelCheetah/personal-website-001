@@ -54,7 +54,7 @@ if __name__=='__main__':
                         default_table_type = 'drawings' if 'drawings' in dirpath else 'photos'
                         try:
                             default_createDate = Image.open(os.path.join(dirpath,filename))._getexif()[36867].replace(':','-', 2)
-                        except AttributeError:
+                        except (IndexError, AttributeError, TypeError) as e:
                             default_createDate = None
                         staged_files.append({
                             'url':default_url,
