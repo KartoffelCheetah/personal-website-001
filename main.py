@@ -4,12 +4,12 @@ Just select the proper operation number to run it."""
 
 if __name__=='__main__':
     import sys, os, re, json, subprocess
-    from PIL import Image
     from server import STAGING_AREA as staging_area
     from server import app, DATABASE, DRAWINGS, PHOTOS
     from db import create_db, drawings, photos, photosDict, drawingsDict
-    from db import insert_photo, insert_drawing, orientate
+    from db import insert_photo, insert_drawing
     from db import select_all_photos, select_all_drawings, print_table, dict_from_row
+    from IMfunctions import *
     green = '\x1b[32m'
     yellow = '\x1b[33m'
     normal = '\x1b[0m'
@@ -52,10 +52,7 @@ if __name__=='__main__':
                         default_url = re.sub(r'/+', '/', path_to_url)
                         default_title = os.path.splitext(filename)[0]
                         default_table_type = 'drawings' if 'drawings' in dirpath else 'photos'
-                        try:
-                            default_createDate = Image.open(os.path.join(dirpath,filename))._getexif()[36867].replace(':','-', 2)
-                        except (IndexError, AttributeError, TypeError) as e:
-                            default_createDate = None
+                        default_createDate = getDateTimeOriginal(os.path.join(dirpath,filename)).replace(':','-', 2)
                         staged_files.append({
                             'url':default_url,
                             'title':default_title,
@@ -85,11 +82,8 @@ if __name__=='__main__':
                 for sd in staged_drawings:
                     staged_url = staging_area+sd['url'].replace('/img','',1)
                     public_url = app.static_folder+sd['url']
-                    if not os.path.exists(os.path.split(public_url)[0]):
-                        os.makedirs(os.path.split(public_url)[0])
-                    image = Image.open(staged_url)
-                    image = orientate(image).save(public_url)
-                    os.remove(staged_url)
+                    createRotatedImage(staged_url, public_url)
+                    # os.remove(staged_url)
                 print('Drawings are live now.')
                 photos.execute('BEGIN')
                 for sp in staged_photos:
@@ -98,11 +92,8 @@ if __name__=='__main__':
                 for sf in staged_photos:
                     staged_url = staging_area+sf['url'].replace('/img','',1)
                     public_url = app.static_folder+sf['url']
-                    if not os.path.exists(os.path.split(public_url)[0]):
-                        os.makedirs(os.path.split(public_url)[0])
-                    image = Image.open(staged_url)
-                    image = orientate(image).save(public_url)
-                    os.remove(staged_url)
+                    createRotatedImage(staged_url, public_url)
+                    # os.remove(staged_url)
                 print('Photos are live now.')
         elif op == 4 :
             size_of_drawings = subprocess.check_output(

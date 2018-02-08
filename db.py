@@ -1,8 +1,8 @@
 #! /usr/bin/python3
 
 import sqlite3
-from PIL import Image
 import io, os
+from IMfunctions import *
 from server import app, DATABASE, PHOTOS, DRAWINGS, THUMBNAILS, THUMBNAILS_DR, STAGING_AREA # Flask app, database
 
 """This program creates the photos- and drawings Cursor objects,
@@ -21,50 +21,7 @@ imagedbDict = sqlite3.connect(DATABASE)
 imagedbDict.row_factory = sqlite3.Row
 photosDict, drawingsDict = imagedbDict.cursor(), imagedbDict.cursor()
 photosDict.connection.isolation_level, drawingsDict.connection.isolation_level = None, None
-# ---------------------------------------------------
-# HELPER FUNCTIONS
-# ---------------------------------------------------
-def orientate(image):
-    """Rotates an image based on it's Orientation exif tag"""
-    normal = '\x1b[0m'
-    red = '\x1b[31m'
-    try:
-        orientation = image._getexif()[274]
-    except (IndexError, AttributeError, TypeError) as e:
-        orientation = None
-        print(red+'Could not find orientation because: '+normal, e)
-        print('Set orientation to', orientation)
-    if orientation == 3 :
-        image = image.rotate(180, expand=True)
-    elif orientation == 6 :
-        image = image.rotate(270, expand=True)
-    elif orientation == 8 :
-        image = image.rotate(90, expand=True)
-    return image
-def create_thumbnail(image, url):
-    """Creates thumbnail, be aware
-    it uses the original image for creation"""
-    image.thumbnail((200,200))
-    new_url = '{}/{}{}'.format(
-        app.static_folder,
-        THUMBNAILS,
-        url.split(PHOTOS, maxsplit=1)[1]
-    )
-    if not os.path.exists(os.path.split(new_url)[0]):
-        os.makedirs(os.path.split(new_url)[0])
-    image.save(new_url, format='JPEG', resample=Image.ANTIALIAS)
-def create_thumbnail_DR(image, url):
-    """Creates thumbnail, be aware
-    it uses the original image for creation"""
-    image.thumbnail((200,200))
-    new_url = '{}/{}{}'.format(
-        app.static_folder,
-        THUMBNAILS_DR,
-        url.split(DRAWINGS, maxsplit=1)[1]
-    )
-    if not os.path.exists(os.path.split(new_url)[0]):
-        os.makedirs(os.path.split(new_url)[0])
-    image.save(new_url, format='PNG', resample=Image.ANTIALIAS)
+
 # ---------------------------------------------------
 # DB FUNCTIONS
 # ---------------------------------------------------
@@ -96,9 +53,9 @@ def create_db():
 def insert_photo(url, title, desc, createDate, license=None, **kwargs):
     """Inserts drawing into the database"""
     staged_url = STAGING_AREA+url.replace('/img','',1)
-    image = Image.open(staged_url)
-    image = orientate(image)
-    create_thumbnail(image, url)
+    # TODO: new place for thumbnails could be /img/_thumbnails/{url}
+    public_url = app.static_folder+'/'+THUMBNAILS+url.split(PHOTOS, maxsplit=1)[1]
+    createThumbnail(staged_url, public_url)
     if license:
         drawings.execute("""
         INSERT INTO photos
@@ -138,8 +95,8 @@ def select_a_photo(session, url):
 def insert_drawing(url, title, desc, createDate, license=None, **kwargs):
     """Inserts drawing into the database"""
     staged_url = STAGING_AREA+url.replace('/img','',1)
-    image = Image.open(staged_url)
-    create_thumbnail_DR(image, url)
+    public_url = app.static_folder+'/'+THUMBNAILS_DR+url.split(DRAWINGS, maxsplit=1)[1]
+    createThumbnail(staged_url, public_url)
     if license:
         drawings.execute("""
         INSERT INTO drawings
