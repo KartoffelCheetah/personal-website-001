@@ -9,7 +9,7 @@ Please note that the server is set in development mode. Do not run it directly i
 
 ## Dependencies:
 
-- Python3 and Flask installed on your computer.
+- ImageMagick, Python3 and Flask installed on your computer.
 - Optionally install npm and Node.js if you wish to edit the Stylus stylesheets.
 - @Deevad 's [Pepper&Carrot Fonts](https://github.com/Deevad/peppercarrot_fonts)
 - [JQuery-3.2.1](http://jquery.com/) (included)
