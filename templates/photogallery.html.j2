@@ -4,16 +4,16 @@
 {%endblock%}
 {%block MAIN%}
 <div class="photogallery">
-    {% for url,title in photos %}
+    {% for photo in photos %}
         <figure class="photo">
             <div class="setHeight">
-                <a class="photo-image" href="/photos/{{url}}">
-                    <img src="{{staticPATH+THUMBNAILS+url}}" alt="{{title or 'Gallery Image'}}">
+                <a class="photo-image" href="{{photo.url}}">
+                    <img src="{{staticPATH+photo.thumbnail}}" alt="{{photo.title or 'Gallery Image'}}">
                 </a>
             </div>
             <figcaption class="photo-title">
-                <a href="/photos/{{url}}">
-                    {{title}}
+                <a href="{{photo.url}}">
+                    {{photo.title}}
                 </a>
             </figcaption>
         </figure>

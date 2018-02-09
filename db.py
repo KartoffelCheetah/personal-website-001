@@ -2,8 +2,9 @@
 
 import sqlite3
 import io, os
+from os.path import join as pathJoin
 from IMfunctions import *
-from server import app, DATABASE, PHOTOS, DRAWINGS, THUMBNAILS, THUMBNAILS_DR, STAGING_AREA # Flask app, database
+from server import app, DATABASE, PHOTOS, DRAWINGS, THUMBNAILS, STAGING_AREA, FULL_THUMBNAILS, FULL_IMAGES # Flask app, database
 
 """This program creates the photos- and drawings Cursor objects,
 contains the basic functions to operate the SQLite db.
@@ -84,13 +85,22 @@ def dict_from_row(row):
 # ---------------------------------------------------
 def insert_photo(url, title, desc, createDate, license=None, **kwargs):
     """Inserts drawing into the database"""
-    if license==None :
+    if not license :
         license = getDefault('photos', 'license')
-    staged_url = STAGING_AREA+url.replace('/img','',1)
-    # TODO: new place for thumbnails could be /img/_thumbnails/{url}
-    public_url = app.static_folder+'/'+THUMBNAILS+url.split(PHOTOS, maxsplit=1)[1]
-    createThumbnail(staged_url, public_url)
-    xres, yres = getDimensions(app.static_folder+url)
+    # base image location
+    staged_url = pathJoin(STAGING_AREA,PHOTOS,url)
+    # thumbnail image location
+    thumb_url = pathJoin(FULL_THUMBNAILS,PHOTOS,url)
+    # public image location
+    public_url = pathJoin(FULL_IMAGES,PHOTOS,url)
+    # temporary thumbnail image location
+    temp_thumb_url = thumb_url + '_tmp'
+    # temporary image location
+    temp_url = public_url + '_tmp'
+
+    createThumbnail(staged_url, temp_thumb_url)
+    createRotatedImage(staged_url, temp_url)
+    xres, yres = getDimensions(temp_url)
     drawings.execute("""
     INSERT INTO photos
     (url, description, datetimeoriginal, title, license, xres, yres) VALUES (?,?,?,?,?,?,?)
@@ -124,12 +134,22 @@ def select_a_photo(session, url):
 # ---------------------------------------------------
 def insert_drawing(url, title, desc, createDate, license=None, **kwargs):
     """Inserts drawing into the database"""
-    if license == None :
+    if not license :
         license = getDefault('drawings', 'license')
-    staged_url = STAGING_AREA+url.replace('/img','',1)
-    public_url = app.static_folder+'/'+THUMBNAILS_DR+url.split(DRAWINGS, maxsplit=1)[1]
-    createThumbnail(staged_url, public_url)
-    xres, yres = getDimensions(app.static_folder+url)
+    # base image location
+    staged_url = pathJoin(STAGING_AREA,DRAWINGS,url)
+    # thumbnail image location
+    thumb_url = pathJoin(FULL_THUMBNAILS,DRAWINGS,url)
+    # public image location
+    public_url = pathJoin(FULL_IMAGES,DRAWINGS,url)
+    # temporary thumbnail image location
+    temp_thumb_url = thumb_url + '_tmp'
+    # temporary image location
+    temp_url = public_url + '_tmp'
+
+    createThumbnail(staged_url, temp_thumb_url)
+    createRotatedImage(staged_url, temp_url)
+    xres, yres = getDimensions(temp_url)
     drawings.execute("""
     INSERT INTO drawings
     (url, description, datetimeoriginal, title, license, xres, yres) VALUES (?,?,?,?,?,?,?)

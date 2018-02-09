@@ -4,18 +4,21 @@
 from flask import Flask, render_template, g, abort, redirect
 import os, pathlib
 from os.path import splitext, dirname, abspath
+from os.path import join as pathJoin
 import sqlite3
 
 app = Flask(__name__)
 DATABASE = abspath(dirname(__file__))+'/imagedb.db'
-PHOTOS = 'img/photos/'
-DRAWINGS = 'img/drawings/'
-LOGOS = 'img/logos/'
-THUMBNAILS = PHOTOS+'_thumbnails/'
-THUMBNAILS_DR = DRAWINGS+'_thumbnails/'
+IMAGES = 'img/'
+PHOTOS = 'photos/'
+DRAWINGS = 'drawings/'
+LOGOS = 'logos/'
+THUMBNAILS = '_thumbnails/'
+STAGING_AREA = './staging_area'
+FULL_IMAGES = pathJoin(app.static_folder,IMAGES)
+FULL_THUMBNAILS = pathJoin(app.static_folder,IMAGES,THUMBNAILS)
 IMGEXT = ['jpg', 'jpeg', 'png', 'svg', 'gif']
 IMGEXT = tuple(list(map( lambda x:x.upper(), IMGEXT))+IMGEXT)
-STAGING_AREA = './staging_area'
 import db # cant be from db import something because of circular import
 #////////////////////////////////////
 
@@ -40,14 +43,20 @@ def artgallery():
         conn = get_db()
         c = conn.cursor()
         phs = db.select_all_drawing_thumbnail(c)
-        phs = [[url.split(DRAWINGS, maxsplit=1)[1],title] for url,title in phs]
+        phs = [
+            {
+                'title':title,
+                'url':pathJoin('/',DRAWINGS,url),
+                'thumbnail':pathJoin(IMAGES,THUMBNAILS,DRAWINGS,url)
+            } for url,title in phs
+        ]
     except Exception as e:
         print('\x1b[31m', e, '\x1b[0m')
         abort(500)
     finally:
         c.close()
         conn.close()
-    return render_template('artgallery.html.j2', photos=phs,THUMBNAILS=THUMBNAILS_DR)
+    return render_template('artgallery.html.j2', photos=phs)
 #------------------------------------------------
 @app.route('/photogallery/')#---------------------------
 def photogallery():
@@ -55,14 +64,20 @@ def photogallery():
         conn = get_db()
         c = conn.cursor()
         phs = db.select_all_photo_thumbnail(c)
-        phs = [[url.split(PHOTOS, maxsplit=1)[1],title] for url,title in phs]
+        phs = [
+            {
+                'title':title,
+                'url':pathJoin('/',PHOTOS,url),
+                'thumbnail':pathJoin(IMAGES,THUMBNAILS,PHOTOS,url)
+            } for url,title in phs
+        ]
     except Exception as e:
         print('\x1b[31m', e, '\x1b[0m')
         abort(500)
     finally:
         c.close()
         conn.close()
-    return render_template('photogallery.html.j2', photos=phs,THUMBNAILS=THUMBNAILS)
+    return render_template('photogallery.html.j2', photos=phs)
 #------------------------------------------------
 @app.route('/about')#----------------------------
 def about():
@@ -73,40 +88,54 @@ def about():
 @app.route('/photos/<folder>/<img>')#----------------------------
 def photos(folder, img):
     # security?
-    imgUrl = '/{}{}/{}'.format(PHOTOS, folder, img)
+    imgUrl = folder+'/'+img
     try:
         conn = get_db()
         c = conn.cursor()
-        img = db.select_a_photo(c, imgUrl) #mainPhoto
+        img = list(db.select_a_photo(c, imgUrl)) #mainPhoto
         phs = db.select_all_photo_thumbnail(c)
         phs = calc_neighbours(phs, img, 2, func=lambda x: x[0])
-        phs = [[url.split(PHOTOS, maxsplit=1)[1],title] for url,title in phs]
+        phs = [
+            {
+                'title':title,
+                'url':pathJoin('/',PHOTOS,url),
+                'thumbnail':pathJoin(IMAGES,THUMBNAILS,PHOTOS,url)
+            } for url,title in phs
+        ]
+        img[0] = pathJoin(IMAGES,PHOTOS,img[0])
     except Exception as e:
         print('\x1b[31m', e, '\x1b[0m')
         abort(500)
     finally:
         c.close()
         conn.close()
-    return render_template('photos.html.j2', img=img, photos=phs,THUMBNAILS=THUMBNAILS)
+    return render_template('photos.html.j2', img=img, photos=phs)
 #------------------------------------------------
 @app.route('/drawings/<img>')#----------------------------
 def drawings(img):
     # security?
-    imgUrl = '/{}{}'.format(DRAWINGS, img)
+    imgUrl = img
     try:
         conn = get_db()
         c = conn.cursor()
-        img = db.select_a_drawing(c, imgUrl) #mainPhoto
+        img = list(db.select_a_drawing(c, imgUrl)) #mainPhoto
         phs = db.select_all_drawing_thumbnail(c)
         phs = calc_neighbours(phs, img, 2, func=lambda x: x[0])
-        phs = [[url.split(DRAWINGS, maxsplit=1)[1],title] for url,title in phs]
+        phs = [
+            {
+                'title':title,
+                'url':pathJoin('/',DRAWINGS,url),
+                'thumbnail':pathJoin(IMAGES,THUMBNAILS,DRAWINGS,url)
+            } for url,title in phs
+        ]
+        img[0] = pathJoin(IMAGES,DRAWINGS,img[0])
     except Exception as e:
         print('\x1b[31m', e, '\x1b[0m')
         abort(500)
     finally:
         c.close()
         conn.close()
-    return render_template('drawings.html.j2', img=img, photos=phs,THUMBNAILS=THUMBNAILS_DR)
+    return render_template('drawings.html.j2', img=img, photos=phs)
 #------------------------------------------------
 
 #ERRORHANDLER------------------------------------
@@ -120,11 +149,11 @@ def not_found(err):
 #------------------------------------------------
 
 def getLogos():
-    logos = os.listdir(app.static_folder + '/'+ LOGOS)
+    logos = os.listdir(pathJoin(FULL_IMAGES,LOGOS))
     logos = [logo for logo in logos if logo.endswith(IMGEXT)]
     return [{
                 'name':splitext(logo)[0],
-                'link':pathlib.Path(app.static_folder+ '/' + LOGOS+splitext(logo)[0]+'.txt').read_text(),
+                'link':pathlib.Path(app.static_folder+ '/' + IMAGES+LOGOS+splitext(logo)[0]+'.txt').read_text(),
                 'filename':logo
             } for logo in logos]
 

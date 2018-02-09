@@ -3,9 +3,10 @@
 Just select the proper operation number to run it."""
 
 if __name__=='__main__':
-    import sys, os, re, json, subprocess
-    from server import STAGING_AREA as staging_area
-    from server import app, DATABASE, DRAWINGS, PHOTOS
+    import sys, os, json, subprocess
+    from os.path import join as pathJoin
+    from server import STAGING_AREA
+    from server import app, DATABASE, DRAWINGS, PHOTOS, FULL_IMAGES, FULL_THUMBNAILS
     from db import create_db, drawings, photos, photosDict, drawingsDict
     from db import insert_photo, insert_drawing
     from db import select_all_photos, select_all_drawings
@@ -43,18 +44,16 @@ if __name__=='__main__':
             create_db()
         elif op == 2 :
             staged_files = []
-            for dirpath, dirnames, filenames in os.walk(staging_area) :
+            for dirpath, dirnames, filenames in os.walk(STAGING_AREA) :
                 for filename in filenames :
                     if not filename.endswith('.json'):
                         shortened_path = (dirpath
-                        .replace(staging_area+'/', '')
-                        .replace(staging_area+'\\', '')
-                        .replace(staging_area, ''))
-                        path_to_url = '/'.join(['/img', shortened_path, filename])
-                        default_url = re.sub(r'/+', '/', path_to_url)
+                            .replace(STAGING_AREA+'/', '')
+                            .replace(STAGING_AREA, ''))
+                        default_url = pathJoin(shortened_path, filename)
                         default_title = os.path.splitext(filename)[0]
                         default_table_type = 'drawings' if 'drawings' in dirpath else 'photos'
-                        default_createDate = getDateTimeOriginal(os.path.join(dirpath,filename)).replace(':','-', 2)
+                        default_createDate = getDateTimeOriginal(pathJoin(dirpath,filename)).replace(':','-', 2)
                         staged_files.append({
                             'url':default_url,
                             'title':default_title,
@@ -65,7 +64,7 @@ if __name__=='__main__':
                         })
             clear_staging = input('I need to overwrite the staging file. Are you okay with this? (yes/y): ').lower() in ('yes', 'y')
             if clear_staging:
-                with open(os.path.join(staging_area,'staging.json'), 'w') as staging_file:
+                with open(pathJoin(STAGING_AREA,'staging.json'), 'w') as staging_file:
                     print('Overwriting staging file...')
                     json.dump(staged_files, staging_file, indent=2)
                 print('Finished dumping. Staging file is done.')
@@ -73,7 +72,8 @@ if __name__=='__main__':
             else:
                 print('Aborting... Kept staging file.')
         elif op == 3 :
-            with open(os.path.join(staging_area,'staging.json')) as staging_file:
+            # TODO: staged_url, thumb_url, and their temp versions declared too many times
+            with open(pathJoin(STAGING_AREA,'staging.json')) as staging_file:
                 staged_files = json.loads(staging_file.read())
                 staged_drawings = [sf for sf in staged_files if sf['tableType']=='drawings']
                 staged_photos = [sf for sf in staged_files if sf['tableType']=='photos']
@@ -82,9 +82,19 @@ if __name__=='__main__':
                     insert_drawing(**sd)
                 drawings.execute('COMMIT')
                 for sd in staged_drawings:
-                    staged_url = staging_area+sd['url'].replace('/img','',1)
-                    public_url = app.static_folder+sd['url']
-                    createRotatedImage(staged_url, public_url)
+                    # base image location
+                    staged_url = pathJoin(STAGING_AREA,DRAWINGS,sd['url'])
+                    # thumbnail image location
+                    thumb_url = pathJoin(FULL_THUMBNAILS,DRAWINGS,sd['url'])
+                    # public image location
+                    public_url = pathJoin(FULL_IMAGES,DRAWINGS,sd['url'])
+                    # temporary thumbnail image location
+                    temp_thumb_url = thumb_url + '_tmp'
+                    # temporary image location
+                    temp_url = public_url + '_tmp'
+
+                    os.rename(temp_thumb_url, thumb_url)
+                    os.rename(temp_url, public_url)
                     # os.remove(staged_url)
                 print('Drawings are live now.')
                 photos.execute('BEGIN')
@@ -92,17 +102,27 @@ if __name__=='__main__':
                     insert_photo(**sp)
                 photos.execute('COMMIT')
                 for sf in staged_photos:
-                    staged_url = staging_area+sf['url'].replace('/img','',1)
-                    public_url = app.static_folder+sf['url']
-                    createRotatedImage(staged_url, public_url)
+                    # base image location
+                    staged_url = pathJoin(STAGING_AREA,PHOTOS,sf['url'])
+                    # thumbnail image location
+                    thumb_url = pathJoin(FULL_THUMBNAILS,PHOTOS,sf['url'])
+                    # public image location
+                    public_url = pathJoin(FULL_IMAGES,PHOTOS,sf['url'])
+                    # temporary thumbnail image location
+                    temp_thumb_url = thumb_url + '_tmp'
+                    # temporary image location
+                    temp_url = public_url + '_tmp'
+
+                    os.rename(temp_thumb_url, thumb_url)
+                    os.rename(temp_url, public_url)
                     # os.remove(staged_url)
                 print('Photos are live now.')
         elif op == 4 :
             size_of_drawings = subprocess.check_output(
-                ['du', '-sh', os.path.join(app.static_folder, DRAWINGS)]
+                ['du', '-sh', pathJoin(FULL_IMAGES, DRAWINGS)]
             ).split()[0].decode('utf-8')
             size_of_photos = subprocess.check_output(
-                ['du', '-sh', os.path.join(app.static_folder, PHOTOS)]
+                ['du', '-sh', pathJoin(FULL_IMAGES, PHOTOS)]
             ).split()[0].decode('utf-8')
             size_of_database = subprocess.check_output(
                 ['du', '-sh', DATABASE]
@@ -129,7 +149,7 @@ if __name__=='__main__':
             clear_staging = input('I need to overwrite the staging file. Are you okay with this? (yes/y): ').lower() in ('yes', 'y')
             if not clear_staging:
                 sys.exit('Aborting... Kept staging file.')
-            with open(os.path.join(staging_area,'staging.json'), 'w') as staging_file:
+            with open(pathJoin(STAGING_AREA,'staging.json'), 'w') as staging_file:
                 print('Overwriting staging file...')
                 staging_file.write(j)
         elif op == 7 :
