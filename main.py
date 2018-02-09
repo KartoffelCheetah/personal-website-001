@@ -26,6 +26,7 @@ if __name__=='__main__':
     4: Print Size of images
     5: Select all images
     6: Create Staging file from db
+    7: Delete database
     anything else will exit
     """)
     try:
@@ -130,6 +131,12 @@ if __name__=='__main__':
             with open(os.path.join(staging_area,'staging.json'), 'w') as staging_file:
                 print('Overwriting staging file...')
                 staging_file.write(j)
+        elif op == 7 :
+            if input('Are you sure you want to delete db? (yes/y): ') in ('yes', 'y') :
+                os.rename(DATABASE, DATABASE+'old')
+                print('DB renamed to', DATABASE+'old', '(atomic operation)')
+            else:
+                print('Aborting...')
         else:
             sys.exit(green+'exit'+normal)
         # being here means total success
