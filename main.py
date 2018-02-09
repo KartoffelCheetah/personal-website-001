@@ -8,7 +8,8 @@ if __name__=='__main__':
     from server import app, DATABASE, DRAWINGS, PHOTOS
     from db import create_db, drawings, photos, photosDict, drawingsDict
     from db import insert_photo, insert_drawing
-    from db import select_all_photos, select_all_drawings, print_table, dict_from_row
+    from db import select_all_photos, select_all_drawings
+    from db import print_table, dict_from_row
     from IMfunctions import *
     green = '\x1b[32m'
     yellow = '\x1b[33m'

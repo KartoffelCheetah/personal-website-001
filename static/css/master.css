@@ -208,6 +208,11 @@ body {
   border: 2px solid #d2d2d2;
   font-weight: bold;
 }
+#TheImage {
+  position: relative;
+  cursor: pointer;
+  background-color: #393939;
+}
 #TheImage canvas,
 #TheImage img {
   max-width: 100%;
@@ -261,10 +266,6 @@ body {
   right: 0;
   width: auto;
   height: auto;
-}
-#TheImage {
-  cursor: pointer;
-  background-color: #393939;
 }
 @media (max-width: 1000px) {
   .photo-main {

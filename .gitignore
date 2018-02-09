@@ -1,6 +1,7 @@
 **/__pycache__
 node_modules
 imagedb.db
+imagedb.dbold
 static/fonts/peppercarrot_fonts
 static/img/drawings
 static/img/photos

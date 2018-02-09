@@ -35,7 +35,9 @@ def create_db():
         description TEXT,
         datetimeoriginal TEXT,
         uploaddate TEXT DEFAULT CURRENT_TIMESTAMP,
-        license TEXT DEFAULT 'All rights reserved'
+        license TEXT DEFAULT 'All rights reserved',
+        xres INTEGER,
+        yres INTEGER
         )""")
     drawings.execute("""
     CREATE TABLE IF NOT EXISTS drawings
@@ -45,27 +47,54 @@ def create_db():
         description TEXT,
         datetimeoriginal TEXT,
         uploaddate TEXT DEFAULT CURRENT_TIMESTAMP,
-        license TEXT DEFAULT 'All rights reserved'
+        license TEXT DEFAULT 'All rights reserved',
+        xres INTEGER,
+        yres INTEGER
         )""")
+# ---------------------------------------------------
+# GENERIC
+# ---------------------------------------------------
+def getDefault(tableName, colName) :
+    """Specify a table's column and the function returns it's default value."""
+    cols = photosDict.execute("PRAGMA table_info('%s')" % tableName)
+    for col in cols :
+        if col['name'] == colName :
+            return col['dflt_value']
+    raise sqlite3.OperationalError('no such column: %s' % colName)
+# ---------------------------------------------------
+def print_table(selected_table):
+    """Receives a list of sqlite3.Row objects and print all of them to stdout"""
+    yellow = '\x1b[33m'
+    normal = '\x1b[0m'
+    magenta = '\x1b[35m'
+    for row in selected_table:
+        print('-------------')
+        for k,v in zip(row.keys(), row):
+            print(yellow+str(k)+': '+magenta+str(v)+normal)
+# ---------------------------------------------------
+def dict_from_row(row):
+    """Transforms an sqlite3.Row object to a dictionary"""
+    if type(row)==sqlite3.Row :
+        return dict(zip(row.keys(), row))
+    else :
+        return [dict(zip(r.keys(), r)) for r in row]
+# ---------------------------------------------------
 # ---------------------------------------------------
 # PHOTOS
 # ---------------------------------------------------
 def insert_photo(url, title, desc, createDate, license=None, **kwargs):
     """Inserts drawing into the database"""
+    if license==None :
+        license = getDefault('photos', 'license')
     staged_url = STAGING_AREA+url.replace('/img','',1)
     # TODO: new place for thumbnails could be /img/_thumbnails/{url}
     public_url = app.static_folder+'/'+THUMBNAILS+url.split(PHOTOS, maxsplit=1)[1]
     createThumbnail(staged_url, public_url)
-    if license:
-        drawings.execute("""
-        INSERT INTO photos
-        (url, description, datetimeoriginal, title, license) VALUES (?,?,?,?,?)
-        """, (url, desc, createDate, title, license))
-    else:
-        drawings.execute("""
-        INSERT INTO photos
-        (url, description, datetimeoriginal, title) VALUES (?,?,?,?)
-        """, (url, desc, createDate, title))
+    xres, yres = getDimensions(app.static_folder+url)
+    drawings.execute("""
+    INSERT INTO photos
+    (url, description, datetimeoriginal, title, license, xres, yres) VALUES (?,?,?,?,?,?,?)
+    """, (url, desc, createDate, title, license, xres, yres))
 # ---------------------------------------------------
 def select_all_photos(session):
     """Get a list of all images from db"""
@@ -85,28 +114,26 @@ def select_a_photo(session, url):
     """Get a single image from db"""
     session.execute("""
     SELECT url, description, datetimeoriginal,
-           uploaddate, license, title FROM photos
+           uploaddate, license, title, xres, yres FROM photos
            WHERE url = ? LIMIT 1
     """, (url,))
     return session.fetchone()
+# ---------------------------------------------------
 # ---------------------------------------------------
 # DRAWINGS
 # ---------------------------------------------------
 def insert_drawing(url, title, desc, createDate, license=None, **kwargs):
     """Inserts drawing into the database"""
+    if license == None :
+        license = getDefault('drawings', 'license')
     staged_url = STAGING_AREA+url.replace('/img','',1)
     public_url = app.static_folder+'/'+THUMBNAILS_DR+url.split(DRAWINGS, maxsplit=1)[1]
     createThumbnail(staged_url, public_url)
-    if license:
-        drawings.execute("""
-        INSERT INTO drawings
-        (url, description, datetimeoriginal, title, license) VALUES (?,?,?,?,?)
-        """, (url, desc, createDate, title, license))
-    else:
-        drawings.execute("""
-        INSERT INTO drawings
-        (url, description, datetimeoriginal, title) VALUES (?,?,?,?)
-        """, (url, desc, createDate, title))
+    xres, yres = getDimensions(app.static_folder+url)
+    drawings.execute("""
+    INSERT INTO drawings
+    (url, description, datetimeoriginal, title, license, xres, yres) VALUES (?,?,?,?,?,?,?)
+    """, (url, desc, createDate, title, license, xres, yres))
 # ---------------------------------------------------
 def select_all_drawings(session):
     """Get a list of all images from db"""
@@ -126,25 +153,8 @@ def select_a_drawing(session, url):
     """Get a single image from db"""
     session.execute("""
     SELECT url, description, datetimeoriginal,
-           uploaddate, license, title FROM drawings
+           uploaddate, license, title, xres, yres FROM drawings
            WHERE url = ? LIMIT 1
     """, (url,))
     return session.fetchone()
-# ---------------------------------------------------
-def print_table(selected_table):
-    """Receives a list of sqlite3.Row objects and print all of them to stdout"""
-    yellow = '\x1b[33m'
-    normal = '\x1b[0m'
-    magenta = '\x1b[35m'
-    for row in selected_table:
-        print('-------------')
-        for k,v in zip(row.keys(), row):
-            print(yellow+str(k)+': '+magenta+str(v)+normal)
-# ---------------------------------------------------
-def dict_from_row(row):
-    """Transforms an sqlite3.Row object to a dictionary"""
-    if type(row)==sqlite3.Row :
-        return dict(zip(row.keys(), row))
-    else :
-        return [dict(zip(r.keys(), r)) for r in row]
 # ---------------------------------------------------

@@ -1,15 +1,15 @@
 {% extends "layout.html.j2"%}
 {%block TITLE%}
- 	{{img[-1]}} {{super()}}
+ 	{{img[5]}} {{super()}}
 {%endblock%}
 {%block MAIN%}
     <div id="modal100" class="hidden">
-        <img src="{{staticPATH[:-1]+img.0}}" alt="{{img[-1]}}">
+        <img src="{{staticPATH[:-1]+img.0}}" alt="{{img[5]}}">
     </div>
     <div class="wrap-photos">
-        <header>{{img[-1]}}</header>
+        <header>{{img[5]}}</header>
         <div id="TheImage">
-            <img src="{{staticPATH[:-1]+img.0}}" alt="{{img[-1]}}">
+            <img src="{{staticPATH[:-1]+img.0}}" alt="{{img[5]}}">
         </div>
         <div class="photo-main">
             <div class="photo-slider">
@@ -22,7 +22,7 @@
                 {% endfor %}
             </div>
             <div class="photo-info">
-                <header>{{img[-1]}}</header>
+                <header>{{img[5]}}</header>
                 <div class="photo-desc">
                     {{img.1}}
                 </div>
