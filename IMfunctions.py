@@ -16,12 +16,14 @@ def getDimensions(filePath) :
     return int(x), int(y)
 def createThumbnail(originPath, destinationPath, size='200x200') :
     """Creates a thumbnail image out of originPath in destinationPath of size (which defaults to maxWidth:200, maxHeight:200) and keeps ratio. The function creates directory if not exists already. Returns the subprocess's response."""
+    print('Create thumbnail -> %s' % destinationPath)
     destDirPath = os.path.split(destinationPath)[0]
     if not os.path.exists(destDirPath) :
         os.makedirs(destDirPath)
     return subprocess.run(['convert', originPath, '-auto-orient', '-thumbnail', size, destinationPath], timeout=3)
 def createRotatedImage(originPath, destinationPath) :
     """Creates a rotated image out of originPath in destinationPath. EXIF orientation will be adjusted with the rotation. The function creates directory if not exists already. Returns the subprocess's response."""
+    print('Create rotatedImage -> %s' % destinationPath)
     destDirPath = os.path.split(destinationPath)[0]
     if not os.path.exists(destDirPath) :
         os.makedirs(destDirPath)

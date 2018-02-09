@@ -23,6 +23,9 @@ imagedbDict.row_factory = sqlite3.Row
 photosDict, drawingsDict = imagedbDict.cursor(), imagedbDict.cursor()
 photosDict.connection.isolation_level, drawingsDict.connection.isolation_level = None, None
 
+
+DEFAULTPHOTOLICENSE = "All rights reserved"
+DEFAULTDRAWINGLICENSE = "All rights reserved"
 # ---------------------------------------------------
 # DB FUNCTIONS
 # ---------------------------------------------------
@@ -36,10 +39,10 @@ def create_db():
         description TEXT,
         datetimeoriginal TEXT,
         uploaddate TEXT DEFAULT CURRENT_TIMESTAMP,
-        license TEXT DEFAULT 'All rights reserved',
+        license TEXT DEFAULT '%s',
         xres INTEGER,
         yres INTEGER
-        )""")
+        )""" % DEFAULTPHOTOLICENSE)
     drawings.execute("""
     CREATE TABLE IF NOT EXISTS drawings
         (id INTEGER PRIMARY KEY,
@@ -48,10 +51,10 @@ def create_db():
         description TEXT,
         datetimeoriginal TEXT,
         uploaddate TEXT DEFAULT CURRENT_TIMESTAMP,
-        license TEXT DEFAULT 'All rights reserved',
+        license TEXT DEFAULT '%s',
         xres INTEGER,
         yres INTEGER
-        )""")
+        )""" % DEFAULTDRAWINGLICENSE)
 # ---------------------------------------------------
 # GENERIC
 # ---------------------------------------------------
@@ -86,7 +89,7 @@ def dict_from_row(row):
 def insert_photo(url, title, desc, createDate, license=None, **kwargs):
     """Inserts drawing into the database"""
     if not license :
-        license = getDefault('photos', 'license')
+        license = DEFAULTPHOTOLICENSE
     # base image location
     staged_url = pathJoin(STAGING_AREA,PHOTOS,url)
     # thumbnail image location
@@ -135,7 +138,7 @@ def select_a_photo(session, url):
 def insert_drawing(url, title, desc, createDate, license=None, **kwargs):
     """Inserts drawing into the database"""
     if not license :
-        license = getDefault('drawings', 'license')
+        license = DEFAULTDRAWINGLICENSE
     # base image location
     staged_url = pathJoin(STAGING_AREA,DRAWINGS,url)
     # thumbnail image location
