@@ -48,8 +48,10 @@ if __name__=='__main__':
                 for filename in filenames :
                     if not filename.endswith('.json'):
                         shortened_path = (dirpath
-                            .replace(STAGING_AREA+'/', '')
-                            .replace(STAGING_AREA, ''))
+                            .replace(STAGING_AREA+'/'+PHOTOS.rstrip('/'),'')
+                            .replace(STAGING_AREA+'/'+DRAWINGS.rstrip('/'),'')
+                            .replace(STAGING_AREA, '')
+                            .lstrip('/'))
                         default_url = pathJoin(shortened_path, filename)
                         default_title = os.path.splitext(filename)[0]
                         default_table_type = 'drawings' if 'drawings' in dirpath else 'photos'
