@@ -1,15 +1,15 @@
 {% extends "layout.html.j2"%}
 {%block TITLE%}
- 	{{img[5]}} {{super()}}
+ 	{{img.title}} {{super()}}
 {%endblock%}
 {%block MAIN%}
     <div id="modal100" class="hidden">
-        <img src="{{staticPATH+img.0}}" alt="{{img[5]}}">
+        <img src="{{staticPATH+img.url}}" alt="{{img.title}}">
     </div>
     <div class="wrap-photos">
-        <header>{{img[5]}}</header>
+        <header>{{img.title}}</header>
         <div id="TheImage">
-            <img src="{{staticPATH+img.0}}" alt="{{img[5]}}">
+            <img src="{{staticPATH+img.url}}" alt="{{img.title}}">
         </div>
         <div class="photo-main">
             <div class="photo-slider">
@@ -22,14 +22,14 @@
                 {% endfor %}
             </div>
             <div class="photo-info">
-                <header>{{img[5]}}</header>
+                <header>{{img.title}}</header>
                 <div class="photo-desc">
-                    {{img.1}}
+                    {{img.description}}
                 </div>
                 <div class="photo-meta">
-                    <b>Date of creation:</b> {{img.2 or "Not known"}}<br>
-                    <b>Upload date:</b> {{img.3 or "Not known"}}<br>
-                    <b>License:</b> {{img.4 or "Not known"}}
+                    <b>Date of creation:</b> {{img.datetimeoriginal or "Not known"}}<br>
+                    <b>Upload date:</b> {{img.uploaddate or "Not known"}}<br>
+                    <b>License:</b> {{img.license or "Not known"}}
                 </div>
             </div>
         </div>

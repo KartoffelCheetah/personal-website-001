@@ -91,10 +91,11 @@ def photos(folder, img):
     imgUrl = folder+'/'+img
     try:
         conn = get_db()
+        conn.row_factory = sqlite3.Row
         c = conn.cursor()
-        img = list(db.select_a_photo(c, imgUrl)) #mainPhoto
+        img = db.dict_from_row(db.select_a_photo(c, imgUrl)) #mainPhoto
         phs = db.select_all_photo_thumbnail(c)
-        phs = calc_neighbours(phs, img, 2, func=lambda x: x[0])
+        phs = calc_neighbours(phs, img, 2, func=lambda x: x['url'])
         phs = [
             {
                 'title':title,
@@ -102,7 +103,7 @@ def photos(folder, img):
                 'thumbnail':pathJoin(IMAGES,THUMBNAILS,PHOTOS,url)
             } for url,title in phs
         ]
-        img[0] = pathJoin(IMAGES,PHOTOS,img[0])
+        img['url'] = pathJoin(IMAGES,PHOTOS,img['url'])
     except Exception as e:
         print('\x1b[31m', e, '\x1b[0m')
         abort(500)
@@ -117,10 +118,11 @@ def drawings(img):
     imgUrl = img
     try:
         conn = get_db()
+        conn.row_factory = sqlite3.Row
         c = conn.cursor()
-        img = list(db.select_a_drawing(c, imgUrl)) #mainPhoto
+        img = db.dict_from_row(db.select_a_drawing(c, imgUrl)) #mainPhoto
         phs = db.select_all_drawing_thumbnail(c)
-        phs = calc_neighbours(phs, img, 2, func=lambda x: x[0])
+        phs = calc_neighbours(phs, img, 2, func=lambda x: x['url'])
         phs = [
             {
                 'title':title,
@@ -128,7 +130,7 @@ def drawings(img):
                 'thumbnail':pathJoin(IMAGES,THUMBNAILS,DRAWINGS,url)
             } for url,title in phs
         ]
-        img[0] = pathJoin(IMAGES,DRAWINGS,img[0])
+        img['url'] = pathJoin(IMAGES,DRAWINGS,img['url'])
     except Exception as e:
         print('\x1b[31m', e, '\x1b[0m')
         abort(500)
