@@ -9,7 +9,8 @@
     <div class="wrap-photos">
         <header>{{img.title}}</header>
         <div id="TheImage">
-            <img src="{{staticPATH+img.url}}" alt="{{img.title}}">
+            <img src="{{staticPATH+img.thumbnail}}" aria-hidden="true" width="{{img.xres}}">
+            <img src="{{staticPATH+img.url}}" alt="{{img.title}}" onload="$('#TheImage img[aria-hidden]').hide()">
         </div>
         <div class="photo-main">
             <div class="photo-slider">

@@ -215,12 +215,19 @@ body {
 }
 #TheImage canvas,
 #TheImage img {
+  position: relative;
   max-width: 100%;
   max-height: 100%;
   display: block;
   margin: auto;
   padding: 2px;
   border: 2px solid #d2d2d2;
+}
+#TheImage canvas[aria-hidden],
+#TheImage img[aria-hidden] {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 .photo-desc,
 .photo-meta {

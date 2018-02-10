@@ -103,6 +103,7 @@ def photos(folder, img):
                 'thumbnail':pathJoin(IMAGES,THUMBNAILS,PHOTOS,url)
             } for url,title in phs
         ]
+        img['thumbnail'] = pathJoin(IMAGES,THUMBNAILS,PHOTOS,img['url'])
         img['url'] = pathJoin(IMAGES,PHOTOS,img['url'])
     except Exception as e:
         print('\x1b[31m', e, '\x1b[0m')
@@ -130,6 +131,7 @@ def drawings(img):
                 'thumbnail':pathJoin(IMAGES,THUMBNAILS,DRAWINGS,url)
             } for url,title in phs
         ]
+        img['thumbnail'] = pathJoin(IMAGES,THUMBNAILS,DRAWINGS,img['url'])
         img['url'] = pathJoin(IMAGES,DRAWINGS,img['url'])
     except Exception as e:
         print('\x1b[31m', e, '\x1b[0m')
