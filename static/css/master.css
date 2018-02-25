@@ -74,7 +74,7 @@ footer nav a {
   color: #392e21;
   background-color: #d2d2d2;
   -webkit-transition: background-color 1s, color 1s;
-  transition: background-color 1s color 1s;
+  transition: background-color 1s, color 1s;
 }
 footer nav a {
   margin-top: 1.5rem;
@@ -91,7 +91,7 @@ footer nav a:hover,
 }
 #mainNav a.selected {
   -webkit-transition: background-color 0s, color 0s;
-  transition: background-color 0s color 0s;
+  transition: background-color 0s, color 0s;
 }
 .text-centered {
   text-align: center;
