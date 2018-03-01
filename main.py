@@ -12,11 +12,12 @@ if __name__=='__main__':
     from db import select_all_photos, select_all_drawings
     from db import print_table, dict_from_row
     from IMfunctions import *
-    green = '\x1b[32m'
-    yellow = '\x1b[33m'
-    normal = '\x1b[0m'
-    red = '\x1b[31m'
-    magenta = '\x1b[35m'
+    from console_paint_presets import *
+    # green = '\x1b[32m'
+    # yellow = '\x1b[33m'
+    # normal = '\x1b[0m'
+    # red = '\x1b[31m'
+    # magenta = '\x1b[35m'
 
     print("""
     For more info use help('main') in the python console.
@@ -38,9 +39,12 @@ if __name__=='__main__':
 
     try:
         if   op == 0 :
-            sys.exit(green+'exit'+normal)
+            # sys.exit(green+'exit'+normal)
+            printOK('exit')
+            sys.exit('Bye!')
         elif op == 1 :
-            print(green, 'creating database...', normal)
+            # print(green, 'creating database...', normal)
+            printOK('creating database...')
             create_db()
         elif op == 2 :
             staged_files = []
@@ -70,7 +74,8 @@ if __name__=='__main__':
                     print('Overwriting staging file...')
                     json.dump(staged_files, staging_file, indent=2)
                 print('Finished dumping. Staging file is done.')
-                print(yellow+'Please check the staging file before uploading to database.\nDo not forget to order the elements in the list and fill out the descriptions.'+normal)
+                # print(yellow+'Please check the staging file before uploading to database.\nDo not forget to order the elements in the list and fill out the descriptions.'+normal)
+                printWarning('Please check the staging file before uploading to database.\nDo not forget to order the elements in the list and fill out the descriptions.')
             else:
                 print('Aborting... Kept staging file.')
         elif op == 3 :
@@ -129,7 +134,9 @@ if __name__=='__main__':
             size_of_database = subprocess.check_output(
                 ['du', '-sh', DATABASE]
             ).split()[0].decode('utf-8')
-            print(yellow+'Size of directories:\n drawings: {}\n photos: {}\n database: {}'.format(size_of_drawings,size_of_photos,size_of_database)+normal)
+            # print(yellow+'Size of directories:\n drawings: {}\n photos: {}\n database: {}'.format(size_of_drawings,size_of_photos,size_of_database)+normal)
+            printWarning(
+                'Size of directories:\n drawings: {}\n photos: {}\n database: {}'.format(size_of_drawings,size_of_photos,size_of_database))
         elif op == 5 :
             selected_drawings = select_all_drawings(drawingsDict)
             selected_photos = select_all_photos(photosDict)
@@ -161,11 +168,16 @@ if __name__=='__main__':
             else:
                 print('Aborting...')
         else:
-            sys.exit(green+'exit'+normal)
+            # sys.exit(green+'exit'+normal)
+            printOK('exit')
+            sys.exit('Unknown operation number.')
         # being here means total success
-        print(green, 'Finished operation!', normal)
+        # print(green, 'Finished operation!', normal)
+        printOK('Finished operation!')
     except Exception as e:
         # in case of error print the error in red
-        print(red, e, normal)
-        print(red, 'Finished operation!', normal)
+        # print(red, e, normal)
+        printAlert(e)
+        # print(red, 'Finished operation!', normal)
+        printAlert('Finished operation!')
         raise e
