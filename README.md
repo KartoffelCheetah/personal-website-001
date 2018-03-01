@@ -26,9 +26,12 @@ Navigate to the chosen folder to clone the repo:
 
 ```
 personal-website-001
-│  server.py     # ./server.py will run the development server
-│  main.py       # ./main.py is the interface for common tasks
-│  db.py         # these are the function defs of the db
+│  server.py        # ./server.py will run the development server
+│  main.py          # ./main.py is the interface for common tasks
+│  db.py            # these are the function defs of the db
+|  IMfunctions.py   # IMAGE MAGICK functions for image manipulation
+|  console_paint.py          # Terminal colorizer
+|  console_paint_presets.py  # Local presets for terminal colorizer
 │  package.json
 │  LICENSE
 │  README.md
