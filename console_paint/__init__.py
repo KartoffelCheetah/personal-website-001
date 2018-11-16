@@ -2,6 +2,7 @@
 #-*- coding:utf-8 -*-
 """
 Prints * Colorful, Bold, Underline * Text
+This file should be used with a preset.
 """
 
 effects = {

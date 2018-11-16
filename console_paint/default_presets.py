@@ -1,5 +1,6 @@
 #!.venv/bin/python3
 #-*- coding:utf-8 -*-
+""" Default presets. """
 from console_paint import painter
 
 def painterColor(color) :

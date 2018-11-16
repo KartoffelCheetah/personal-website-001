@@ -33,8 +33,7 @@ personal-website-001
 │  main.py          # ./main.py is the interface for common tasks
 │  db.py            # these are the function defs of the db
 |  IMfunctions.py   # IMAGE MAGICK functions for image manipulation
-|  console_paint.py          # Terminal colorizer
-|  console_paint_presets.py  # Local presets for terminal colorizer
+|  console_paint          # Terminal colorizer with presets
 │  package.json
 │  LICENSE
 │  README.md
