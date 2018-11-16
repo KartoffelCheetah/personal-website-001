@@ -2,24 +2,41 @@
 #-*- coding:utf-8 -*-
 
 from flask import Flask, render_template, g, abort, redirect
+from flask_restful import Resource, Api
+from dotenv import load_dotenv
 import os, pathlib
 from os.path import splitext, dirname, abspath
 from os.path import join as pathJoin
 import sqlite3
 
+# Read the configuration
+# override ENVIRONMENT variables from .env
+# FLASK_ENV is set from here
+PROJECT_PATH = pathlib.Path('.')
+load_dotenv(dotenv_path=PROJECT_PATH/'.env', override=True)
+
+DATABASE_PATH = PROJECT_PATH/os.getenv('DATABASE_NAME')
+
 app = Flask(__name__)
-DATABASE = abspath(dirname(__file__))+'/imagedb.db'
-IMAGES = 'img/'
-PHOTOS = 'photos/'
-DRAWINGS = 'drawings/'
-LOGOS = 'logos/'
-THUMBNAILS = '_thumbnails/'
-STAGING_AREA = './staging_area'
-FULL_IMAGES = pathJoin(app.static_folder,IMAGES)
-FULL_THUMBNAILS = pathJoin(app.static_folder,IMAGES,THUMBNAILS)
-IMGEXT = ['jpg', 'jpeg', 'png', 'svg', 'gif']
-IMGEXT = tuple(list(map( lambda x:x.upper(), IMGEXT))+IMGEXT)
-import db # cant be from db import something because of circular import
+# configure app before doing anything which could be influenced
+# by the configuration
+app.config.update(
+    SECRET_KEY=os.getenv('SECRET_KEY'),
+    SESSION_COOKIE_SECURE=os.getenv('SESSION_COOKIE_SECURE')
+) # in case someone forgot to change the key
+if app.secret_key=='notsecure':
+    raise ValueError('You need to set a proper SECRET KEY.')
+# RestfulAPi
+api = Api(app)
+# TODO
+class HelloWorld(Resource):
+    """docstring for """
+    def get(self):
+        return {'hello': 'World'}
+
+api.add_resource(HelloWorld, '/')
+
+
 #////////////////////////////////////
 
 ## ROUTES ##
@@ -181,6 +198,5 @@ def get_db():
 #////////////////////////////////////
 if __name__=='__main__':
     app.run(
-        debug=True,
         threaded=True
     )
