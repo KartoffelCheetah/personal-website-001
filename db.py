@@ -1,4 +1,4 @@
-#! /usr/bin/python3.5
+#!.venv/bin/python3
 
 import sqlite3
 import io, os
