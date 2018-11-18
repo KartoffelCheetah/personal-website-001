@@ -1,202 +1,96 @@
 #!.venv/bin/python3
-#-*- coding:utf-8 -*-
 
-from flask import Flask, render_template, g, abort, redirect
-from flask_restful import Resource, Api
+import os
+import pathlib
+from os.path import splitext, dirname, abspath, join as pathJoin
 from dotenv import load_dotenv
-import os, pathlib
-from os.path import splitext, dirname, abspath
-from os.path import join as pathJoin
-import sqlite3
-
+# flask
+from flask import Flask, render_template, g, abort, redirect
+from flask_restful import reqparse, abort, Resource, Api
+# models
+from models.db import db
+from models.User import User as UserModel
+# ------------------------
+# absolute path to project
+PROJECT_PATH = pathlib.Path('.').absolute()
 # Read the configuration
-# override ENVIRONMENT variables from .env
-# FLASK_ENV is set from here
-PROJECT_PATH = pathlib.Path('.')
+# and override ENVIRONMENT variables with dotenv
 load_dotenv(dotenv_path=PROJECT_PATH/'.env', override=True)
-
+# absolute path to database
 DATABASE_PATH = PROJECT_PATH/os.getenv('DATABASE_NAME')
-
+# ------------------------
 app = Flask(__name__)
-# configure app before doing anything which could be influenced
-# by the configuration
+# configure app before doing anything noteworthy
+# which could be influenced by the configuration
+# NOTE: FLASK_ENV configuration value is set from ENVIRONMENT variable
 app.config.update(
     SECRET_KEY=os.getenv('SECRET_KEY'),
-    SESSION_COOKIE_SECURE=os.getenv('SESSION_COOKIE_SECURE')
-) # in case someone forgot to change the key
-if app.secret_key=='notsecure':
+    SESSION_COOKIE_SECURE=os.getenv('SESSION_COOKIE_SECURE'),
+    SQLALCHEMY_DATABASE_URI='sqlite:///'+DATABASE_PATH.__str__(),
+    SQLALCHEMY_TRACK_MODIFICATIONS=os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS'),
+) # key has to be changed!
+if app.secret_key=='notsecure' or len(app.secret_key) < 100:
     raise ValueError('You need to set a proper SECRET KEY.')
-# RestfulAPi
+# Plugins
 api = Api(app)
-# TODO
-class HelloWorld(Resource):
-    """docstring for """
-    def get(self):
-        return {'hello': 'World'}
-
-api.add_resource(HelloWorld, '/')
-
-
+db.init_app(app)
+# Create db with tables
+db.create_all(app=app)
 #////////////////////////////////////
-
 ## ROUTES ##
 # -----------------------------------------------
-@app.route('/')#---------------------------------
-def index():
-    # return render_template('index.html.j2')
-    return redirect('/about')
-#------------------------------------------------
-@app.route('/contact')#--------------------------
-def contact():
-    return render_template('contact.html.j2')
-#------------------------------------------------
-@app.route('/faq')#------------------------------
-def faq():
-    return render_template('faq.html.j2')
-#------------------------------------------------
-@app.route('/artgallery/')#-------------------------
-def artgallery():
-    try:
-        conn = get_db()
-        c = conn.cursor()
-        phs = db.select_all_drawing_thumbnail(c)
-        phs = [
-            {
-                'title':title,
-                'url':pathJoin('/',DRAWINGS,url),
-                'thumbnail':pathJoin(IMAGES,THUMBNAILS,DRAWINGS,url)
-            } for url,title in phs
-        ]
-    except Exception as e:
-        print('\x1b[31m', e, '\x1b[0m')
-        abort(500)
-    finally:
-        c.close()
-        conn.close()
-    return render_template('artgallery.html.j2', photos=phs)
-#------------------------------------------------
-@app.route('/photogallery/')#---------------------------
-def photogallery():
-    try:
-        conn = get_db()
-        c = conn.cursor()
-        phs = db.select_all_photo_thumbnail(c)
-        phs = [
-            {
-                'title':title,
-                'url':pathJoin('/',PHOTOS,url),
-                'thumbnail':pathJoin(IMAGES,THUMBNAILS,PHOTOS,url)
-            } for url,title in phs
-        ]
-    except Exception as e:
-        print('\x1b[31m', e, '\x1b[0m')
-        abort(500)
-    finally:
-        c.close()
-        conn.close()
-    return render_template('photogallery.html.j2', photos=phs)
-#------------------------------------------------
-@app.route('/about')#----------------------------
-def about():
-    logos = getLogos()
-    return render_template('about.html.j2', techs=logos)
-#------------------------------------------------
-#------------------------------------------------
-@app.route('/photos/<folder>/<img>')#----------------------------
-def photos(folder, img):
-    # security?
-    imgUrl = folder+'/'+img
-    try:
-        conn = get_db()
-        conn.row_factory = sqlite3.Row
-        c = conn.cursor()
-        img = db.dict_from_row(db.select_a_photo(c, imgUrl)) #mainPhoto
-        phs = db.select_all_photo_thumbnail(c)
-        phs = calc_neighbours(phs, img, 2, func=lambda x: x['url'])
-        phs = [
-            {
-                'title':title,
-                'url':pathJoin('/',PHOTOS,url),
-                'thumbnail':pathJoin(IMAGES,THUMBNAILS,PHOTOS,url)
-            } for url,title in phs
-        ]
-        img['thumbnail'] = pathJoin(IMAGES,THUMBNAILS,PHOTOS,img['url'])
-        img['url'] = pathJoin(IMAGES,PHOTOS,img['url'])
-    except Exception as e:
-        print('\x1b[31m', e, '\x1b[0m')
-        abort(500)
-    finally:
-        c.close()
-        conn.close()
-    return render_template('photos.html.j2', img=img, photos=phs)
-#------------------------------------------------
-@app.route('/drawings/<img>')#----------------------------
-def drawings(img):
-    # security?
-    imgUrl = img
-    try:
-        conn = get_db()
-        conn.row_factory = sqlite3.Row
-        c = conn.cursor()
-        img = db.dict_from_row(db.select_a_drawing(c, imgUrl)) #mainPhoto
-        phs = db.select_all_drawing_thumbnail(c)
-        phs = calc_neighbours(phs, img, 2, func=lambda x: x['url'])
-        phs = [
-            {
-                'title':title,
-                'url':pathJoin('/',DRAWINGS,url),
-                'thumbnail':pathJoin(IMAGES,THUMBNAILS,DRAWINGS,url)
-            } for url,title in phs
-        ]
-        img['thumbnail'] = pathJoin(IMAGES,THUMBNAILS,DRAWINGS,img['url'])
-        img['url'] = pathJoin(IMAGES,DRAWINGS,img['url'])
-    except Exception as e:
-        print('\x1b[31m', e, '\x1b[0m')
-        abort(500)
-    finally:
-        c.close()
-        conn.close()
-    return render_template('drawings.html.j2', img=img, photos=phs)
-#------------------------------------------------
+# TODO Userhandling with WTFORMS?
+# TODO: add csrf tokens
+# TODO: defend with auth
+# TODO: sanitize input
+# TODO: make decorator for only debug
+class Users(Resource):
+    """docstring for TODO"""
+    def get(self):
+        users = UserModel.query.all()
+        return {'users': [{
+            'username': user.username,
+            'email': user.email,
+        } for user in users if user]}
+    def post(self): # TODO: this needs to be super secure
+        parser = reqparse.RequestParser()
+        parser.add_argument(
+            'username',
+            type=str,
+            location='form',
+            required=True,
+        )
+        parser.add_argument(
+            'email',
+            type=str,
+            location='form',
+            required=True,
+        )
+        parser.add_argument(
+            'password',
+            type=str,
+            location='form',
+            required=True,
+        )
+        args = parser.parse_args()
+        print(args)
+        # TODO do something
+        return {}
 
-#ERRORHANDLER------------------------------------
-@app.errorhandler(500)#--------------------------
-def internal_server_error(err):
-    print('\x1b[31m', err, '\x1b[0m') # TODO log it somewhere
-    return app.send_static_file('html/500.html'), 500
-@app.errorhandler(404)
-def not_found(err):
-    return render_template('404.html.j2'), 404
-#------------------------------------------------
+class User(Resource):
+    """docstring for TODO"""
+    def get(self, user_id):
+        user = UserModel.query.filter_by(id=user_id).first()
+        return {'user':{
+            'username': user.username,
+            'email': user.email,
+        } if user else user }
 
-def getLogos():
-    logos = os.listdir(pathJoin(FULL_IMAGES,LOGOS))
-    logos = [logo for logo in logos if logo.endswith(IMGEXT)]
-    return [{
-                'name':splitext(logo)[0],
-                'link':pathlib.Path(app.static_folder+ '/' + IMAGES+LOGOS+splitext(logo)[0]+'.txt').read_text(),
-                'filename':logo
-            } for logo in logos]
 
-def calc_neighbours(ofItems, targetItem, n, func=lambda x:x):
-    """Search through ofItems for targetItem.
-    Returns n number of neighbours of targetItem from ofItems."""
-    for i in range(len(ofItems)):
-        if func(ofItems[i])==func(targetItem):
-            break # we found our target index
-    # get the neighbours, handle edge cases
-    return ofItems[max(0,i-n):min(i+n+1,len(ofItems))]
-
-def get_db():
-    """Returns an sqlite3.Connection object stored in g.
-    Or creates it if doesn't exist yet."""
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = sqlite3.connect(DATABASE)
-    return db
-
+api.add_resource(Users, '/users')
+api.add_resource(User, '/user/<int:user_id>')
 #////////////////////////////////////
 if __name__=='__main__':
-    app.run(
-        threaded=True
-    )
+    # only run in main in development
+    # production mode should import the app
+    app.run(threaded=True)

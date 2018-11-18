@@ -1,6 +1,4 @@
 #!.venv/bin/python3
-#-*- coding:utf-8 -*-
-
 """Functions handling images."""
 
 import subprocess
