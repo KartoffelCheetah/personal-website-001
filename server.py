@@ -4,9 +4,15 @@ import os
 import pathlib
 from os.path import splitext, dirname, abspath, join as pathJoin
 from dotenv import load_dotenv
+# token
+from itsdangerous import (
+                        BadSignature,
+                        SignatureExpired,
+                        TimedJSONWebSignatureSerializer as TJWSSerializer)
 # flask
-from flask import Flask, render_template, g, abort, redirect
+from flask import Flask, render_template, g, abort, redirect, jsonify
 from flask_restful import reqparse, abort, Resource, Api
+from flask_httpauth import HTTPTokenAuth
 # models
 from models.db import db
 from models.User import User as UserModel
@@ -32,63 +38,59 @@ app.config.update(
 if app.secret_key=='notsecure' or len(app.secret_key) < 100:
     raise ValueError('You need to set a proper SECRET KEY.')
 # Plugins
-api = Api(app)
+api = Api(app, prefix='/api/v1')
 db.init_app(app)
-# Create db with tables
-db.create_all(app=app)
+auth = HTTPTokenAuth(scheme='Token')
+
+@app.before_first_request
+def create_tables():
+    """Creates database and tables if they don't exist already."""
+    db.create_all(app=app)
+
+@auth.verify_token
+def verify(token):
+    """Checks request's Authorization header for token."""
+    if UserModel.verify_auth_token(app.secret_key, token):
+        return True
+    return False
+
 #////////////////////////////////////
 ## ROUTES ##
 # -----------------------------------------------
-# TODO Userhandling with WTFORMS?
-# TODO: add csrf tokens
-# TODO: defend with auth
-# TODO: sanitize input
-# TODO: make decorator for only debug
-class Users(Resource):
-    """docstring for TODO"""
+class Private_Test(Resource):
+    @auth.login_required
     def get(self):
-        users = UserModel.query.all()
-        return {'users': [{
-            'username': user.username,
-            'email': user.email,
-        } for user in users if user]}
-    def post(self): # TODO: this needs to be super secure
+    #     db.session.add(
+    #         UserModel(
+    #             username='test',
+    #             email='test@mail.com',
+    #             password_hash=UserModel.hash_password('test'),
+    #         )
+    #     )
+    #     db.session.commit()
+        print('working')
+        return
+class Auth_Token(Resource):
+    def post(self):
+        """Expects username and pwd and returns token"""
         parser = reqparse.RequestParser()
-        parser.add_argument(
-            'username',
+        parser.add_argument('username',
             type=str,
-            location='form',
             required=True,
-        )
-        parser.add_argument(
-            'email',
+            location='form')
+        parser.add_argument('password',
             type=str,
-            location='form',
             required=True,
-        )
-        parser.add_argument(
-            'password',
-            type=str,
-            location='form',
-            required=True,
-        )
+            location='form')
         args = parser.parse_args()
-        print(args)
-        # TODO do something
-        return {}
-
-class User(Resource):
-    """docstring for TODO"""
-    def get(self, user_id):
-        user = UserModel.query.filter_by(id=user_id).first()
-        return {'user':{
-            'username': user.username,
-            'email': user.email,
-        } if user else user }
-
-
-api.add_resource(Users, '/users')
-api.add_resource(User, '/user/<int:user_id>')
+        user = UserModel.query.filter_by(username=args.username).first()
+        if user and user.verify_password_hash(args.password):
+            token = user.generate_auth_token(app.secret_key)
+            return jsonify({ 'token': token.decode('ascii') })
+        abort(401)
+# register API endponints
+api.add_resource(Auth_Token, '/auth_token')
+api.add_resource(Private_Test, '/pr')
 #////////////////////////////////////
 if __name__=='__main__':
     # only run in main in development
