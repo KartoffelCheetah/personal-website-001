@@ -50,9 +50,7 @@ def create_tables():
 @auth.verify_token
 def verify(token):
     """Checks request's Authorization header for token."""
-    if UserModel.verify_auth_token(app.secret_key, token):
-        return True
-    return False
+    return True if UserModel.verify_auth_token(app.secret_key, token) else False
 
 #////////////////////////////////////
 ## ROUTES ##
