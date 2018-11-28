@@ -35,7 +35,7 @@ app.config.update(
     SQLALCHEMY_DATABASE_URI='sqlite:///'+DATABASE_PATH.__str__(),
     SQLALCHEMY_TRACK_MODIFICATIONS=os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS'),
 ) # key has to be changed!
-if app.secret_key=='notsecure' or len(app.secret_key) < 100:
+if len(app.secret_key) < 100:
     raise ValueError('You need to set a proper SECRET KEY.')
 # Plugins
 api = Api(app, prefix='/api/v1')
