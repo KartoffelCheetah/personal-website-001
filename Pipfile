@@ -9,7 +9,7 @@ flask-restful = "*"
 python-dotenv = "*"
 flask-sqlalchemy = "*"
 passlib = "*"
-flask-httpauth = "*"
+flask-login = "*"
 
 [dev-packages]
 
