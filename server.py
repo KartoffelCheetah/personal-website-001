@@ -46,9 +46,10 @@ app.config.update(
 if len(app.secret_key) < 100:
     raise ValueError('You need to set a proper SECRET KEY.')
 # Plugins
-api = Api(app, prefix='/api/v1')
+api = Api(app, prefix=os.getenv('API_PREFIX'))
 db.init_app(app)
 login_manager = flask_login.LoginManager()
+login_manager.session_protection = os.getenv('LOGIN_MANAGER_SESSION_PROTECTION')
 login_manager.init_app(app)
 
 @app.before_first_request
@@ -57,9 +58,22 @@ def create_tables():
     db.create_all(app=app)
 
 @login_manager.user_loader
-def load_user(user_id):
-    """Connects the flask_login User with the UserModel"""
-    return UserModel.query.filter_by(id=int(user_id)).first()
+def load_user(user_identifier):
+    """Connects the flask_login User with the UserModel,
+    if user_identifier is not valid returns None"""
+    try:
+        user_id, pwdCheck = user_identifier.split('->')
+
+        user = UserModel.query.filter_by(id=int(user_id)).first()
+
+        if user and user.session_auth(pwdCheck):
+            return user
+    except ValueError:
+        # ValueError: invalid input
+        # just do not allow user to enter
+        # TODO: logging
+        pass
+    return None
 
 #////////////////////////////////////
 ## ROUTES ##
