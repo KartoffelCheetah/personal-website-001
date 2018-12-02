@@ -19,6 +19,10 @@ import flask_login
 # models
 from models.db import db
 from models.User import User as UserModel
+from models.Media import Media as MediaModel
+# blueprints
+from app_media.routes import blue as mediaBlueprint
+from app_user.routes import blue as userBlueprint
 # ------------------------
 # absolute path to project
 PROJECT_PATH = pathlib.Path('.').absolute()
@@ -51,6 +55,11 @@ db.init_app(app)
 login_manager = flask_login.LoginManager()
 login_manager.session_protection = os.getenv('LOGIN_MANAGER_SESSION_PROTECTION')
 login_manager.init_app(app)
+app.register_blueprint(mediaBlueprint, url_prefix='/media')
+app.register_blueprint(userBlueprint, url_prefix='/user')
+# register db in config so media blueprint will
+# be able to access it from current_app.config
+app.config['media.db'] = db
 
 @app.before_first_request
 def create_tables():
@@ -78,39 +87,13 @@ def load_user(user_identifier):
 #////////////////////////////////////
 ## ROUTES ##
 # -----------------------------------------------
-class Login(Resource):
-    def post(self):
-        """Expects username and pwd to login user"""
-        parser = reqparse.RequestParser()
-        parser.add_argument('username',
-            type=str,
-            required=True,
-            location='form')
-        parser.add_argument('password',
-            type=str,
-            required=True,
-            location='form')
-        args = parser.parse_args()
-        user = UserModel.query.filter_by(username=args.username).first()
-        if user and user.verify_password_hash(args.password):
-            flask_login.login_user(user) # flask_login logins the user
-            return 'You are now logged in!'
-        abort(401)
-
-class Logout(Resource):
-    @flask_login.login_required
-    def get(self):
-        """Logout user"""
-        flask_login.logout_user()
-        return 'You are now logged out!'
 
 @app.route('/')
 def index():
     return render_template('index.html.j2')
 
 # register API endponints
-api.add_resource(Login, '/login')
-api.add_resource(Logout, '/logout')
+
 #////////////////////////////////////
 if __name__=='__main__':
     # only run in main in development
