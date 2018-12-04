@@ -16,6 +16,7 @@ from flask import (
                     jsonify)
 from flask_restful import reqparse, abort, Resource, Api
 import flask_login
+import jinja2
 # models
 from models.db import db
 from models.User import User as UserModel
@@ -55,11 +56,29 @@ db.init_app(app)
 login_manager = flask_login.LoginManager()
 login_manager.session_protection = os.getenv('LOGIN_MANAGER_SESSION_PROTECTION')
 login_manager.init_app(app)
-app.register_blueprint(mediaBlueprint, url_prefix='/media')
-app.register_blueprint(userBlueprint, url_prefix='/user')
-# register db in config so media blueprint will
-# be able to access it from current_app.config
+app.register_blueprint(mediaBlueprint, url_prefix=os.getenv('MEDIA_BLUEPRINT_ENDPOINT'))
+app.register_blueprint(userBlueprint, url_prefix=os.getenv('USER_BLUEPRINT_ENDPOINT'))
+# DB-ACCESS
+#   register db in config so media blueprint will
+#   be able to access it from current_app.config
 app.config['media.db'] = db
+
+# JINJA2 CONFIGUTAION
+@jinja2.contextfunction
+def get_context(c):
+    """Returns the context.
+    Context is a 'Context object' of variables globally accessible to jinja2.
+    To get the context in templates use {{ context() }}"""
+    return c
+
+app.jinja_env.globals['context'] = get_context
+
+(app.jinja_env.globals
+    ['MEDIA_BLUEPRINT_ENDPOINT']) = os.getenv('MEDIA_BLUEPRINT_ENDPOINT')
+
+(app.jinja_env.globals
+    ['USER_BLUEPRINT_ENDPOINT']) = os.getenv('USER_BLUEPRINT_ENDPOINT')
+# ##############################################
 
 @app.before_first_request
 def create_tables():
@@ -88,9 +107,9 @@ def load_user(user_identifier):
 ## ROUTES ##
 # -----------------------------------------------
 
-@app.route('/')
-def index():
-    return render_template('index.html.j2')
+@app.route('/login_page')
+def login_page():
+    return render_template('login_page.html.j2')
 
 # register API endponints
 
