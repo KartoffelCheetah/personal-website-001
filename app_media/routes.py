@@ -5,7 +5,7 @@ from flask_restful import Api, Resource, reqparse, abort
 import flask_login
 from flask_sqlalchemy import sqlalchemy
 
-from helpers import max_length
+from validator import max_length
 # models
 from models.Media import Media as MediaModel
 

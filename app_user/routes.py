@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask_restful import Api, Resource, reqparse, abort
 import flask_login
 
-from helpers import max_length
+from validator import max_length
 # models
 from models.User import User as UserModel
 
