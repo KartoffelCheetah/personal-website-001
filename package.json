@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "styl": "./node_modules/.bin/stylus -w ./static/css/master.styl -o ./static/css/master.css ./static/css/contact.styl -o ./static/css/contact.css"
+    "start": "npm install && node index.js"
   },
   "keywords": [
     "personal",
@@ -20,6 +20,6 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "stylus": "^0.54.5"
+    "express": "^4.16.4"
   }
 }
