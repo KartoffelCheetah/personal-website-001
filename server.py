@@ -50,19 +50,30 @@ app.config.update(
 ) # key has to be changed!
 if len(app.secret_key) < 100:
     raise ValueError('You need to set a proper SECRET KEY.')
-# Plugins
+# RESTAPI
 api = Api(app, prefix=os.getenv('API_PREFIX'))
+# ##############################################
+# DATABASE
 db.init_app(app)
+# ###############################################
+# LOGIN MANAGER
 login_manager = flask_login.LoginManager()
 login_manager.session_protection = os.getenv('LOGIN_MANAGER_SESSION_PROTECTION')
 login_manager.init_app(app)
-app.register_blueprint(mediaBlueprint, url_prefix=os.getenv('MEDIA_BLUEPRINT_ENDPOINT'))
-app.register_blueprint(userBlueprint, url_prefix=os.getenv('USER_BLUEPRINT_ENDPOINT'))
+# ##############################################
+# BLUEPRINTS
+app.register_blueprint(
+    mediaBlueprint,
+    url_prefix=os.getenv('MEDIA_BLUEPRINT_ENDPOINT'))
+app.register_blueprint(
+    userBlueprint,
+    url_prefix=os.getenv('USER_BLUEPRINT_ENDPOINT'))
+# ##############################################
 # DB-ACCESS
 #   register db in config so media blueprint will
 #   be able to access it from current_app.config
 app.config['media.db'] = db
-
+# ##############################################
 # JINJA2 CONFIGUTAION
 @jinja2.contextfunction
 def get_context(c):
