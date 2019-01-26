@@ -13,3 +13,16 @@ services:
             - 3000:3000
             - 4200:4200
         command: "npm start"
+    python:
+        build:
+            context: .
+            dockerfile: python.dockerfile
+        user: "python"
+        working_dir: /home/python/app/
+        env_file:
+            - .env.python
+        volumes:
+            - ./:/home/python/app/
+        ports:
+            - 5000:5000
+        command: "./server.py"
