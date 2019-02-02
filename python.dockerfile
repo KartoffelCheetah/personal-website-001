@@ -9,6 +9,6 @@ RUN mkdir /home/python/app
 
 RUN apt-get update
 
-RUN apt-get install nano
+RUN apt-get -y install nano
 
 RUN pip install 'pipenv==2018.10.13'

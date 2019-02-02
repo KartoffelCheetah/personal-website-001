@@ -25,4 +25,17 @@ services:
             - ./:/home/python/app/
         ports:
             - 5000:5000
-        command: "./server.py"
+        command: "pipenv run python_start"
+    python_debug:
+        build:
+            context: .
+            dockerfile: python.dockerfile
+        user: "python"
+        working_dir: /home/python/app/
+        env_file:
+            - .env.python
+        volumes:
+            - ./:/home/python/app/
+        ports:
+            - 5001:5001
+        command: "pipenv run python_debug_start"
