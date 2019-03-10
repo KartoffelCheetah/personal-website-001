@@ -1,7 +1,6 @@
 const PROXY_CONFIG = [
   {
     context: [
-      "/api/v1",
       "/media",
       "/user",
     ],

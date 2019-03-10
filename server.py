@@ -7,7 +7,6 @@ import pathlib
 from dotenv import load_dotenv
 # flask
 from flask import Flask
-from flask_restful import Api
 import flask_login
 import jinja2
 # models
@@ -42,8 +41,6 @@ APP.config.update(
 ) # key has to be changed!
 if len(APP.secret_key) < 100:
     raise ValueError('You need to set a proper SECRET KEY.')
-# RESTAPI
-API = Api(APP, prefix=os.getenv('API_PREFIX'))
 # ##############################################
 # DATABASE
 db.init_app(APP)
@@ -70,17 +67,16 @@ APP.config['media.db'] = db
 @jinja2.contextfunction
 def get_context(context):
     """Returns the context.
-    Context is a 'Context object' of variables globally accessible to jinja2.
-    To get the context in templates use {{ context() }}"""
+    Context is a 'Context object' of variables globally accessible to jinja2."""
     return context
+# to render the context use '{{ _context() }}'
+APP.add_template_global(name='_context', f=get_context)
+# custom routes
+APP.add_template_global(name='CUSTOM_ROUTES', f={
+    'MEDIA_BLUEPRINT_ENDPOINT': os.getenv('MEDIA_BLUEPRINT_ENDPOINT'),
+    'USER_BLUEPRINT_ENDPOINT': os.getenv('USER_BLUEPRINT_ENDPOINT')
+})
 
-APP.jinja_env.globals['context'] = get_context
-
-(APP.jinja_env.globals
- ['MEDIA_BLUEPRINT_ENDPOINT']) = os.getenv('MEDIA_BLUEPRINT_ENDPOINT')
-
-(APP.jinja_env.globals
- ['USER_BLUEPRINT_ENDPOINT']) = os.getenv('USER_BLUEPRINT_ENDPOINT')
 # ##############################################
 @APP.before_first_request
 def create_tables():
@@ -104,12 +100,6 @@ def load_user(user_identifier):
         # TODO: logging
         pass
     return None
-
-#////////////////////////////////////
-## ROUTES ##
-# -----------------------------------------------
-
-# register API endponints
 
 #////////////////////////////////////
 if __name__ == '__main__':
