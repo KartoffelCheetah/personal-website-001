@@ -21,6 +21,7 @@ PROJECT_PATH = pathlib.Path('.').absolute()
 # Read the configuration
 # and override ENVIRONMENT variables with dotenv
 load_dotenv(dotenv_path=PROJECT_PATH/'.env', override=True)
+load_dotenv(dotenv_path=PROJECT_PATH/'.env.blueprint', override=True)
 # absolute path to database
 DATABASE_PATH = PROJECT_PATH/os.getenv('DATABASE_NAME')
 # ------------------------
