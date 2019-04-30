@@ -9,8 +9,8 @@ from validator import max_length
 # models
 from models.Media import Media as MediaModel
 
-blue = Blueprint('media', __name__)
-api = Api(blue)
+BLUE = Blueprint('media', __name__)
+API = Api(BLUE)
 
 class Media(Resource):
     def get(self, id):
@@ -21,8 +21,8 @@ class Media(Resource):
     @flask_login.login_required
     def delete(self, id):
         media = MediaModel.query.filter_by(id=int(id)).first()
-        db = current_app.config['media.db']
-        session = db.session
+        DB = current_app.config['media.db']
+        session = DB.session
         try:
             session.delete(media)
             session.commit()
@@ -36,26 +36,30 @@ class MediaList(Resource):
     def get(self):
         """Returns all media."""
         medialist = MediaModel.query.all()
-        return [ media.name for media in medialist ]
+        return [media.name for media in medialist]
 
     @flask_login.login_required
     def post(self):
         """Adds new media element to media list."""
         parser = reqparse.RequestParser(trim=True)
         # ---
-        parser.add_argument('src',
+        parser.add_argument(
+            'src',
             type=max_length(1024, str),
             required=True,
             location='form')
-        parser.add_argument('name',
+        parser.add_argument(
+            'name',
             type=max_length(128, str),
             required=True,
             location='form')
-        parser.add_argument('license',
+        parser.add_argument(
+            'license',
             type=max_length(64, str),
             required=True,
             location='form')
-        parser.add_argument('description',
+        parser.add_argument(
+            'description',
             type=max_length(4096, str),
             required=False,
             location='form')
@@ -69,8 +73,8 @@ class MediaList(Resource):
             description=args.description,
             width=0,
             height=0)
-        db = current_app.config['media.db']
-        session = db.session
+        DB = current_app.config['media.db']
+        session = DB.session
         try:
             session.add(media)
             session.commit()
@@ -79,5 +83,5 @@ class MediaList(Resource):
             abort(500)
         return 'Success!'
 
-api.add_resource(Media, '/<int:id>')
-api.add_resource(MediaList, '/')
+API.add_resource(Media, '/<int:id>')
+API.add_resource(MediaList, '/')

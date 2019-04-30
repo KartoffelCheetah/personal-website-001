@@ -6,18 +6,20 @@ from validator import max_length
 # models
 from models.User import User as UserModel
 
-blue = Blueprint('user', __name__)
-api = Api(blue)
+BLUE = Blueprint('user', __name__)
+API = Api(BLUE)
 
 class Login(Resource):
     def post(self):
         """Expects username and pwd to login user"""
         parser = reqparse.RequestParser(trim=True)
-        parser.add_argument('username',
+        parser.add_argument(
+            'username',
             type=max_length(64, str),
             required=True,
             location='form')
-        parser.add_argument('password',
+        parser.add_argument(
+            'password',
             type=max_length(1024, str),
             required=True,
             location='form')
@@ -35,5 +37,5 @@ class Logout(Resource):
         flask_login.logout_user()
         return 'You are now logged out!'
 
-api.add_resource(Login, '/login')
-api.add_resource(Logout, '/logout')
+API.add_resource(Login, '/login')
+API.add_resource(Logout, '/logout')

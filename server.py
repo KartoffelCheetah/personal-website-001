@@ -13,8 +13,8 @@ import jinja2
 from models.db import db
 from models.User import User as UserModel
 # blueprints
-from app_media.routes import blue as mediaBlueprint
-from app_user.routes import blue as userBlueprint
+from app_media.routes import BLUE as mediaBlueprint
+from app_user.routes import BLUE as userBlueprint
 # ------------------------
 # absolute path to project
 PROJECT_PATH = pathlib.Path('.').absolute()
