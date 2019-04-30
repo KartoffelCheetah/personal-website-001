@@ -3,21 +3,21 @@
 Flask Application Server
 """
 import os
-import pathlib
 from dotenv import load_dotenv
 # flask
 from flask import Flask
-import flask_login
 import jinja2
 # models
 from models.db import db
 from models.User import User as UserModel
 # blueprints
-from app_media.routes import BLUE as mediaBlueprint
-from app_user.routes import BLUE as userBlueprint
-# ------------------------
+from app_media.routes import BLUE as MEDIA_BLUEPRINT
+from app_user.routes import BLUE as USER_BLUEPRINT
+# login manager
+from login_manager import LOGIN_MANAGER
 # absolute path to project
-PROJECT_PATH = pathlib.Path('.').absolute()
+from definitions import PROJECT_PATH
+# ------------------------
 # Read the configuration
 # and override ENVIRONMENT variables with dotenv
 load_dotenv(dotenv_path=PROJECT_PATH/'.env', override=True)
@@ -47,16 +47,14 @@ if len(APP.secret_key) < 100:
 db.init_app(APP)
 # ###############################################
 # LOGIN MANAGER
-LOGIN_MANAGER = flask_login.LoginManager()
-LOGIN_MANAGER.session_protection = os.getenv('LOGIN_MANAGER_SESSION_PROTECTION')
 LOGIN_MANAGER.init_app(APP)
 # ##############################################
 # BLUEPRINTS
 APP.register_blueprint(
-    mediaBlueprint,
+    MEDIA_BLUEPRINT,
     url_prefix=os.getenv('MEDIA_BLUEPRINT_ENDPOINT'))
 APP.register_blueprint(
-    userBlueprint,
+    USER_BLUEPRINT,
     url_prefix=os.getenv('USER_BLUEPRINT_ENDPOINT'))
 # ##############################################
 # DB-ACCESS

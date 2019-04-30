@@ -2,14 +2,12 @@
 """
 Flask Application Server - PYLINT DEBUG
 """
-import pathlib
 import subprocess
 from dotenv import load_dotenv
 # flask
 from flask import Flask, request
+from definitions import PROJECT_PATH
 # ------------------------
-# absolute path to project
-PROJECT_PATH = pathlib.Path('.').absolute()
 # Read the configuration
 # and override ENVIRONMENT variables with dotenv
 load_dotenv(dotenv_path=PROJECT_PATH/'.env', override=True)

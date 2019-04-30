@@ -17,8 +17,9 @@ import sys
 import pathlib
 import requests
 
+from definitions import PROJECT_PATH
+
 if __name__ == '__main__':
-    PROJECT_PATH = pathlib.Path('.').absolute()
     # change to relative path
     sys.argv[-1] = str(pathlib.Path(sys.argv[-1]).relative_to(PROJECT_PATH))
     # remove filename
