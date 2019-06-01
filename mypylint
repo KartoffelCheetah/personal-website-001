@@ -25,8 +25,13 @@ if __name__ == '__main__':
     # remove filename
     sys.argv.pop(0)
     # the debugger_container
+    with open(PROJECT_PATH/'.env', 'r') as env:
+        for line in env:
+            if line.startswith('DEBUG_PORT'):
+                PORT = line.replace('DEBUG_PORT', '').replace('=', '').strip()
+                break
     DEBUGGER_RESPONSE = requests.post(
-        'http://localhost:5001',
+        'http://localhost:'+PORT,
         json=sys.argv,
     )
     sys.stdout.write(str(DEBUGGER_RESPONSE.text))
