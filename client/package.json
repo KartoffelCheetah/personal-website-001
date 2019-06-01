@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "generate_assets": "if [ $NODE_ENV = production ]; then npm run build; else npm run start; fi",
     "start": "ng serve --host 0.0.0.0 --proxy-config proxy.conf.js",
     "build": "ng build --prod --base-href /static/client/ --deploy-url /static/client/",
     "test": "ng test",

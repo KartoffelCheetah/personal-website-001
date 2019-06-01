@@ -21,6 +21,7 @@ from definitions import PROJECT_PATH
 # Read the configuration
 # and override ENVIRONMENT variables with dotenv
 load_dotenv(dotenv_path=PROJECT_PATH/'.env', override=True)
+load_dotenv(dotenv_path=PROJECT_PATH/'.env.server', override=True)
 load_dotenv(dotenv_path=PROJECT_PATH/'.env.blueprint', override=True)
 # absolute path to database
 DATABASE_PATH = PROJECT_PATH/os.getenv('DATABASE_NAME')
@@ -104,4 +105,4 @@ def load_user(user_identifier):
 if __name__ == '__main__':
     # only run in main in development
     # production mode should import the APP
-    APP.run(port=5000, host='0.0.0.0', threaded=True)
+    APP.run(port=int(os.getenv('TEST_SERVER_PORT')), host='0.0.0.0', threaded=True)

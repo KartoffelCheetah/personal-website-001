@@ -20,5 +20,5 @@ python_version = "3.6"
 
 [scripts]
 project_install = "pipenv install --dev"
-python_debug_start = ".venv/bin/gunicorn --bind 0.0.0.0:5001 debug_wsgi:APP"
+python_debug_start = ".venv/bin/gunicorn"
 python_start = "bash -c \"pipenv run project_install && ./server.py\""

@@ -11,7 +11,7 @@ from itsdangerous import (
 # User class has to implement flask_login's UserMixin
 from flask_login import UserMixin
 
-load_dotenv(dotenv_path=find_dotenv('.env'))
+load_dotenv(dotenv_path=find_dotenv('.env.server'))
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -10,9 +10,8 @@ services:
         volumes:
             - ./:/home/node/app/
         ports:
-            - 3000:3000
-            - 4200:4200
-        command: "npm start"
+            - ${TEST_CLIENT_PORT}:${TEST_CLIENT_PORT}
+        command: bash -c "cd client && npm install && npm run generate_assets"
     python:
         build:
             context: .
@@ -24,7 +23,7 @@ services:
         volumes:
             - ./:/home/python/app/
         ports:
-            - 5000:5000
+            - ${TEST_SERVER_PORT}:${TEST_SERVER_PORT}
         command: "pipenv run python_start"
     python_debug:
         build:
@@ -37,5 +36,5 @@ services:
         volumes:
             - ./:/home/python/app/
         ports:
-            - 5001:5001
-        command: "pipenv run python_debug_start"
+            - ${DEBUG_PORT}:${DEBUG_PORT}
+        command: "pipenv run -- python_debug_start --bind 0.0.0.0:${DEBUG_PORT} debug_wsgi:APP"
