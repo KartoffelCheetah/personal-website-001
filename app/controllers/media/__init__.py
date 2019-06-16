@@ -1,3 +1,4 @@
+"""Media Controller"""
 from flask import (
     Blueprint,
     current_app)
@@ -5,9 +6,8 @@ from flask_restful import Api, Resource, reqparse, abort
 import flask_login
 from flask_sqlalchemy import sqlalchemy
 
-from validator import max_length
-# models
-from models.Media import Media as MediaModel
+from app.validators import max_length
+from app.models.Media import Media as MediaModel
 
 BLUE = Blueprint('media', __name__)
 API = Api(BLUE)

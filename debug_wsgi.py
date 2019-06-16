@@ -1,6 +1,4 @@
 #!.venv/bin/python3
 """WSGI file for debugger"""
+#pylint: disable=W0611
 from debug_server import APP
-
-if __name__ == '__main__':
-    APP.run()

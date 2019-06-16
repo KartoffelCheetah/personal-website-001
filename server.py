@@ -8,11 +8,11 @@ from dotenv import load_dotenv
 from flask import Flask
 import jinja2
 # models
-from models.db import db
-from models.User import User as UserModel
+from app.models import DB
+from app.models.User import User as UserModel
 # blueprints
-from app_media.routes import BLUE as MEDIA_BLUEPRINT
-from app_user.routes import BLUE as USER_BLUEPRINT
+from app.controllers.media import BLUE as MEDIA_BLUEPRINT
+from app.controllers.user import BLUE as USER_BLUEPRINT
 # login manager
 from login_manager import LOGIN_MANAGER
 # absolute path to project
@@ -44,7 +44,7 @@ if len(APP.secret_key) < 100:
     raise ValueError('You need to set a proper SECRET KEY.')
 # ##############################################
 # DATABASE
-db.init_app(APP)
+DB.init_app(APP)
 # ###############################################
 # LOGIN MANAGER
 LOGIN_MANAGER.init_app(APP)
@@ -60,7 +60,7 @@ APP.register_blueprint(
 # DB-ACCESS
 #   register db in config so media blueprint will
 #   be able to access it from current_app.config
-APP.config['media.db'] = db
+APP.config['media.db'] = DB
 # ##############################################
 # JINJA2 CONFIGUTAION
 @jinja2.contextfunction
@@ -80,11 +80,11 @@ APP.add_template_global(name='CUSTOM_ROUTES', f={
 @APP.before_first_request
 def create_tables():
     """Creates database and tables if they don't exist already."""
-    db.create_all(app=APP)
+    DB.create_all(app=APP)
 
 @LOGIN_MANAGER.user_loader
 def load_user(user_identifier):
-    """Connects the flask_login User with the UserModel,
+    """Gets user from session,
     if user_identifier is not valid returns None"""
     try:
         user_id, pwd_check = user_identifier.split('->')

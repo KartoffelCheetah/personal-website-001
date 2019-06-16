@@ -26,6 +26,3 @@ def debug():
     except subprocess.CalledProcessError as err:
         debug_info = err.output
     return debug_info.decode('utf-8')
-
-if __name__ == '__main__':
-    pass

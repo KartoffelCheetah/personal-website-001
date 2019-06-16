@@ -1,6 +1,7 @@
 """User Model"""
 
 import os
+import datetime
 from typing import Union
 from passlib.hash import pbkdf2_sha512
 from dotenv import load_dotenv, find_dotenv
@@ -12,21 +13,30 @@ from itsdangerous import (
     JSONWebSignatureSerializer as Serializer)
 # User class has to implement flask_login's UserMixin
 from flask_login import UserMixin
-from .db import db
+from . import DB
 from .Base import Base as BaseModel
 
 load_dotenv(dotenv_path=find_dotenv('.env.server'))
 
-class User(BaseModel, UserMixin, db.Model):
+class User(BaseModel, UserMixin, DB.Model):
     """user table"""
-    username = db.Column(db.String(64), unique=True, nullable=False)
-    email = db.Column(db.String(128), unique=True, nullable=False)
-    password_hash = db.Column(db.String(256), nullable=False)
+
+    USERNAME_LENGTH: int = 64
+    # Block user when reaches this limit
+    LOGIN_COUNT_LIMIT: int = 10
+    # Timer to reset LOGIN_COUNT_LIMIT to 0
+    LOGIN_COUNT_RESET: int = 600
+
+    username = DB.Column(DB.String(USERNAME_LENGTH), unique=True, nullable=False)
+    email = DB.Column(DB.String(128), unique=True, nullable=False)
+    password_hash = DB.Column(DB.String(256), nullable=False)
+    login_count = DB.Column(DB.Integer, nullable=False, default=0)
+    last_try = DB.Column(DB.DateTime(), nullable=False, default=datetime.datetime.utcnow)
 
     def __repr__(self) -> str:
         return '<User %r>' % self.username
 
-    def verify_password_hash(self, password: str) -> bool:
+    def is_password_correct(self, password: str) -> bool:
         """Returns if the password is correct.
 
         Parameters
@@ -43,8 +53,8 @@ class User(BaseModel, UserMixin, db.Model):
         return pbkdf2_sha512.verify(password, self.password_hash)
 
     @staticmethod
-    def hash_password(password: str) -> str:
-        """Calculates password hash from plain text password.
+    def get_hashed_password(password: str) -> str:
+        """Gets hashed password from plain text password.
 
         Parameters
         ----------
@@ -104,7 +114,29 @@ class User(BaseModel, UserMixin, db.Model):
         try:
             return serializer.loads(pwd_check.encode()) == self.id
         except (BadSignature, SignatureExpired, UnicodeError):
-            #NOTE: I know we do not use signature expired,
-            #NOTE: as we do not use timed token.
-            #NOTE: Leaving this here for possible future changes.
+            #NOTE: SignatureExpired could happen only when using
+            #NOTE: TimedJSONWebSignatureSerializer.
             return None
+
+    def is_under_login_count_limit(self) -> bool:
+        """Counting login attempts.
+
+        Parameters
+        ----------
+
+
+        Returns
+        -------
+        bool
+            Returns if user is below the login attempt count limit.
+
+        """
+
+        if (self.last_try - datetime.datetime.utcnow()).total_seconds() > self.LOGIN_COUNT_RESET:
+            self.login_count = 0
+        else:
+            self.login_count += 1
+
+        self.last_try = datetime.datetime.utcnow()
+
+        return self.login_count < self.LOGIN_COUNT_LIMIT
