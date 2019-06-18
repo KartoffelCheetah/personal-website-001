@@ -2,7 +2,7 @@
 
 import os
 import datetime
-from typing import Union
+from typing import Union, List
 from passlib.hash import pbkdf2_sha512
 from dotenv import load_dotenv, find_dotenv
 # timing is handled by session so
@@ -13,7 +13,7 @@ from itsdangerous import (
     JSONWebSignatureSerializer as Serializer)
 # User class has to implement flask_login's UserMixin
 from flask_login import UserMixin
-from . import DB
+from .db import DB
 from .Base import Base as BaseModel
 
 load_dotenv(dotenv_path=find_dotenv('.env.server'))
@@ -21,14 +21,16 @@ load_dotenv(dotenv_path=find_dotenv('.env.server'))
 class User(BaseModel, UserMixin, DB.Model):
     """user table"""
 
-    USERNAME_LENGTH: int = 64
+    USERNAME_LENGTH: List[int] = [6, 64]
+    EMAIL_LENGTH: List[int] = [5, 128]
+    PASSWORD_LENGTH: List[int] = [8, 256]
     # Block user when reaches this limit
     LOGIN_COUNT_LIMIT: int = 10
     # Timer to reset LOGIN_COUNT_LIMIT to 0
     LOGIN_COUNT_RESET: int = 600
-
-    username = DB.Column(DB.String(USERNAME_LENGTH), unique=True, nullable=False)
-    email = DB.Column(DB.String(128), unique=True, nullable=False)
+    #pylint: disable=E1101
+    username = DB.Column(DB.String(USERNAME_LENGTH[1]), unique=True, nullable=False)
+    email = DB.Column(DB.String(EMAIL_LENGTH[1]), unique=True, nullable=False)
     password_hash = DB.Column(DB.String(256), nullable=False)
     login_count = DB.Column(DB.Integer, nullable=False, default=0)
     last_try = DB.Column(DB.DateTime(), nullable=False, default=datetime.datetime.utcnow)
@@ -117,26 +119,3 @@ class User(BaseModel, UserMixin, DB.Model):
             #NOTE: SignatureExpired could happen only when using
             #NOTE: TimedJSONWebSignatureSerializer.
             return None
-
-    def is_under_login_count_limit(self) -> bool:
-        """Counting login attempts.
-
-        Parameters
-        ----------
-
-
-        Returns
-        -------
-        bool
-            Returns if user is below the login attempt count limit.
-
-        """
-
-        if (self.last_try - datetime.datetime.utcnow()).total_seconds() > self.LOGIN_COUNT_RESET:
-            self.login_count = 0
-        else:
-            self.login_count += 1
-
-        self.last_try = datetime.datetime.utcnow()
-
-        return self.login_count < self.LOGIN_COUNT_LIMIT

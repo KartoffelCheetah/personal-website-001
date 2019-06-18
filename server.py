@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from flask import Flask
 import jinja2
 # models
-from app.models import DB
+from app.models.db import DB
 from app.models.User import User as UserModel
 # blueprints
 from app.controllers.media import BLUE as MEDIA_BLUEPRINT
@@ -58,9 +58,10 @@ APP.register_blueprint(
     url_prefix=os.getenv('USER_BLUEPRINT_ENDPOINT'))
 # ##############################################
 # DB-ACCESS
-#   register db in config so media blueprint will
+#   register db in config so blueprint will
 #   be able to access it from current_app.config
 APP.config['media.db'] = DB
+APP.config['user.db'] = DB
 # ##############################################
 # JINJA2 CONFIGUTAION
 @jinja2.contextfunction
