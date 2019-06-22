@@ -1,26 +1,31 @@
-def min_length(min_length, t):
-    def validate(s):
-        if type(s) is t and len(s) >= min_length:
-            return s
-        raise ValueError(
-            "String must be at least %i characters long"
-            % min_length)
-    return validate
+"""Validation functions"""
+from typing import Callable
 
-def max_length(max_length, t):
-    def validate(s):
-        if type(s) is t and len(s) <= max_length:
-            return s
-        raise ValueError(
-            "String cannot be longer than %i characters"
-            % max_length)
-    return validate
+def length(min_length: int, max_length: int, required_type: any)-> Callable:
+    """Length check
 
-def length(min_length, max_length, t):
-    def validate(s):
-        if type(s) is t and len(s) >= min_length and len(s) <= max_length:
-            return s
-        raise ValueError(
-            "Length of String must be between %i and %i characters"
-            % (min_length, max_length))
+    Parameters
+    ----------
+    min_length : int
+        Minimum length of input.
+    max_length : int
+        Maximum length of input.
+    required_type : any
+        Type of input.
+
+    Returns
+    -------
+    Callable
+        Validation funtion.
+
+    """
+    def validate(inp: any)-> any:
+        """validation function"""
+        if not isinstance(inp, required_type):
+            raise TypeError("Must be of type %s" % (required_type))
+        if not min_length <= len(inp) <= max_length:
+            raise ValueError(
+                "Length of String must be between %i and %i characters"
+                % (min_length, max_length))
+        return inp
     return validate
