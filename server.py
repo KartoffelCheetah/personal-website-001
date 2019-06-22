@@ -52,10 +52,10 @@ LOGIN_MANAGER.init_app(APP)
 # BLUEPRINTS
 APP.register_blueprint(
     MEDIA_BLUEPRINT,
-    url_prefix=os.getenv('MEDIA_BLUEPRINT_ENDPOINT'))
+    url_prefix=os.getenv('BLUEPRINT_ENDPOINT_MEDIA'))
 APP.register_blueprint(
     USER_BLUEPRINT,
-    url_prefix=os.getenv('USER_BLUEPRINT_ENDPOINT'))
+    url_prefix=os.getenv('BLUEPRINT_ENDPOINT_USER'))
 # ##############################################
 # DB-ACCESS
 #   register db in config so blueprint will
@@ -73,8 +73,8 @@ def get_context(context):
 APP.add_template_global(name='_context', f=get_context)
 # custom routes
 APP.add_template_global(name='CUSTOM_ROUTES', f={
-    'MEDIA_BLUEPRINT_ENDPOINT': os.getenv('MEDIA_BLUEPRINT_ENDPOINT'),
-    'USER_BLUEPRINT_ENDPOINT': os.getenv('USER_BLUEPRINT_ENDPOINT')
+    'BLUEPRINT_ENDPOINT_MEDIA': os.getenv('BLUEPRINT_ENDPOINT_MEDIA'),
+    'BLUEPRINT_ENDPOINT_USER': os.getenv('BLUEPRINT_ENDPOINT_USER')
 })
 
 # ##############################################

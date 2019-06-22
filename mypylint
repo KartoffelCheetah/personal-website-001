@@ -27,8 +27,8 @@ if __name__ == '__main__':
     # the debugger_container
     with open(PROJECT_PATH/'.env', 'r') as env:
         for line in env:
-            if line.startswith('DEBUG_PORT'):
-                PORT = line.replace('DEBUG_PORT', '').replace('=', '').strip()
+            if line.startswith('PORT_DEBUG'):
+                PORT = line.replace('PORT_DEBUG', '').replace('=', '').strip()
                 break
     DEBUGGER_RESPONSE = requests.post(
         'http://localhost:'+PORT,

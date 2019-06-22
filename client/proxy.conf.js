@@ -6,10 +6,10 @@ dotenv.config({ path: '../.env.blueprint' });
 const PROXY_CONFIG = [
   {
     context: [
-      process.env.MEDIA_BLUEPRINT_ENDPOINT,
-      process.env.USER_BLUEPRINT_ENDPOINT,
+      process.env.BLUEPRINT_ENDPOINT_MEDIA,
+      process.env.BLUEPRINT_ENDPOINT_USER,
     ],
-    target: `http://python:${process.env.TEST_SERVER_PORT}`,
+    target: `http://python:${process.env.PORT_TEST_SERVER}`,
     secure: false //DEV
   }
 ];
