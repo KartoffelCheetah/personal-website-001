@@ -16,7 +16,7 @@ class MediaList(Resource):
     def get(self):
         """Returns all media."""
         medialist = MediaModel.query.all()
-        return [media.name for media in medialist]
+        return [media.title for media in medialist]
 
     @flask_login.login_required
     def post(self):
