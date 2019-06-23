@@ -17,7 +17,7 @@ import sys
 import pathlib
 import requests
 
-from definitions import PROJECT_PATH
+from app.definitions import PROJECT_PATH
 
 if __name__ == '__main__':
     # change to relative path

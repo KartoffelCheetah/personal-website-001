@@ -1,14 +1,11 @@
 const dotenv = require('dotenv');
+const ROUTING = require('./src/assets/routing.json');
 
 dotenv.config({ path: '../.env' });
-dotenv.config({ path: '../.env.blueprint' });
 
 const PROXY_CONFIG = [
   {
-    context: [
-      process.env.BLUEPRINT_ENDPOINT_MEDIA,
-      process.env.BLUEPRINT_ENDPOINT_USER,
-    ],
+    context: Object.values(ROUTING).map(blueprintRoute=>blueprintRoute['base']),
     target: `http://python:${process.env.PORT_TEST_SERVER}`,
     secure: false //DEV
   }

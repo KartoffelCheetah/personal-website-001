@@ -6,6 +6,7 @@ import flask_login
 from flask_sqlalchemy import sqlalchemy
 from app.models.Media import Media as MediaModel
 from app.forms.add_media import ADD_MEDIA_PARSER
+from app.definitions import ROUTING
 
 BLUE = Blueprint('media', __name__)
 API = Api(BLUE)
@@ -39,4 +40,4 @@ class MediaList(Resource):
             abort(500)
         return 'Success!'
 
-API.add_resource(MediaList, '/')
+API.add_resource(MediaList, ROUTING['MEDIA']['LIST'])

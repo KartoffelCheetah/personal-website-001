@@ -8,6 +8,7 @@ from flask_sqlalchemy import sqlalchemy
 from app.models.User import User as UserModel
 from app.forms.login import LOGIN_PARSER
 from app.forms.registration import REGISTRATION_PARSER
+from app.definitions import ROUTING
 
 BLUE = Blueprint('user', __name__)
 API = Api(BLUE)
@@ -63,6 +64,6 @@ class Register(Resource):
 
 
 if os.getenv('FLASK_ENV') == 'development':
-    API.add_resource(Register, '/register')
-API.add_resource(Login, '/login')
-API.add_resource(Logout, '/logout')
+    API.add_resource(Register, ROUTING['USER']['REGISTER'])
+API.add_resource(Login, ROUTING['USER']['LOGIN'])
+API.add_resource(Logout, ROUTING['USER']['LOGOUT'])

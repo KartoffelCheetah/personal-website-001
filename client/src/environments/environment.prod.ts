@@ -1,3 +1,6 @@
+// @ts-ignore
+import ROUTING from '../assets/routing.json';
 export const environment = {
-  production: true
+  production: true,
+  ROUTING: ROUTING,
 };

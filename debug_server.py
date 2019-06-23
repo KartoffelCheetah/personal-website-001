@@ -6,7 +6,7 @@ import subprocess
 from dotenv import load_dotenv
 # flask
 from flask import Flask, request
-from definitions import PROJECT_PATH
+from app.definitions import PROJECT_PATH
 # ------------------------
 # Read the configuration
 # and override ENVIRONMENT variables with dotenv

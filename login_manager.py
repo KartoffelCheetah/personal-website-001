@@ -5,7 +5,7 @@ import os
 import flask_login
 from dotenv import load_dotenv
 
-from definitions import PROJECT_PATH
+from app.definitions import PROJECT_PATH
 
 load_dotenv(dotenv_path=PROJECT_PATH/'.env.server', override=True)
 

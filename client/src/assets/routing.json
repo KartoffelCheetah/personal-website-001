@@ -1,0 +1,12 @@
+{
+    "USER": {
+      "base": "/user",
+      "LOGIN": "/login",
+      "LOGOUT": "/logout",
+      "REGISTER": "/register"
+    },
+    "MEDIA": {
+      "base": "/media",
+      "LIST": "/"
+    }
+}

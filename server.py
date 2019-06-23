@@ -16,7 +16,7 @@ from app.controllers.user import BLUE as USER_BLUEPRINT
 # login manager
 from login_manager import LOGIN_MANAGER
 # absolute path to project
-from definitions import PROJECT_PATH
+from app.definitions import PROJECT_PATH, ROUTING
 # ------------------------
 # Read the configuration
 # and override ENVIRONMENT variables with dotenv
@@ -52,10 +52,10 @@ LOGIN_MANAGER.init_app(APP)
 # BLUEPRINTS
 APP.register_blueprint(
     MEDIA_BLUEPRINT,
-    url_prefix=os.getenv('BLUEPRINT_ENDPOINT_MEDIA'))
+    url_prefix=ROUTING['MEDIA']['base'])
 APP.register_blueprint(
     USER_BLUEPRINT,
-    url_prefix=os.getenv('BLUEPRINT_ENDPOINT_USER'))
+    url_prefix=ROUTING['USER']['base'])
 # ##############################################
 # DB-ACCESS
 #   register db in config so blueprint will
@@ -73,8 +73,7 @@ def get_context(context):
 APP.add_template_global(name='_context', f=get_context)
 # custom routes
 APP.add_template_global(name='CUSTOM_ROUTES', f={
-    'BLUEPRINT_ENDPOINT_MEDIA': os.getenv('BLUEPRINT_ENDPOINT_MEDIA'),
-    'BLUEPRINT_ENDPOINT_USER': os.getenv('BLUEPRINT_ENDPOINT_USER')
+    'routing': ROUTING,
 })
 
 # ##############################################
