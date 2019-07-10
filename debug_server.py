@@ -10,7 +10,7 @@ from app.definitions import PROJECT_PATH
 # ------------------------
 # Read the configuration
 # and override ENVIRONMENT variables with dotenv
-load_dotenv(dotenv_path=PROJECT_PATH/'.env.server', override=True)
+load_dotenv(dotenv_path=PROJECT_PATH/'.env', override=True)
 # ------------------------
 APP = Flask(__name__)
 # NOTE: FLASK_ENV configuration value is set from ENVIRONMENT variable

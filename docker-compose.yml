@@ -5,8 +5,8 @@ services:
         image: "node:11"
         user: "node"
         working_dir: /home/node/app/
-        env_file:
-            - .env.node
+        environment:
+            - NODE_ENV
         volumes:
             - ./:/home/node/app/
         ports:
@@ -18,8 +18,10 @@ services:
             dockerfile: python.dockerfile
         user: "python"
         working_dir: /home/python/app/
-        env_file:
-            - .env.python
+        environment:
+            - PIPENV_VENV_IN_PROJECT
+            - FLASK_ENV
+            - FLASK_APP
         volumes:
             - ./:/home/python/app/
         ports:
@@ -31,8 +33,10 @@ services:
             dockerfile: python.dockerfile
         user: "python"
         working_dir: /home/python/app/
-        env_file:
-            - .env.python
+        environment:
+            - PIPENV_VENV_IN_PROJECT
+            - FLASK_ENV
+            - FLASK_APP
         volumes:
             - ./:/home/python/app/
         ports:

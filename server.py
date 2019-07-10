@@ -20,8 +20,7 @@ from app.definitions import PROJECT_PATH, ROUTING
 # ------------------------
 # Read the configuration
 # and override ENVIRONMENT variables with dotenv
-load_dotenv(dotenv_path=PROJECT_PATH/'.env.server', override=True)
-load_dotenv(dotenv_path=PROJECT_PATH/'.env.blueprint', override=True)
+load_dotenv(dotenv_path=PROJECT_PATH/'.env', override=True)
 # absolute path to database
 DATABASE_PATH = PROJECT_PATH/os.getenv('DATABASE_NAME')
 # ------------------------

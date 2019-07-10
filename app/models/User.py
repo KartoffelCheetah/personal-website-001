@@ -16,7 +16,7 @@ from flask_login import UserMixin
 from .db import DB
 from .Base import Base as BaseModel
 
-load_dotenv(dotenv_path=find_dotenv('.env.server'))
+load_dotenv(dotenv_path=find_dotenv('.env'))
 
 class User(BaseModel, UserMixin, DB.Model):
     """user table"""
