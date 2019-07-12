@@ -1,29 +1,44 @@
 """Add media parser"""
 
+from marshmallow import Schema, fields, post_load, validate
+from flask_restplus import fields as frpf
+from app.models.api import API
 from app.models.Media import Media as MediaModel
-from app.validators import length
-from .base import BASE_PARSER
 
-ADD_MEDIA_PARSER = BASE_PARSER.copy()
+MEDIA_DOC = API.model('Media', {
+    'src': frpf.String(required=True, description='Image source, should be unique.'),
+    'title': frpf.String(required=True),
+    'license': frpf.String(required=True),
+    'description': frpf.String(required=False),
+})
 
-ADD_MEDIA_PARSER.add_argument(
-    'src',
-    type=length(MediaModel.SRC_LENGTH[0], MediaModel.SRC_LENGTH[1], str),
-    required=True,
-    location='form',
-).add_argument(
-    'title',
-    type=length(MediaModel.TITLE_LENGTH[0], MediaModel.TITLE_LENGTH[1], str),
-    required=True,
-    location='form',
-).add_argument(
-    'license',
-    type=length(MediaModel.LICENSE_LENGTH[0], MediaModel.LICENSE_LENGTH[1], str),
-    required=True,
-    location='form',
-).add_argument(
-    'description',
-    type=length(MediaModel.DESCRIPTION_LENGTH[0], MediaModel.DESCRIPTION_LENGTH[1], str),
-    required=False,
-    location='form',
-)
+class MediaSchema(Schema):
+    src = fields.String(
+        required=True,
+        validate=[
+            validate.Length(**MediaModel.SRC_LENGTH)
+        ]
+    )
+    title = fields.String(
+        required=True,
+        validate=[
+            validate.Length(**MediaModel.TITLE_LENGTH)
+        ]
+    )
+    license = fields.String(
+        required=True,
+        validate=[
+            validate.Length(**MediaModel.LICENSE_LENGTH)
+        ]
+    )
+    description = fields.String(
+        required=False,
+        validate=[
+            validate.Length(**MediaModel.DESCRIPTION_LENGTH)
+        ]
+    )
+
+    @post_load
+    def create_media(self, data):
+        # TODO: compute dimensions
+        return MediaModel(**data, width=0, height=0)

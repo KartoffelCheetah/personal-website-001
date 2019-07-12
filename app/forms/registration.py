@@ -1,13 +1,20 @@
 """Registration Parser"""
-from app.validators import length
+from marshmallow import fields, validate
+from flask_restplus import fields as frpf
 from app.models.User import User as UserModel
-from .login import LOGIN_PARSER
+from app.models.api import API
+from .login import LoginSchema
 
-REGISTRATION_PARSER = LOGIN_PARSER.copy()
+REGISTER_DOC = API.model('Register', {
+    'username': frpf.String(required=True),
+    'password': frpf.String(required=True),
+    'email': frpf.String(required=True),
+})
 
-REGISTRATION_PARSER.add_argument(
-    'email',
-    type=length(UserModel.EMAIL_LENGTH[0], UserModel.EMAIL_LENGTH[1], str),
-    required=True,
-    location='form',
-)
+class RegistrationSchema(LoginSchema):
+    email = fields.String(
+        required=True,
+        validate=[
+            validate.Length(**UserModel.EMAIL_LENGTH)
+        ]
+    )

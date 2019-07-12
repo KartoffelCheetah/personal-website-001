@@ -4,19 +4,17 @@ Flask Application Server
 """
 import os
 from dotenv import load_dotenv
-# flask
 from flask import Flask
 import jinja2
 # models
 from app.models.db import DB
 from app.models.User import User as UserModel
-# blueprints
-from app.controllers.media import BLUE as MEDIA_BLUEPRINT
-from app.controllers.user import BLUE as USER_BLUEPRINT
-# login manager
-from login_manager import LOGIN_MANAGER
-# absolute path to project
+# controllers
+from app.controllers.media import MEDIA_NAMESPACE
+from app.controllers.user import USER_NAMESPACE
+from app.models.api import API
 from app.definitions import PROJECT_PATH, ROUTING
+from login_manager import LOGIN_MANAGER
 # ------------------------
 # Read the configuration
 # and override ENVIRONMENT variables with dotenv
@@ -44,23 +42,20 @@ if len(APP.secret_key) < 100:
 # ##############################################
 # DATABASE
 DB.init_app(APP)
-# ###############################################
-# LOGIN MANAGER
-LOGIN_MANAGER.init_app(APP)
-# ##############################################
-# BLUEPRINTS
-APP.register_blueprint(
-    MEDIA_BLUEPRINT,
-    url_prefix=ROUTING['MEDIA']['base'])
-APP.register_blueprint(
-    USER_BLUEPRINT,
-    url_prefix=ROUTING['USER']['base'])
-# ##############################################
-# DB-ACCESS
+# DB-ACCESS -------------------------------
 #   register db in config so blueprint will
 #   be able to access it from current_app.config
 APP.config['media.db'] = DB
 APP.config['user.db'] = DB
+# ###############################################
+# LOGIN MANAGER
+LOGIN_MANAGER.init_app(APP)
+# ###############################################
+# API
+API.init_app(APP)
+# namespaces --------------------
+API.add_namespace(USER_NAMESPACE)
+API.add_namespace(MEDIA_NAMESPACE)
 # ##############################################
 # JINJA2 CONFIGUTAION
 @jinja2.contextfunction

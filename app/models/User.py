@@ -2,7 +2,7 @@
 
 import os
 import datetime
-from typing import Union, List
+from typing import Union, Dict
 from passlib.hash import pbkdf2_sha512
 from dotenv import load_dotenv, find_dotenv
 # timing is handled by session so
@@ -13,7 +13,7 @@ from itsdangerous import (
     JSONWebSignatureSerializer as Serializer)
 # User class has to implement flask_login's UserMixin
 from flask_login import UserMixin
-from .db import DB
+from app.models.db import DB
 from .Base import Base as BaseModel
 
 load_dotenv(dotenv_path=find_dotenv('.env'))
@@ -21,16 +21,16 @@ load_dotenv(dotenv_path=find_dotenv('.env'))
 class User(BaseModel, UserMixin, DB.Model):
     """user table"""
 
-    USERNAME_LENGTH: List[int] = [6, 64]
-    EMAIL_LENGTH: List[int] = [5, 128]
-    PASSWORD_LENGTH: List[int] = [8, 256]
+    USERNAME_LENGTH: Dict[str, int] = {'min': 6, 'max': 64}
+    EMAIL_LENGTH: Dict[str, int] = {'min': 5, 'max': 128}
+    PASSWORD_LENGTH: Dict[str, int] = {'min': 8, 'max': 256}
     # Block user when reaches this limit
     LOGIN_COUNT_LIMIT: int = 10
     # Timer to reset LOGIN_COUNT_LIMIT to 0
     LOGIN_COUNT_RESET: int = 600
     #pylint: disable=E1101
-    username = DB.Column(DB.String(USERNAME_LENGTH[1]), unique=True, nullable=False)
-    email = DB.Column(DB.String(EMAIL_LENGTH[1]), unique=True, nullable=False)
+    username = DB.Column(DB.String(USERNAME_LENGTH['max']), unique=True, nullable=False)
+    email = DB.Column(DB.String(EMAIL_LENGTH['max']), unique=True, nullable=False)
     password_hash = DB.Column(DB.String(256), nullable=False)
     login_count = DB.Column(DB.Integer, nullable=False, default=0)
     last_try = DB.Column(DB.DateTime(), nullable=False, default=datetime.datetime.utcnow)

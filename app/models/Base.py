@@ -1,6 +1,6 @@
 """Base Model"""
 import datetime
-from .db import DB
+from app.models.db import DB
 
 class Base():
     """Abstract class for tables."""

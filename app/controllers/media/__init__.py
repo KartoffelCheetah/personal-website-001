@@ -1,16 +1,20 @@
 """Media Controller"""
 from typing import Union
-from flask import Blueprint, current_app
-from flask_restful import Api, Resource, reqparse, abort
+from flask import current_app
+from flask_restplus import Resource, abort
 import flask_login
 from flask_sqlalchemy import sqlalchemy
 from app.models.Media import Media as MediaModel
-from app.forms.add_media import ADD_MEDIA_PARSER
+from app.forms.add_media import MediaSchema, MEDIA_DOC
 from app.definitions import ROUTING
+from app.models.api import API
 
-BLUE = Blueprint('media', __name__)
-API = Api(BLUE)
+MEDIA_NAMESPACE = API.namespace(
+    ROUTING['MEDIA']['namespace'],
+    description='Media management',
+)
 
+@MEDIA_NAMESPACE.route(ROUTING['MEDIA']['LIST'])
 class MediaList(Resource):
     """Handles media in bulk"""
 
@@ -20,24 +24,16 @@ class MediaList(Resource):
         return [media.title for media in medialist]
 
     @flask_login.login_required
+    @API.doc(security='cookie', body=MEDIA_DOC)
     def post(self):
         """Adds new media element to media list."""
-        args = ADD_MEDIA_PARSER.parse_args(strict=True)
-        # TODO: calc width and height
-        media = MediaModel(
-            src=args.src,
-            title=args.title,
-            license=args.license,
-            description=args.description,
-            width=0,
-            height=0)
+        schema = MediaSchema()
+        new_media = schema.load(API.payload)
         DB = current_app.config['media.db']
         try:
-            DB.session.add(media)
+            DB.session.add(new_media.data)
             DB.session.commit()
         except sqlalchemy.exc.IntegrityError:
             # TODO log error
             abort(500)
         return 'Success!'
-
-API.add_resource(MediaList, ROUTING['MEDIA']['LIST'])

@@ -5,11 +5,12 @@ name = "pypi"
 
 [packages]
 flask = "*"
-flask-restful = "*"
 python-dotenv = "*"
 flask-sqlalchemy = "*"
 passlib = "*"
 flask-login = "*"
+flask-restplus = "*"
+marshmallow = "*"
 
 [dev-packages]
 pylint = "*"
