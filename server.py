@@ -4,7 +4,7 @@ Flask Application Server
 """
 import os
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, Blueprint
 import jinja2
 # models
 from app.models.db import DB
@@ -52,7 +52,9 @@ APP.config['user.db'] = DB
 LOGIN_MANAGER.init_app(APP)
 # ###############################################
 # API
-API.init_app(APP)
+API_BLUEPRINT = Blueprint('api', __name__, url_prefix=ROUTING['API_PREFIX'])
+API.init_app(API_BLUEPRINT)
+APP.register_blueprint(API_BLUEPRINT)
 # namespaces --------------------
 API.add_namespace(USER_NAMESPACE)
 API.add_namespace(MEDIA_NAMESPACE)

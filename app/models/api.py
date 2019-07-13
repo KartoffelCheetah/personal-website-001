@@ -1,7 +1,12 @@
 """API of the website"""
+import os
 from flask_restplus import Api
+import dotenv
+
+dotenv.load_dotenv('../.env', override=True)
+
 API = Api(
-    version='0.1',
+    version=os.getenv('API_VERSION'),
     title='API of Personal Website',
     description='The api of the website.',
 )

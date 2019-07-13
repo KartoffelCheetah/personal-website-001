@@ -1,12 +1,14 @@
 {
+  "API_PREFIX": "/api",
+
     "USER": {
-      "base": "/user",
+      "namespace": "user",
       "LOGIN": "/login",
       "LOGOUT": "/logout",
       "REGISTER": "/register"
     },
     "MEDIA": {
-      "base": "/media",
+      "namespace": "media",
       "LIST": "/"
     }
 }

@@ -2,11 +2,11 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-// @ts-ignore
-import ROUTING from '../assets/routing.json';
+import apiRoute from './api-route';
+
 export const environment = {
   production: false,
-  ROUTING: ROUTING
+  ...apiRoute,
 };
 
 /*

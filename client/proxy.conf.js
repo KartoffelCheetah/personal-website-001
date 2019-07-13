@@ -5,7 +5,7 @@ dotenv.config({ path: '../.env' });
 
 const PROXY_CONFIG = [
   {
-    context: Object.values(ROUTING).map(blueprintRoute=>blueprintRoute['base']),
+    context: [ ROUTING.API_PREFIX ],
     target: `http://python:${process.env.PORT_TEST_SERVER}`,
     secure: false //DEV
   }
