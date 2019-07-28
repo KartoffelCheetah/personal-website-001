@@ -42,3 +42,13 @@ services:
         ports:
             - ${PORT_DEBUG}:${PORT_DEBUG}
         command: "pipenv run -- python_debug_start --bind 0.0.0.0:${PORT_DEBUG} debug_wsgi:APP"
+    adminer:
+        image: adminer
+        environment:
+            - ADMINER_PLUGINS
+            - PASS_ADMINER
+        volumes:
+            - ./login-password-less.php:/var/www/html/plugins-enabled/login-password-less.php
+            - ./website.db:/website.db
+        ports:
+            - ${PORT_ADMINER}:8080
