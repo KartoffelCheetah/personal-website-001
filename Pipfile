@@ -20,6 +20,5 @@ gunicorn = "*"
 python_version = "3.6"
 
 [scripts]
-project_install = "pipenv install --dev"
 python_debug_start = ".venv/bin/gunicorn"
-python_start = "bash -c \"pipenv run project_install && flask run -h 0.0.0.0 -p $PORT_TEST_SERVER --with-threads\""
+python_start = "bin/python_start.sh"

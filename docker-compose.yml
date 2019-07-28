@@ -48,7 +48,7 @@ services:
             - ADMINER_PLUGINS
             - PASS_ADMINER
         volumes:
-            - ./login-password-less.php:/var/www/html/plugins-enabled/login-password-less.php
+            - ./adminer_config/login-password-less.php:/var/www/html/plugins-enabled/login-password-less.php
             - ./website.db:/website.db
         ports:
             - ${PORT_ADMINER}:8080
