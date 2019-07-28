@@ -14,7 +14,7 @@ from app.controllers.media import MEDIA_NAMESPACE
 from app.controllers.user import USER_NAMESPACE
 from app.models.api import API
 from app.definitions import PROJECT_PATH, ROUTING
-from login_manager import LOGIN_MANAGER
+from app.managers.login_manager import LOGIN_MANAGER
 # ------------------------
 # Read the configuration
 # and override ENVIRONMENT variables with dotenv
