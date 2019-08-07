@@ -1,7 +1,7 @@
 """Registration Parser"""
 from marshmallow import fields, validate
 from flask_restplus import fields as frpf
-from app.models.User import User as UserModel
+from app.models.user_entity import UserEntity
 from app.models.api import API
 from .login import LoginSchema
 
@@ -15,6 +15,6 @@ class RegistrationSchema(LoginSchema):
     email = fields.String(
         required=True,
         validate=[
-            validate.Length(**UserModel.EMAIL_LENGTH)
+            validate.Length(**UserEntity.EMAIL_LENGTH)
         ]
     )

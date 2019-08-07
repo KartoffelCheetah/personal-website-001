@@ -1,9 +1,9 @@
-"""Media Model"""
+"""Entity for media elements"""
 from typing import Dict
 from app.models.db import DB
-from .Base import Base as BaseModel
+from .abstract_base_entity import AbstractBaseEntity
 
-class Media(BaseModel, DB.Model):
+class MediaEntity(AbstractBaseEntity, DB.Model): # pylint: disable=too-few-public-methods
     """media table."""
 
     SRC_LENGTH: Dict[str, int] = {'min': 1, 'max': 1024}

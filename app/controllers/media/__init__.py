@@ -4,7 +4,7 @@ from flask import current_app
 from flask_restplus import Resource, abort
 import flask_login
 from flask_sqlalchemy import sqlalchemy
-from app.models.Media import Media as MediaModel
+from app.models.media_entity import MediaEntity
 from app.forms.add_media import MediaSchema, MEDIA_DOC
 from app.definitions import ROUTING
 from app.models.api import API
@@ -20,7 +20,7 @@ class MediaList(Resource):
 
     def get(self):
         """Returns all media."""
-        medialist = MediaModel.query.all()
+        medialist = MediaEntity.query.all()
         return [media.title for media in medialist]
 
     @flask_login.login_required

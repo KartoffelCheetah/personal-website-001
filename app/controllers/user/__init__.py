@@ -5,7 +5,7 @@ import flask_login
 from flask import current_app
 from flask_restplus import Resource, abort
 from flask_sqlalchemy import sqlalchemy
-from app.models.User import User as UserModel
+from app.models.user_entity import UserEntity
 from app.forms.login import LoginSchema, LOGIN_DOC
 from app.forms.registration import RegistrationSchema, REGISTER_DOC
 from app.definitions import ROUTING
@@ -24,17 +24,17 @@ class Login(Resource):
         """Tries to login user with username and password"""
         schema = LoginSchema()
         new_login = schema.load(API.payload)
-        user = UserModel.query.filter_by(username=new_login.data['username']).first()
+        user = UserEntity.query.filter_by(username=new_login.data['username']).first()
         if user:
             current_date = datetime.datetime.utcnow()
             DB = current_app.config['user.db']
-            if (current_date - user.last_try).total_seconds() > UserModel.LOGIN_COUNT_RESET:
+            if (current_date - user.last_try).total_seconds() > UserEntity.LOGIN_COUNT_RESET:
                 user.login_count = 0
             else:
                 user.login_count = user.login_count + 1
             user.last_try = current_date
             DB.session.commit()
-            if user.login_count < UserModel.LOGIN_COUNT_LIMIT:
+            if user.login_count < UserEntity.LOGIN_COUNT_LIMIT:
                 if user.is_password_correct(new_login.data['password']):
                     user.login_count = 0
                     DB.session.commit()
@@ -61,10 +61,10 @@ class Register(Resource):
         if os.getenv('FLASK_ENV') == 'development':
             schema = RegistrationSchema()
             new_registration = schema.load(API.payload)
-            new_user = UserModel(
+            new_user = UserEntity(
                 username=new_registration.data['username'],
                 email=new_registration.data['email'],
-                password_hash=UserModel.get_hashed_password(new_registration.data['password']),
+                password_hash=UserEntity.get_hashed_password(new_registration.data['password']),
             )
             DB = current_app.config['user.db']
             try:

@@ -14,11 +14,11 @@ from itsdangerous import (
 # User class has to implement flask_login's UserMixin
 from flask_login import UserMixin
 from app.models.db import DB
-from .Base import Base as BaseModel
+from .abstract_base_entity import AbstractBaseEntity
 
 load_dotenv(dotenv_path=find_dotenv('.env'))
 
-class User(BaseModel, UserMixin, DB.Model):
+class UserEntity(AbstractBaseEntity, UserMixin, DB.Model):
     """user table"""
 
     USERNAME_LENGTH: Dict[str, int] = {'min': 6, 'max': 64}
@@ -36,7 +36,7 @@ class User(BaseModel, UserMixin, DB.Model):
     last_try = DB.Column(DB.DateTime(), nullable=False, default=datetime.datetime.utcnow)
 
     def __repr__(self) -> str:
-        return '<User %r>' % self.username
+        return '<UserEntity %r>' % self.username
 
     def is_password_correct(self, password: str) -> bool:
         """Returns if the password is correct.

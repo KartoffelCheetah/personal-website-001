@@ -8,7 +8,7 @@ from flask import Flask, Blueprint
 import jinja2
 # models
 from app.models.db import DB
-from app.models.User import User as UserModel
+from app.models.user_entity import UserEntity
 # controllers
 from app.controllers.media import MEDIA_NAMESPACE
 from app.controllers.user import USER_NAMESPACE
@@ -85,7 +85,7 @@ def load_user(user_identifier):
     try:
         user_id, pwd_check = user_identifier.split('->')
 
-        user = UserModel.query.filter_by(id=int(user_id)).first()
+        user = UserEntity.query.filter_by(id=int(user_id)).first()
 
         if user and user.session_auth(pwd_check):
             return user
