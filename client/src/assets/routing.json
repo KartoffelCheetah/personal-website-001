@@ -5,7 +5,7 @@
       "namespace": "user",
       "LOGIN": "/login",
       "LOGOUT": "/logout",
-      "REGISTER": "/register"
+      "REGISTER": "/"
     },
     "MEDIA": {
       "namespace": "media",

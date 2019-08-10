@@ -1,3 +1,4 @@
+#pylint: disable=R0201
 """User Controller"""
 import os
 import datetime
@@ -27,20 +28,20 @@ class Login(Resource):
         user = UserEntity.query.filter_by(username=new_login.data['username']).first()
         if user:
             current_date = datetime.datetime.utcnow()
-            DB = current_app.config['user.db']
+            database = current_app.config['database']
             if (current_date - user.last_try).total_seconds() > UserEntity.LOGIN_COUNT_RESET:
                 user.login_count = 0
             else:
                 user.login_count = user.login_count + 1
             user.last_try = current_date
-            DB.session.commit()
+            database.session.commit()
             if user.login_count < UserEntity.LOGIN_COUNT_LIMIT:
                 if user.is_password_correct(new_login.data['password']):
                     user.login_count = 0
-                    DB.session.commit()
+                    database.session.commit()
                     flask_login.login_user(user) # flask_login logins the user
                     return 'You are now logged in!'
-        abort(401)
+        return abort(401)
 
 @USER_NAMESPACE.route(ROUTING['USER']['LOGOUT'])
 class Logout(Resource):
@@ -66,12 +67,12 @@ class Register(Resource):
                 email=new_registration.data['email'],
                 password_hash=UserEntity.get_hashed_password(new_registration.data['password']),
             )
-            DB = current_app.config['user.db']
+            database = current_app.config['database']
             try:
-                DB.session.add(new_user)
-                DB.session.commit()
+                database.session.add(new_user)
+                database.session.commit()
             except sqlalchemy.exc.IntegrityError:
                 # TODO: log, probably not unique
-                abort(500)
+                return abort(500)
             return 'Success!'
-        abort(404)
+        return abort(404)

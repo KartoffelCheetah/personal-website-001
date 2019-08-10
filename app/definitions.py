@@ -1,7 +1,7 @@
 """
 Contains dynamic definitions which cannot be placed inside static files.
 
-For example PRJECT_PATH had to be calculated runtime.
+For example PROJECT_PATH had to be calculated runtime.
 """
 
 import pathlib

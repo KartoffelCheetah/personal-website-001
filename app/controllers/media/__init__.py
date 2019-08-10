@@ -1,3 +1,4 @@
+#pylint: disable=R0201
 """Media Controller"""
 from typing import Union
 from flask import current_app
@@ -29,10 +30,10 @@ class MediaList(Resource):
         """Adds new media element to media list."""
         schema = MediaSchema()
         new_media = schema.load(API.payload)
-        DB = current_app.config['media.db']
+        database = current_app.config['database']
         try:
-            DB.session.add(new_media.data)
-            DB.session.commit()
+            database.session.add(new_media.data)
+            database.session.commit()
         except sqlalchemy.exc.IntegrityError:
             # TODO log error
             abort(500)

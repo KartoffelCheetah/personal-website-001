@@ -45,8 +45,7 @@ DB.init_app(APP)
 # DB-ACCESS -------------------------------
 #   register db in config so blueprint will
 #   be able to access it from current_app.config
-APP.config['media.db'] = DB
-APP.config['user.db'] = DB
+APP.config['database'] = DB
 # ###############################################
 # LOGIN MANAGER
 LOGIN_MANAGER.init_app(APP)
