@@ -1,18 +1,23 @@
-"""Add media parser"""
+"""A form to handle media addition"""
 
 from marshmallow import Schema, fields, post_load, validate
 from flask_restplus import fields as frpf
 from app.models.api import API
 from app.models.media_entity import MediaEntity
 
+# Generate documentation
+
 MEDIA_DOC = API.model('Media', {
-    'src': frpf.String(required=True, description='Image source, should be unique.'),
+    'src': frpf.String(required=True, description='This has to be unique in the db.'),
     'title': frpf.String(required=True),
     'license': frpf.String(required=True),
     'description': frpf.String(required=False),
 })
 
+# Validation
+
 class MediaSchema(Schema):
+    """Validation"""
     src = fields.String(
         required=True,
         validate=[
@@ -39,6 +44,7 @@ class MediaSchema(Schema):
     )
 
     @post_load
-    def create_media(self, data):
+    def create_media(self, data): #pylint: disable=R0201
+        """After validation passes creates a media element."""
         # TODO: compute dimensions
         return MediaEntity(**data, width=0, height=0)

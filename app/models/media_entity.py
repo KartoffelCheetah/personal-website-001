@@ -17,3 +17,6 @@ class MediaEntity(AbstractBaseEntity, DB.Model): # pylint: disable=too-few-publi
     description = DB.Column(DB.String(DESCRIPTION_LENGTH['max']))
     width = DB.Column(DB.Integer, nullable=False)
     height = DB.Column(DB.Integer, nullable=False)
+
+    def __repr__(self) -> str:
+        return '<MediaEntity %r>' % self.title

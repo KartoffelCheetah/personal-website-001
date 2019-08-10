@@ -5,6 +5,7 @@ import datetime
 import flask_login
 from flask import current_app
 from flask_restplus import Resource, abort
+from marshmallow.exceptions import ValidationError
 from flask_sqlalchemy import sqlalchemy
 from app.models.user_entity import UserEntity
 from app.forms.login import LoginSchema, LOGIN_DOC
@@ -23,10 +24,19 @@ class Login(Resource):
     @API.doc(body=LOGIN_DOC)
     def post(self):
         """Tries to login user with username and password"""
-        schema = LoginSchema()
-        new_login = schema.load(API.payload)
+        current_app.logger.warning('Log in attempt')
+        schema = LoginSchema(strict=True)
+        try:
+            new_login = schema.load(API.payload)
+        except ValidationError as error:
+            current_app.logger.warning('Invalid login form: %s', error)
+            return abort(400, message=error)
         user = UserEntity.query.filter_by(username=new_login.data['username']).first()
-        if user:
+        current_app.logger.warning('Login attempt with username: %s', new_login.data['username'])
+        if not user:
+            current_app.logger.warning('No such user: %s', new_login.data['username'])
+            return abort(401)
+        else:
             current_date = datetime.datetime.utcnow()
             database = current_app.config['database']
             if (current_date - user.last_try).total_seconds() > UserEntity.LOGIN_COUNT_RESET:
@@ -40,7 +50,9 @@ class Login(Resource):
                     user.login_count = 0
                     database.session.commit()
                     flask_login.login_user(user) # flask_login logins the user
+                    current_app.logger.warning('Successfull log in: %s', user)
                     return 'You are now logged in!'
+                current_app.logger.warning('Invalid password during login: %s', user)
         return abort(401)
 
 @USER_NAMESPACE.route(ROUTING['USER']['LOGOUT'])
@@ -60,19 +72,19 @@ class Register(Resource):
     def post(self):
         """Registers new user"""
         if os.getenv('FLASK_ENV') == 'development':
-            schema = RegistrationSchema()
-            new_registration = schema.load(API.payload)
-            new_user = UserEntity(
-                username=new_registration.data['username'],
-                email=new_registration.data['email'],
-                password_hash=UserEntity.get_hashed_password(new_registration.data['password']),
-            )
+            try:
+                schema = RegistrationSchema(strict=True)
+            except ValidationError as error:
+                current_app.logger.warning('Invalid user registration form.')
+                abort(400, message=error)
+            new_user = schema.load(API.payload)
             database = current_app.config['database']
             try:
                 database.session.add(new_user)
                 database.session.commit()
             except sqlalchemy.exc.IntegrityError:
-                # TODO: log, probably not unique
+                current_app.logger.exception('Registration integrity error in db.')
                 return abort(500)
+            current_app.logger.warning('New user is successfully registered: %s', new_user)
             return 'Success!'
         return abort(404)

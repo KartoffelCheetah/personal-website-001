@@ -1,4 +1,4 @@
-"""Login Parser"""
+"""A form to handle login"""
 from marshmallow import Schema, fields, validate
 from flask_restplus import fields as frpf
 from app.models.api import API
@@ -10,6 +10,7 @@ LOGIN_DOC = API.model('Login', {
 })
 
 class LoginSchema(Schema):
+    """Validation"""
     username = fields.String(
         required=True,
         validate=[

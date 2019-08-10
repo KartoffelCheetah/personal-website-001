@@ -4,6 +4,7 @@ from typing import Union
 from flask import current_app
 from flask_restplus import Resource, abort
 import flask_login
+from marshmallow.exceptions import ValidationError
 from flask_sqlalchemy import sqlalchemy
 from app.models.media_entity import MediaEntity
 from app.forms.add_media import MediaSchema, MEDIA_DOC
@@ -27,14 +28,18 @@ class MediaList(Resource):
     @flask_login.login_required
     @API.doc(security='cookie', body=MEDIA_DOC)
     def post(self):
-        """Adds new media element to media list."""
-        schema = MediaSchema()
-        new_media = schema.load(API.payload)
+        """Adds a new media element."""
+        schema = MediaSchema(strict=True)
+        try:
+            new_media = schema.load(API.payload)
+        except ValidationError as error:
+            current_app.logger.warning('Invalid media form.')
+            return abort(400, message=error)
         database = current_app.config['database']
         try:
             database.session.add(new_media.data)
             database.session.commit()
-        except sqlalchemy.exc.IntegrityError:
-            # TODO log error
+        except sqlalchemy.exc.IntegrityError as error:
+            current_app.logger.exception('Post media integrity error in db.')
             abort(500)
         return 'Success!'
