@@ -44,7 +44,7 @@ class MediaSchema(Schema):
     )
 
     @post_load
-    def create_media(self, data): #pylint: disable=R0201
+    def create_media(self, data, **kwargs): #pylint: disable=R0201, W0613
         """After validation passes creates a media element."""
         # TODO: compute dimensions
         return MediaEntity(**data, width=0, height=0)

@@ -29,7 +29,7 @@ class MediaList(Resource):
     @API.doc(security='cookie', body=MEDIA_DOC)
     def post(self):
         """Adds a new media element."""
-        schema = MediaSchema(strict=True)
+        schema = MediaSchema()
         try:
             new_media = schema.load(API.payload)
         except ValidationError as error:
@@ -37,9 +37,9 @@ class MediaList(Resource):
             return abort(400, message=error)
         database = current_app.config['database']
         try:
-            database.session.add(new_media.data)
+            database.session.add(new_media)
             database.session.commit()
         except sqlalchemy.exc.IntegrityError as error:
             current_app.logger.exception('Post media integrity error in db.')
-            abort(500)
+            return abort(409)
         return 'Success!'

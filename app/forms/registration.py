@@ -21,7 +21,7 @@ class RegistrationSchema(LoginSchema):
     )
 
     @post_load
-    def create_user(self, data): #pylint: disable=R0201
+    def create_user(self, data, **kwargs): #pylint: disable=R0201, W0613
         """After validation passes creates a user."""
         return UserEntity(
             username=data['username'],

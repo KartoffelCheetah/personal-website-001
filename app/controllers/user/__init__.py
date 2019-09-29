@@ -25,16 +25,16 @@ class Login(Resource):
     def post(self):
         """Tries to login user with username and password"""
         current_app.logger.warning('Log in attempt')
-        schema = LoginSchema(strict=True)
+        schema = LoginSchema()
         try:
             new_login = schema.load(API.payload)
         except ValidationError as error:
             current_app.logger.warning('Invalid login form: %s', error)
             return abort(400, message=error)
-        user = UserEntity.query.filter_by(username=new_login.data['username']).first()
-        current_app.logger.warning('Login attempt with username: %s', new_login.data['username'])
+        user = UserEntity.query.filter_by(username=new_login['username']).first()
+        current_app.logger.warning('Login attempt with username: %s', new_login['username'])
         if not user:
-            current_app.logger.warning('No such user: %s', new_login.data['username'])
+            current_app.logger.warning('No such user: %s', new_login['username'])
             return abort(401)
         else:
             current_date = datetime.datetime.utcnow()
@@ -46,7 +46,7 @@ class Login(Resource):
             user.last_try = current_date
             database.session.commit()
             if user.login_count < UserEntity.LOGIN_COUNT_LIMIT:
-                if user.is_password_correct(new_login.data['password']):
+                if user.is_password_correct(new_login['password']):
                     user.login_count = 0
                     database.session.commit()
                     flask_login.login_user(user) # flask_login logins the user
@@ -72,12 +72,12 @@ class Register(Resource):
     def post(self):
         """Registers new user"""
         if os.getenv('FLASK_ENV') == 'development':
+            schema = RegistrationSchema()
             try:
-                schema = RegistrationSchema(strict=True)
+                new_user = schema.load(API.payload)
             except ValidationError as error:
                 current_app.logger.warning('Invalid user registration form.')
                 abort(400, message=error)
-            new_user = schema.load(API.payload)
             database = current_app.config['database']
             try:
                 database.session.add(new_user)
