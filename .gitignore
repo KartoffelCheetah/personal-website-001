@@ -7,6 +7,7 @@ static/img/drawings/
 static/img/photos/
 static/img/_thumbnails/
 static/client/
+tags
 .tags
 .tags1
 .venv
