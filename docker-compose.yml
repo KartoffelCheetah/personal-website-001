@@ -15,7 +15,7 @@ services:
     python:
         build:
             context: .
-            dockerfile: python.dockerfile
+            dockerfile: python.Dockerfile
         user: "python"
         working_dir: /home/python/app/
         environment:
@@ -27,21 +27,6 @@ services:
         ports:
             - ${PORT_TEST_SERVER}:${PORT_TEST_SERVER}
         command: "pipenv run python_start"
-    python_debug:
-        build:
-            context: .
-            dockerfile: python.dockerfile
-        user: "python"
-        working_dir: /home/python/app/
-        environment:
-            - PIPENV_VENV_IN_PROJECT
-            - FLASK_ENV
-            - FLASK_APP
-        volumes:
-            - ./:/home/python/app/
-        ports:
-            - ${PORT_DEBUG}:${PORT_DEBUG}
-        command: "pipenv run -- python_debug_start --bind 0.0.0.0:${PORT_DEBUG} debug_wsgi:APP"
     adminer:
         image: adminer
         environment:

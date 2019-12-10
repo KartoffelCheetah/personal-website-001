@@ -14,11 +14,9 @@ marshmallow = "*"
 
 [dev-packages]
 pylint = "*"
-gunicorn = "*"
 
 [requires]
 python_version = "3.6"
 
 [scripts]
-python_debug_start = ".venv/bin/gunicorn"
 python_start = "bin/python_start.sh"
