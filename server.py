@@ -3,18 +3,17 @@
 Flask Application Server
 """
 import os
+from typing import Union
 from dotenv import load_dotenv
 from flask import Flask, Blueprint
 import jinja2
-# models
-from app.models.db import DB
-from app.models.user_entity import UserEntity
-# controllers
-from app.controllers.media import MEDIA_NAMESPACE
-from app.controllers.user import USER_NAMESPACE
-from app.models.api import API
 from app.definitions import PROJECT_PATH, ROUTING
 from app.managers.login_manager import LOGIN_MANAGER
+from app.models.db import DB
+from app.models.user_entity import UserEntity
+from app.models.api import API
+from app.controllers.media import MEDIA_NAMESPACE
+from app.controllers.user import USER_NAMESPACE
 # ------------------------
 # Read the configuration
 # and override ENVIRONMENT variables with dotenv
@@ -78,7 +77,7 @@ def create_tables():
     DB.create_all(app=APP)
 
 @LOGIN_MANAGER.user_loader
-def load_user(user_identifier):
+def load_user(user_identifier: str) -> Union[UserEntity, None]:
     """Gets user from session,
     if user_identifier is not valid returns None"""
     try:
