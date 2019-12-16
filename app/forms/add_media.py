@@ -16,7 +16,7 @@ MEDIA_DOC = API.model('Media', {
 
 # Validation
 
-class MediaSchema(Schema):
+class MediaSchema(Schema): # pylint: disable=too-few-public-methods
     """Validation"""
     src = fields.String(
         required=True,
