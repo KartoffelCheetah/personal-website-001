@@ -7,11 +7,12 @@ services:
         working_dir: /home/node/app/
         environment:
             - NODE_ENV
+            - PORT_TEST_SERVER
         volumes:
-            - ./:/home/node/app/
+            - ./client/:/home/node/app/
         ports:
             - ${PORT_TEST_CLIENT}:${PORT_TEST_CLIENT}
-        command: bash -c "cd client && npm install && npm run generate_assets"
+        command: bash -c "npm install && npm run generate_assets"
     python:
         build:
             context: .

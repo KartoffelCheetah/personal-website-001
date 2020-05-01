@@ -1,7 +1,4 @@
-const dotenv = require('dotenv');
 const ROUTING = require('./src/assets/routing.json');
-
-dotenv.config({ path: '../.env' });
 
 const PROXY_CONFIG = [
   {
