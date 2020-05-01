@@ -1,6 +1,6 @@
 """A form to handle the registration"""
 from marshmallow import fields, validate, post_load
-from flask_restplus import fields as frpf
+from flask_restx import fields as frpf
 from app.models.user_entity import UserEntity
 from app.models.api import API
 from .login import LoginSchema

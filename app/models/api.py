@@ -1,6 +1,6 @@
 """API of the website"""
 import os
-from flask_restplus import Api
+from flask_restx import Api
 import dotenv
 
 dotenv.load_dotenv('../.env', override=True)

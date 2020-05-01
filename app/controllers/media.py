@@ -1,8 +1,7 @@
 #pylint: disable=R0201
 """Media Controller"""
-from typing import Union
 from flask import current_app
-from flask_restplus import Resource, abort
+from flask_restx import Resource, abort
 import flask_login
 from marshmallow.exceptions import ValidationError
 from flask_sqlalchemy import sqlalchemy
@@ -23,7 +22,17 @@ class MediaList(Resource):
     def get(self):
         """Returns all media."""
         medialist = MediaEntity.query.all()
-        return [media.title for media in medialist]
+        return [
+            {
+                'src': media.src,
+                'title': media.title,
+                'license': media.license,
+                'description': media.description,
+                'width': media.width,
+                'height': media.height
+            }
+            for media in medialist
+        ]
 
     @flask_login.login_required
     @API.doc(security='cookie', body=MEDIA_DOC)

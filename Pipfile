@@ -9,8 +9,8 @@ python-dotenv = "*"
 flask-sqlalchemy = "*"
 passlib = "*"
 flask-login = "*"
-flask-restplus = "*"
 marshmallow = "*"
+flask-restx = "*"
 
 [dev-packages]
 pylint = "*"

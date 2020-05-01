@@ -1,6 +1,6 @@
 """A form to handle login"""
 from marshmallow import Schema, fields, validate
-from flask_restplus import fields as frpf
+from flask_restx import fields as frpf
 from app.models.api import API
 from app.models.user_entity import UserEntity
 

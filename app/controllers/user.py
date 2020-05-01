@@ -4,7 +4,7 @@ import os
 import datetime
 import flask_login
 from flask import current_app
-from flask_restplus import Resource, abort
+from flask_restx import Resource, abort
 from marshmallow.exceptions import ValidationError
 from flask_sqlalchemy import sqlalchemy
 from app.models.user_entity import UserEntity

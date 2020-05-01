@@ -1,7 +1,7 @@
 """A form to handle media addition"""
 
 from marshmallow import Schema, fields, post_load, validate
-from flask_restplus import fields as frpf
+from flask_restx import fields as frpf
 from app.models.api import API
 from app.models.media_entity import MediaEntity
 
@@ -16,7 +16,7 @@ MEDIA_DOC = API.model('Media', {
 
 # Validation
 
-class MediaSchema(Schema): # pylint: disable=too-few-public-methods
+class MediaSchema(Schema):
     """Validation"""
     src = fields.String(
         required=True,
