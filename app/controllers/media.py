@@ -3,7 +3,6 @@
 from flask import current_app
 from flask_restx import Resource, abort, fields
 import flask_login
-from marshmallow.exceptions import ValidationError
 from flask_sqlalchemy import sqlalchemy
 from app.models.media_entity import MediaEntity
 from app.definitions import ROUTING
@@ -57,16 +56,12 @@ class MediaList(Resource):
     @API.marshal_with(MEDIA_DOC, as_list=True)
     def post(self):
         """Adds a new media element."""
-        try:
-            new_media = MediaEntity(**API.payload, width=0, height=0)
-        except ValidationError as error:
-            current_app.logger.warning('Invalid media form.')
-            return abort(400, message=error)
+        new_media = MediaEntity(**API.payload, width=0, height=0)
         database = current_app.config['database']
         try:
             database.session.add(new_media)
             database.session.commit()
-        except sqlalchemy.exc.IntegrityError as error:
+        except sqlalchemy.exc.IntegrityError:
             current_app.logger.exception('Post media integrity error in db.')
             return abort(409)
         return [new_media]

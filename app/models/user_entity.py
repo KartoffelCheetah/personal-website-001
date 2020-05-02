@@ -21,16 +21,16 @@ load_dotenv(dotenv_path=find_dotenv('.env'))
 class UserEntity(AbstractBaseEntity, UserMixin, DB.Model):
     """user table"""
 
-    USERNAME_LENGTH: Dict[str, int] = {'min': 6, 'max': 64}
-    EMAIL_LENGTH: Dict[str, int] = {'min': 5, 'max': 128}
-    PASSWORD_LENGTH: Dict[str, int] = {'min': 8, 'max': 256}
+    USERNAME_LENGTH: Dict[str, int] = {'min_length': 6, 'max_length': 64}
+    EMAIL_LENGTH: Dict[str, int] = {'min_length': 5, 'max_length': 128}
+    PASSWORD_LENGTH: Dict[str, int] = {'min_length': 8, 'max_length': 256}
     # Block user when reaches this limit
     LOGIN_COUNT_LIMIT: int = 10
     # Timer to reset LOGIN_COUNT_LIMIT to 0
     LOGIN_COUNT_RESET: int = 600
     #pylint: disable=E1101
-    username = DB.Column(DB.String(USERNAME_LENGTH['max']), unique=True, nullable=False)
-    email = DB.Column(DB.String(EMAIL_LENGTH['max']), unique=True, nullable=False)
+    username = DB.Column(DB.String(USERNAME_LENGTH['max_length']), unique=True, nullable=False)
+    email = DB.Column(DB.String(EMAIL_LENGTH['max_length']), unique=True, nullable=False)
     password_hash = DB.Column(DB.String(256), nullable=False)
     login_count = DB.Column(DB.Integer, nullable=False, default=0)
     last_try = DB.Column(DB.DateTime(), nullable=False, default=datetime.datetime.utcnow)
