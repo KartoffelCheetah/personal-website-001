@@ -7,8 +7,14 @@
       "LOGOUT": "/logout",
       "REGISTER": "/"
     },
-    "MEDIA": {
-      "namespace": "media",
-      "LIST": "/"
+    "RI": {
+      "IMAGE": {
+        "namespace": "image",
+        "LIST": "/"
+      },
+      "BLOG": {
+        "namespace": "blog",
+        "LIST": "/"
+      }
     }
 }
