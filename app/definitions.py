@@ -10,5 +10,5 @@ import json
 PROJECT_PATH = pathlib.Path('.').absolute()
 
 # Routing data
-with open(PROJECT_PATH/'client/src/assets/routing.json') as ROUTING_FILE:
+with open(PROJECT_PATH/'static/routing.json') as ROUTING_FILE:
     ROUTING: dict = json.load(ROUTING_FILE)

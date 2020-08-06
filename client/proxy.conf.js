@@ -1,4 +1,4 @@
-const ROUTING = require('./src/assets/routing.json');
+const ROUTING = require('../static/routing.json');
 
 const PROXY_CONFIG = [
   {

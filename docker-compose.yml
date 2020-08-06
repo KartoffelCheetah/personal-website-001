@@ -2,7 +2,7 @@ version: "3"
 
 services:
     node:
-        image: "node:11"
+        image: "node:12.18.3-alpine3.12"
         user: "node"
         working_dir: /home/node/app/
         environment:
@@ -10,9 +10,10 @@ services:
             - PORT_TEST_SERVER
         volumes:
             - ./client/:/home/node/app/
+            - ./static/:/home/node/static/
         ports:
             - ${PORT_TEST_CLIENT}:${PORT_TEST_CLIENT}
-        command: bash -c "npm install && npm run generate_assets"
+        command: sh -c "npm install && npm run generate_assets"
     python:
         build:
             context: .

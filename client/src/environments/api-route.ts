@@ -1,5 +1,5 @@
 // @ts-ignore
-import ROUTING from '../assets/routing.json';
+import ROUTING from '../../../static/routing.json';
 
 export default {
   ROUTING: ROUTING,
