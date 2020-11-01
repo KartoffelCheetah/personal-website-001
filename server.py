@@ -12,7 +12,6 @@ from app.managers.login_manager import LOGIN_MANAGER
 from app.models.db import DB
 from app.models.user_entity import UserEntity
 from app.models.api import API
-from app.controllers.blog_resource import BLOG_RES_NAMESPACE
 from app.controllers.image_resource import IMAGE_RES_NAMESPACE
 from app.controllers.user import USER_NAMESPACE
 # ------------------------
@@ -31,7 +30,7 @@ APP.config.update(
     SESSION_COOKIE_SECURE=bool(int(os.getenv('SESSION_COOKIE_SECURE'))),
     SESSION_COOKIE_HTTPONLY=bool(int(os.getenv('SESSION_COOKIE_HTTPONLY'))),
     REMEMBER_COOKIE_HTTPONLY=bool(int(os.getenv('REMEMBER_COOKIE_HTTPONLY'))),
-    SQLALCHEMY_DATABASE_URI='sqlite:///'+DATABASE_PATH.__str__(),
+    SQLALCHEMY_DATABASE_URI='sqlite:///'+str(DATABASE_PATH),
     SQLALCHEMY_TRACK_MODIFICATIONS=bool(int(os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS'))),
     PERMANENT_SESSION_LIFETIME=int(os.getenv('PERMANENT_SESSION_LIFETIME')),
     SESSION_COOKIE_NAME=os.getenv('SESSION_COOKIE_NAME'),
@@ -56,7 +55,6 @@ API.init_app(API_BLUEPRINT)
 APP.register_blueprint(API_BLUEPRINT)
 # namespaces --------------------
 API.add_namespace(USER_NAMESPACE)
-API.add_namespace(BLOG_RES_NAMESPACE)
 API.add_namespace(IMAGE_RES_NAMESPACE)
 # ##############################################
 # JINJA2 CONFIGUTAION

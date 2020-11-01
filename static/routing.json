@@ -1,20 +1,21 @@
 {
-  "API_PREFIX": "/api",
+    "API_PREFIX": "/api",
+
+    "STATIC": "/static",
+
+    "UPLOADS": "/static/uploads",
 
     "USER": {
-      "namespace": "user",
-      "LOGIN": "/login",
-      "LOGOUT": "/logout",
-      "REGISTER": "/"
+        "namespace": "user",
+        "LOGIN": "/login",
+        "LOGOUT": "/logout",
+        "REGISTER": "/"
     },
+
     "RI": {
-      "IMAGE": {
-        "namespace": "image",
-        "LIST": "/"
-      },
-      "BLOG": {
-        "namespace": "blog",
-        "LIST": "/"
-      }
+        "IMAGE": {
+            "namespace": "image",
+            "LIST": "/"
+        }
     }
 }

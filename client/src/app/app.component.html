@@ -1,5 +1,9 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<a href="api/media">proxy to media on server</a>
+<ul>
+  <li *ngFor="let image of images">
+    <img src="{{ image.resource }}" alt="" height="100">
+  </li>
+</ul>
 <div style="text-align:center">
   <h1>
     Welcome to {{ title }}!

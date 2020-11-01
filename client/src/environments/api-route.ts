@@ -1,22 +1,29 @@
 // @ts-ignore
-import ROUTING from '../../../static/routing.json';
+import ROUTING_JSON from '../../../static/routing.json';
 
-export default {
-  ROUTING: ROUTING,
-  apiRoute(routes: string[]) {
-    let paths: any = routes.reduce(
-      (
-        acc: any,
-        cur: string
-      ):any => {
-        if (typeof ROUTING[cur] === 'object') {
-          return [ acc[0]+acc[1][cur].namespace, acc[1][cur] ];
-        } else {
-          return [ acc[0]+acc[1][cur], acc[1][cur] ];
-        }
-      }, ['', ROUTING]
-    );
-    let path = [ROUTING.API_PREFIX, paths[0]].join('/').replace(/\/+/g, '/');
-    return path;
-  },
+export const ROUTING = ROUTING_JSON;
+
+export function getRoute(routes: string[], isApi: boolean=true) {
+  const paths: any = routes.reduce(
+    (
+      acc: any,
+      cur: string
+    ):any => {
+      const prevStr = acc[0];
+      const curVal = acc[1][cur];
+      switch(typeof curVal) {
+        case 'object':
+          if (curVal.namespace) {
+            return [ prevStr+curVal.namespace, curVal ];
+          }
+          return [ prevStr, curVal ];
+        case 'string':
+          return [ prevStr+curVal, curVal ];
+        default:
+          throw Error('routing error: ' + cur);
+      }
+    }, ['', ROUTING]
+  );
+  const path = [isApi ? ROUTING.API_PREFIX : '', paths[0]].join('/').replace(/\/+/g, '/');
+  return path;
 }
