@@ -1,8 +1,5 @@
 FROM python:3.6
 
-RUN echo "alias ll='ls -laF'" \
->> /etc/bash.bashrc
-
 RUN groupadd --gid 1000 python
 
 RUN useradd \
@@ -13,9 +10,9 @@ RUN useradd \
 
 RUN mkdir /home/python/app
 
-RUN apt-get update \
-    && apt-get -y install \
-        vim
+USER python
+# pipenv will be intalled to ~/.locale/bin/
+ENV PATH="/home/python/.local/bin/:${PATH}"
 
-RUN pip install \
-    'pipenv==2018.10.13'
+RUN pip install --user \
+   'pipenv==2020.08.13'
