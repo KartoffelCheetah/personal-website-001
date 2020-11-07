@@ -3,6 +3,7 @@
 import os
 import datetime
 from typing import Union, Dict
+# TODO: have a look at werkzeug's generate_password_hash
 from passlib.hash import pbkdf2_sha512
 from dotenv import load_dotenv, find_dotenv
 # timing is handled by session so

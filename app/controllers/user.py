@@ -2,6 +2,7 @@
 """User Controller"""
 import os
 import datetime
+from typing import Final
 import flask_login
 from flask import current_app
 from flask_restx import Resource, abort, fields
@@ -10,12 +11,12 @@ from app.models.user_entity import UserEntity
 from app.definitions import ROUTING
 from app.models.api import API
 
-USER_NAMESPACE = API.namespace(
+USER_NAMESPACE: Final[API.namespace] = API.namespace(
     ROUTING['USER']['namespace'],
     description='User management',
 )
 
-LOGIN_DOC = API.model('Login', {
+LOGIN_DOC: Final[API.model] = API.model('Login', {
     'username': fields.String(
         required=True,
         **UserEntity.USERNAME_LENGTH,
@@ -26,7 +27,7 @@ LOGIN_DOC = API.model('Login', {
     ),
 })
 
-REGISTER_DOC = API.model('Register', {
+REGISTER_DOC: Final[API.model] = API.model('Register', {
     'username': fields.String(
         required=True,
         **UserEntity.USERNAME_LENGTH,

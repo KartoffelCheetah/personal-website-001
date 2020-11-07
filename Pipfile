@@ -17,7 +17,7 @@ pillow = "*"
 pylint = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.8"
 
 [scripts]
 python_start = "bin/python_start.sh"

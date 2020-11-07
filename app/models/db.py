@@ -1,4 +1,5 @@
 """Database"""
+from typing import Final
 from flask_sqlalchemy import SQLAlchemy
 
-DB = SQLAlchemy()
+DB: Final[SQLAlchemy] = SQLAlchemy()

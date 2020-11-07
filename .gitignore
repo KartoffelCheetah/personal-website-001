@@ -13,3 +13,4 @@ tags
 .venv
 .env*
 !.env*.dist
+.mypy_cache
