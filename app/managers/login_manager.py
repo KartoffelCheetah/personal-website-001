@@ -2,12 +2,8 @@
 Setting up login manager
 """
 import os
+from typing import Final
 import flask_login
-from dotenv import load_dotenv
 
-from app.definitions import PROJECT_PATH
-
-load_dotenv(dotenv_path=PROJECT_PATH/'.env', override=True)
-
-LOGIN_MANAGER = flask_login.LoginManager()
+LOGIN_MANAGER: Final[flask_login.LoginManager] = flask_login.LoginManager()
 LOGIN_MANAGER.session_protection = os.getenv('LOGIN_MANAGER_SESSION_PROTECTION')

@@ -5,19 +5,15 @@ import datetime
 from typing import Union, Dict
 # TODO: have a look at werkzeug's generate_password_hash
 from passlib.hash import pbkdf2_sha512
-from dotenv import load_dotenv, find_dotenv
 # timing is handled by session so
 # TimedJSONWebSignatureSerializer is not needed
 from itsdangerous import (
     BadSignature,
     SignatureExpired,
     JSONWebSignatureSerializer as Serializer)
-# User class has to implement flask_login's UserMixin
 from flask_login import UserMixin
 from app.models.db import DB
 from .abstract_base_entity import AbstractBaseEntity
-
-load_dotenv(dotenv_path=find_dotenv('.env'))
 
 class UserEntity(AbstractBaseEntity, UserMixin, DB.Model):
     """user table"""
