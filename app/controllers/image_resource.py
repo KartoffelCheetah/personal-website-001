@@ -10,14 +10,14 @@ import flask_login
 from flask_sqlalchemy import sqlalchemy
 from app.models.image_resource_entity import ImageResourceEntity
 from app.definitions import ROUTING
-from app.models.api import API
+from app.models.api import api
 
-IMAGE_RES_NAMESPACE = API.namespace(
+ns_img_res = api.namespace(
     ROUTING['RI']['IMAGE']['namespace'],
     description='Image resource management',
 )
 
-IMAGE_DOC = API.model('ImageResource', {
+doc_image = api.model('ImageResource', {
     'resource': fields.String(
         required=True,
         description='Unique resource identifier.',
@@ -33,33 +33,33 @@ IMAGE_DOC = API.model('ImageResource', {
     ),
 })
 
-IMAGE_POST_DOC = API.parser()
-IMAGE_POST_DOC.add_argument(
+doc_img_post = api.parser()
+doc_img_post.add_argument(
         'resource',
         type=str,
         help='Unique resource identifier.',
         location='form',
         required=True
         )
-IMAGE_POST_DOC.add_argument('imagedata', location='files', type=FileStorage, required=True)
+doc_img_post.add_argument('imagedata', location='files', type=FileStorage, required=True)
 
-@IMAGE_RES_NAMESPACE.route(ROUTING['RI']['IMAGE']['LIST'])
+@ns_img_res.route(ROUTING['RI']['IMAGE']['LIST'])
 class ImageResourceList(Resource):
     """Handles image resources"""
 
-    @API.marshal_with(IMAGE_DOC, as_list=True)
+    @api.marshal_with(doc_image, as_list=True)
     def get(self):
         """Returns all image resources."""
         return ImageResourceEntity.query.all()
 
     @flask_login.login_required
-    @API.doc(security='cookie', body=IMAGE_POST_DOC)
-    @API.expect(IMAGE_POST_DOC, as_list=True)
-    @API.marshal_with(IMAGE_DOC, as_list=True)
+    @api.doc(security='cookie', body=doc_img_post)
+    @api.expect(doc_img_post, as_list=True)
+    @api.marshal_with(doc_image, as_list=True)
     def post(self):
         """Adds a new image resource."""
         is_conflict = False
-        args = IMAGE_POST_DOC.parse_args()
+        args = doc_img_post.parse_args()
         securefname = secure_filename(args['resource'])
         securefpath = os.path.join(os.getenv('FOLDER_UPLOAD'), securefname)
         if ImageResourceEntity.query.filter_by(resource=securefname).first():

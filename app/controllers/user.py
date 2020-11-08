@@ -9,14 +9,14 @@ from flask_restx import Resource, abort, fields
 from flask_sqlalchemy import sqlalchemy
 from app.models.user_entity import UserEntity
 from app.definitions import ROUTING
-from app.models.api import API
+from app.models.api import api
 
-USER_NAMESPACE: Final[API.namespace] = API.namespace(
+ns_user: Final[api.namespace] = api.namespace(
     ROUTING['USER']['namespace'],
     description='User management',
 )
 
-LOGIN_DOC: Final[API.model] = API.model('Login', {
+doc_login: Final[api.model] = api.model('Login', {
     'username': fields.String(
         required=True,
         **UserEntity.USERNAME_LENGTH,
@@ -27,7 +27,7 @@ LOGIN_DOC: Final[API.model] = API.model('Login', {
     ),
 })
 
-REGISTER_DOC: Final[API.model] = API.model('Register', {
+doc_register: Final[api.model] = api.model('Register', {
     'username': fields.String(
         required=True,
         **UserEntity.USERNAME_LENGTH,
@@ -42,17 +42,17 @@ REGISTER_DOC: Final[API.model] = API.model('Register', {
     ),
 })
 
-@USER_NAMESPACE.route(ROUTING['USER']['LOGIN'])
+@ns_user.route(ROUTING['USER']['LOGIN'])
 class Login(Resource):
     """Endpoint"""
 
-    @API.doc(body=LOGIN_DOC)
+    @api.doc(body=doc_login)
     def post(self):
         """Tries to login user with username and password"""
-        current_app.logger.warning('Login attempt with username: %s', API.payload['username'])
-        user = UserEntity.query.filter_by(username=API.payload['username']).first()
+        current_app.logger.warning('Login attempt with username: %s', api.payload['username'])
+        user = UserEntity.query.filter_by(username=api.payload['username']).first()
         if not user:
-            current_app.logger.warning('No such user: %s', API.payload['username'])
+            current_app.logger.warning('No such user: %s', api.payload['username'])
             return abort(401)
         # user is found
         current_date = datetime.datetime.utcnow()
@@ -64,7 +64,7 @@ class Login(Resource):
         user.last_try = current_date
         database.session.commit()
         if user.login_count < UserEntity.LOGIN_COUNT_LIMIT:
-            if user.is_password_correct(API.payload['password']):
+            if user.is_password_correct(api.payload['password']):
                 user.login_count = 0
                 database.session.commit()
                 flask_login.login_user(user) # flask_login logins the user
@@ -73,29 +73,29 @@ class Login(Resource):
             current_app.logger.warning('Invalid password during login: %s', user)
         return abort(401)
 
-@USER_NAMESPACE.route(ROUTING['USER']['LOGOUT'])
+@ns_user.route(ROUTING['USER']['LOGOUT'])
 class Logout(Resource):
     """Endpoint"""
 
     @flask_login.login_required
-    @API.doc(security='cookie')
+    @api.doc(security='cookie')
     def get(self):
         """Logs out user with the session"""
         flask_login.logout_user()
         return {'message': 'You are now logged out!'}
 
-@USER_NAMESPACE.route(ROUTING['USER']['REGISTER'])
+@ns_user.route(ROUTING['USER']['REGISTER'])
 class Register(Resource):
     """Endpoint"""
 
-    @API.doc(body=REGISTER_DOC)
+    @api.doc(body=doc_register)
     def post(self):
         """Registers new user"""
         if os.getenv('FLASK_ENV') == 'development':
             new_user = UserEntity(
-                username=API.payload['username'],
-                email=API.payload['email'],
-                password_hash=UserEntity.get_hashed_password(API.payload['password']),
+                username=api.payload['username'],
+                email=api.payload['email'],
+                password_hash=UserEntity.get_hashed_password(api.payload['password']),
             )
             database = current_app.config['database']
             try:

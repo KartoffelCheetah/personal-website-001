@@ -12,10 +12,10 @@ from itsdangerous import (
     SignatureExpired,
     JSONWebSignatureSerializer as Serializer)
 from flask_login import UserMixin
-from app.models.db import DB
+from app.models.db import db
 from .abstract_base_entity import AbstractBaseEntity
 
-class UserEntity(AbstractBaseEntity, UserMixin, DB.Model):
+class UserEntity(AbstractBaseEntity, UserMixin, db.Model):
     """user table"""
 
     USERNAME_LENGTH: Dict[str, int] = {'min_length': 6, 'max_length': 64}
@@ -26,11 +26,11 @@ class UserEntity(AbstractBaseEntity, UserMixin, DB.Model):
     # Timer to reset LOGIN_COUNT_LIMIT to 0
     LOGIN_COUNT_RESET: int = 600
     #pylint: disable=E1101
-    username = DB.Column(DB.String(USERNAME_LENGTH['max_length']), unique=True, nullable=False)
-    email = DB.Column(DB.String(EMAIL_LENGTH['max_length']), unique=True, nullable=False)
-    password_hash = DB.Column(DB.String(256), nullable=False)
-    login_count = DB.Column(DB.Integer, nullable=False, default=0)
-    last_try = DB.Column(DB.DateTime(), nullable=False, default=datetime.datetime.utcnow)
+    username = db.Column(db.String(USERNAME_LENGTH['max_length']), unique=True, nullable=False)
+    email = db.Column(db.String(EMAIL_LENGTH['max_length']), unique=True, nullable=False)
+    password_hash = db.Column(db.String(256), nullable=False)
+    login_count = db.Column(db.Integer, nullable=False, default=0)
+    last_try = db.Column(db.DateTime(), nullable=False, default=datetime.datetime.utcnow)
 
     def __repr__(self) -> str:
         return '<UserEntity %r>' % self.username

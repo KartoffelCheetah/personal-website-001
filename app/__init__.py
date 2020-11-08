@@ -4,22 +4,22 @@ import os
 import pathlib
 from typing import Union, Final
 from flask import Flask
-from app.models.db import DB
+from app.models.db import db
 from app.managers.env_manager import load_env
 load_env()
-from app.managers.login_manager import LOGIN_MANAGER
+from app.managers.login_manager import login_manager
 from app.definitions import PROJECT_PATH
 from app.models.user_entity import UserEntity
-from app.models.api import API, API_BLUEPRINT
-from app.controllers.image_resource import IMAGE_RES_NAMESPACE
-from app.controllers.user import USER_NAMESPACE
+from app.models.api import api, bl_api
+from app.controllers.image_resource import ns_img_res
+from app.controllers.user import ns_user
 
 def create_app() -> Flask:
     """Creates Flask application"""
 
-    APP: Final[Flask] = Flask(__name__)
+    app: Final[Flask] = Flask(__name__)
     # NOTE: FLASK_ENV configuration value is set from ENVIRONMENT variable
-    APP.config.update(
+    app.config.update(
         SECRET_KEY=os.getenv('SECRET_KEY'),
         SESSION_COOKIE_SECURE=bool(int(os.getenv('SESSION_COOKIE_SECURE'))),
         SESSION_COOKIE_HTTPONLY=bool(int(os.getenv('SESSION_COOKIE_HTTPONLY'))),
@@ -31,26 +31,26 @@ def create_app() -> Flask:
         SESSION_COOKIE_SAMESITE=os.getenv('SESSION_COOKIE_SAMESITE')
     )
 
-    APP.config['database'] = DB
+    app.config['database'] = db
 
-    if not APP.secret_key or len(APP.secret_key) < 100:
+    if not app.secret_key or len(app.secret_key) < 100:
         raise ValueError('You need to set a proper SECRET KEY.')
 
-    DB.init_app(APP)
+    db.init_app(app)
 
-    LOGIN_MANAGER.init_app(APP)
+    db.create_all(app=app)
 
-    API.init_app(API_BLUEPRINT)
+    login_manager.init_app(app)
 
-    APP.register_blueprint(API_BLUEPRINT)
+    api.init_app(bl_api)
 
-    API.add_namespace(USER_NAMESPACE)
+    app.register_blueprint(bl_api)
 
-    API.add_namespace(IMAGE_RES_NAMESPACE)
+    api.add_namespace(ns_user)
 
-    DB.create_all(app=APP)
+    api.add_namespace(ns_img_res)
 
-    @LOGIN_MANAGER.user_loader
+    @login_manager.user_loader
     def load_user(user_identifier: str) -> Union[UserEntity, None]:
         """Gets user from session,
         if user_identifier is not valid returns None"""
@@ -68,4 +68,4 @@ def create_app() -> Flask:
             pass
         return None
 
-    return APP
+    return app
