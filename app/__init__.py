@@ -51,7 +51,7 @@ def create_app() -> Flask:
     api.add_namespace(ns_img_res)
 
     @login_manager.user_loader
-    def load_user(user_identifier: str) -> Union[UserEntity, None]:
+    def load_user(user_identifier: str) -> Union[UserEntity, None]:# pylint: disable=unused-variable
         """Gets user from session,
         if user_identifier is not valid returns None"""
         try:
@@ -61,11 +61,8 @@ def create_app() -> Flask:
 
             if user and user.session_auth(pwd_check):
                 return user
-        except ValueError:
-            # ValueError: invalid input
-            # just do not allow user to enter
-            # TODO: logging
-            pass
+        except ValueError as ex:
+            app.logger.warning('login_manager: %s', ex)
         return None
 
     return app
