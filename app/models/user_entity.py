@@ -18,13 +18,10 @@ from .abstract_base_entity import AbstractBaseEntity
 class UserEntity(AbstractBaseEntity, UserMixin, db.Model):
     """user table"""
 
+    LOGIN_ID_SEPARATOR: str = '->'
     USERNAME_LENGTH: Dict[str, int] = {'min_length': 6, 'max_length': 64}
     EMAIL_LENGTH: Dict[str, int] = {'min_length': 5, 'max_length': 128}
     PASSWORD_LENGTH: Dict[str, int] = {'min_length': 8, 'max_length': 256}
-    # Block user when reaches this limit
-    LOGIN_COUNT_LIMIT: int = 10
-    # Timer to reset LOGIN_COUNT_LIMIT to 0
-    LOGIN_COUNT_RESET: int = 600
     #pylint: disable=E1101
     username = db.Column(db.String(USERNAME_LENGTH['max_length']), unique=True, nullable=False)
     email = db.Column(db.String(EMAIL_LENGTH['max_length']), unique=True, nullable=False)
@@ -90,7 +87,7 @@ class UserEntity(AbstractBaseEntity, UserMixin, db.Model):
         # wont validate after pwd is changed
         pwd_check = serializer.dumps(self.id)
 
-        return '{}->{}'.format(self.id, pwd_check.decode())
+        return str(self.id) + self.LOGIN_ID_SEPARATOR + pwd_check.decode()
 
     def session_auth(self, pwd_check: str) -> Union[bool, None]:
         """Authenticates user.

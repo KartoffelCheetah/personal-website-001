@@ -1,7 +1,7 @@
 #pylint: disable=R0201
 """User Controller"""
 import os
-import datetime
+from datetime import datetime
 from typing import Final
 import flask_login
 from flask import current_app
@@ -10,6 +10,7 @@ from flask_sqlalchemy import sqlalchemy
 from app.models.user_entity import UserEntity
 from app.definitions import ROUTING
 from app.models.api import api
+from app.managers.user_manager import tick_user_login_count, is_user_below_max_login_count
 
 ns_user: Final[api.namespace] = api.namespace(
     ROUTING['USER']['namespace'],
@@ -55,15 +56,12 @@ class Login(Resource):
             current_app.logger.warning('No such user: %s', api.payload['username'])
             return abort(401)
         # user is found
-        current_date = datetime.datetime.utcnow()
+        current_date = datetime.utcnow()
         database = current_app.config['database']
-        if (current_date - user.last_try).total_seconds() > UserEntity.LOGIN_COUNT_RESET:
-            user.login_count = 0
-        else:
-            user.login_count = user.login_count + 1
+        tick_user_login_count(user)
         user.last_try = current_date
         database.session.commit()
-        if user.login_count < UserEntity.LOGIN_COUNT_LIMIT:
+        if is_user_below_max_login_count(user):
             if user.is_password_correct(api.payload['password']):
                 user.login_count = 0
                 database.session.commit()

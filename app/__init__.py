@@ -7,15 +7,16 @@ from flask import Flask
 from app.models.db import db
 from app.managers.env_manager import load_env
 load_env()
-from app.managers.login_manager import login_manager
 from app.definitions import PROJECT_PATH
 from app.models.user_entity import UserEntity
 from app.models.api import api, bl_api
+from app.managers.user_manager import load_user
+from app.managers.login_manager import login_manager
 from app.controllers.image_resource import ns_img_res
 from app.controllers.user import ns_user
 
 def create_app() -> Flask:
-    """Creates Flask application"""
+    """Returns the Flask application"""
 
     app: Final[Flask] = Flask(__name__)
     # NOTE: FLASK_ENV configuration value is set from ENVIRONMENT variable
@@ -51,18 +52,9 @@ def create_app() -> Flask:
     api.add_namespace(ns_img_res)
 
     @login_manager.user_loader
-    def load_user(user_identifier: str) -> Union[UserEntity, None]:# pylint: disable=unused-variable
-        """Gets user from session,
-        if user_identifier is not valid returns None"""
-        try:
-            user_id, pwd_check = user_identifier.split('->')
-
-            user = UserEntity.query.filter_by(id=int(user_id)).first()
-
-            if user and user.session_auth(pwd_check):
-                return user
-        except ValueError as ex:
-            app.logger.warning('login_manager: %s', ex)
-        return None
+    def flask_login_handler(user_identifier: str) -> Union[UserEntity, None]:# pylint: disable=unused-variable
+        """Handler for login_manager. Gets user from session. If
+        user_identifier is not valid None is returned"""
+        return load_user(user_identifier, app.logger)
 
     return app
