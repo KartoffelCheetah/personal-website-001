@@ -29,11 +29,15 @@ def is_exists_in_fs(securefname: str, logger: Logger) -> bool:
         return True
     return False
 
-def save_image_resource_to_fs(securefname: str, imagedata: FileStorage) -> ImageResourceEntity:
-    """Saves image to fs. Returns a corresponding ImageResourceEntity.
-    Database commit required."""
+def save_image_resource_to_fs(securefname: str, imagedata: FileStorage) -> None:
+    """Saves image to fs."""
     securefpath = get_securefpath(securefname)
     imagedata.save(securefpath)
+
+def get_image_resource_entity_from_fs(securefname: str) -> ImageResourceEntity:
+    """Returns a corresponding ImageResourceEntity.
+    Database commit required."""
+    securefpath = get_securefpath(securefname)
     width, height = Image.open(securefpath).size
     return ImageResourceEntity(resource=securefname, width=width, height=height)
 

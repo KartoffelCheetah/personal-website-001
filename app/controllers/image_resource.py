@@ -9,7 +9,7 @@ from flask_sqlalchemy import sqlalchemy
 from app.models.image_resource_entity import ImageResourceEntity
 from app.definitions import ROUTING
 from app.models.api import api
-from app.managers.image_resource_manager import is_exists_in_db, is_exists_in_fs, get_securefname, get_securefpath, save_image_resource_to_fs
+from app.managers.image_resource_manager import is_exists_in_db, is_exists_in_fs, get_securefname, get_securefpath, save_image_resource_to_fs, get_image_resource_entity_from_fs
 
 ns_img_res = api.namespace(
     ROUTING['RI']['IMAGE']['namespace'],
@@ -64,7 +64,9 @@ class ImageResourceList(Resource):
         if is_exists_in_db(securefname, current_app.logger) or is_exists_in_fs(securefname, current_app.logger):
             return abort(409)
 
-        new_media = save_image_resource_to_fs(securefname, args['imagedata'])
+        save_image_resource_to_fs(securefname, args['imagedata'])
+
+        new_media = get_image_resource_entity_from_fs(securefname)
 
         database = current_app.config['database']
 

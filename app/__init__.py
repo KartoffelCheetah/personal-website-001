@@ -14,6 +14,7 @@ from app.managers.user_manager import load_user
 from app.managers.login_manager import login_manager
 from app.controllers.image_resource import ns_img_res
 from app.controllers.user import ns_user
+from app.commands.image_resource_command import image_cli_group
 
 def create_app() -> Flask:
     """Returns the Flask application"""
@@ -50,6 +51,8 @@ def create_app() -> Flask:
     api.add_namespace(ns_user)
 
     api.add_namespace(ns_img_res)
+
+    app.cli.add_command(image_cli_group)
 
     @login_manager.user_loader
     def flask_login_handler(user_identifier: str) -> Union[UserEntity, None]:# pylint: disable=unused-variable
