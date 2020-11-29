@@ -89,7 +89,7 @@ class Register(Resource):
     @api.doc(body=doc_register)
     def post(self):
         """Registers new user"""
-        if os.getenv('FLASK_ENV') == 'development':
+        if os.environ['FLASK_ENV'] == 'development':
             new_user = UserEntity(
                 username=api.payload['username'],
                 email=api.payload['email'],

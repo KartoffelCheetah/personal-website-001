@@ -82,7 +82,7 @@ class UserEntity(AbstractBaseEntity, UserMixin, db.Model):
         """
 
         serializer = Serializer(
-            os.getenv('SECRET_KEY'),
+            os.environ['SECRET_KEY'],
             salt=self.password_hash)
         # wont validate after pwd is changed
         pwd_check = serializer.dumps(self.id)
@@ -105,7 +105,7 @@ class UserEntity(AbstractBaseEntity, UserMixin, db.Model):
         """
 
         serializer = Serializer(
-            os.getenv('SECRET_KEY'),
+            os.environ['SECRET_KEY'],
             salt=self.password_hash)
         try:
             return serializer.loads(pwd_check.encode()) == self.id

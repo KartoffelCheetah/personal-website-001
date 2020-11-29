@@ -5,7 +5,7 @@ from flask_restx import Api
 from app.definitions import ROUTING
 
 api = Api(
-    version=os.getenv('API_VERSION'),
+    version=os.environ['API_VERSION'],
     title='API of Personal Website',
     description='The api of the website.',
     validate=True,
