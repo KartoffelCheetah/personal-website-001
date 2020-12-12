@@ -10,7 +10,7 @@ class AbstractResourceEntity(AbstractBaseEntity): #pylint: disable=too-few-publi
     """
     #pylint: disable=E1101
     RI_LENGTH: Dict[str, int] = {'min_length': 1, 'max_length': 1024}
-    RI_PATTERN: str = r'^[a-zA-Z\d\-\_]+$'
+    RI_PATTERN: str = r'^[a-zA-Z\d\-\_\.]+$'
     resource = db.Column(db.String(RI_LENGTH['max_length']), nullable=False, unique=True)
 
     def __repr__(self) -> str:

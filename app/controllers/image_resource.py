@@ -1,6 +1,7 @@
 #pylint: disable=R0201
 """Image Resource Controller"""
 import os
+import re
 from werkzeug.datastructures import FileStorage
 from flask import current_app
 from flask_restx import Resource, abort, fields
@@ -9,7 +10,7 @@ from flask_sqlalchemy import sqlalchemy
 from app.models.image_resource_entity import ImageResourceEntity
 from app.definitions import ROUTING
 from app.models.api import api
-from app.managers.image_resource_manager import is_exists_in_db, is_exists_in_fs, get_securefname, get_securefpath, save_image_resource_to_fs, get_image_resource_entity_from_fs
+from app.managers.image_resource_manager import is_conflicting, get_securefname, save_image_resource_to_fs, get_image_resource_entity_from_fs
 
 ns_img_res = api.namespace(
     ROUTING['RI']['IMAGE']['namespace'],
@@ -18,9 +19,9 @@ ns_img_res = api.namespace(
 
 doc_image = api.model('ImageResource', {
     'resource': fields.String(
-        required=True,
+        required=False,
         description='Unique resource identifier.',
-        example='my-image',
+        example='my-image.png',
         pattern=ImageResourceEntity.RI_PATTERN,
         **ImageResourceEntity.RI_LENGTH,
     ),
@@ -38,7 +39,7 @@ doc_img_post.add_argument(
         type=str,
         help='Unique resource identifier.',
         location='form',
-        required=True
+        required=False,
         )
 doc_img_post.add_argument('imagedata', location='files', type=FileStorage, required=True)
 
@@ -59,9 +60,20 @@ class ImageResourceList(Resource):
         """Adds a new image resource."""
         args = doc_img_post.parse_args()
 
-        securefname = get_securefname(args['resource'])
+        filename = args['resource'] or args['imagedata'].filename
 
-        if is_exists_in_db(securefname, current_app.logger) or is_exists_in_fs(securefname, current_app.logger):
+        if not re.match(ImageResourceEntity.RI_PATTERN, filename):
+            return abort(400)
+
+        if not (ImageResourceEntity.RI_LENGTH['min_length'] < len(filename) < ImageResourceEntity.RI_LENGTH['max_length']):
+            return abort(400)
+
+        if not os.path.splitext(filename)[1]:
+            return abort(400)
+
+        securefname = get_securefname(filename)
+
+        if is_conflicting(securefname, current_app.logger):
             return abort(409)
 
         save_image_resource_to_fs(securefname, args['imagedata'])
