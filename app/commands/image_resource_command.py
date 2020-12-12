@@ -3,6 +3,7 @@ import os
 from time import sleep
 from flask import current_app
 from flask.cli import AppGroup
+from flask_sqlalchemy import sqlalchemy
 from app.models.image_resource_entity import ImageResourceEntity
 from app.managers.image_resource_manager import get_image_resource_entity_from_fs
 
@@ -41,4 +42,3 @@ def fs2db():
         current_app.logger.exception('Integrity error in db.')
 
     current_app.logger.info('...fs2db ends')
-
