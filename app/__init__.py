@@ -3,7 +3,7 @@
 import os
 import pathlib
 from typing import Union, Final
-from flask import Flask
+from flask import Flask, Response
 from app.models.db import db
 from app.managers.env_manager import load_env
 load_env()
@@ -59,5 +59,11 @@ def create_app() -> Flask:
         """Handler for login_manager. Gets user from session. If
         user_identifier is not valid None is returned"""
         return load_user(user_identifier, app.logger)
+
+    @app.after_request
+    def add_cors_headers(response: Response) -> Response:# pylint: disable=unused-variable
+        if os.environ['FLASK_ENV'] == 'development':
+            response.headers.add('Access-Control-Allow-Origin', f"http://localhost:{os.environ['PORT_TEST_CLIENT']}")
+        return response
 
     return app

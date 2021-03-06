@@ -3,10 +3,10 @@ FROM python:3.8
 RUN groupadd --gid 1000 python
 
 RUN useradd \
-    --uid 1000 \
-    --gid python \
-    --shell /bin/bash \
-    --create-home python
+  --uid 1000 \
+  --gid python \
+  --shell /bin/bash \
+  --create-home python
 
 RUN mkdir /home/python/app
 
@@ -15,4 +15,4 @@ USER python
 ENV PATH="/home/python/.local/bin/:${PATH}"
 
 RUN pip install --user \
-   'pipenv==2020.08.13'
+  'pipenv==2020.08.13'

@@ -1,41 +1,42 @@
 version: "3"
 
 services:
-    node:
-        image: "node:14.15.0-alpine3.12"
-        user: "node"
-        working_dir: /home/node/app/
-        environment:
-            - NODE_ENV
-            - PORT_TEST_SERVER
-        volumes:
-            - ./client/:/home/node/app/
-            - ./static/:/home/node/static/
-        ports:
-            - ${PORT_TEST_CLIENT}:${PORT_TEST_CLIENT}
-        command: sh -c "npm install && npm run generate_assets"
-    python:
-        build:
-            context: .
-            dockerfile: python.Dockerfile
-        user: "python"
-        working_dir: /home/python/app/
-        environment:
-            - PIPENV_VENV_IN_PROJECT
-            - FLASK_ENV
-            - FLASK_APP
-        volumes:
-            - ./:/home/python/app/
-        ports:
-            - ${PORT_TEST_SERVER}:${PORT_TEST_SERVER}
-        command: "pipenv run python_start"
-    adminer:
-        image: adminer
-        environment:
-            - ADMINER_PLUGINS
-            - PASS_ADMINER
-        volumes:
-            - ./config/login-password-less.php:/var/www/html/plugins-enabled/login-password-less.php
-            - ./website.db:/website.db
-        ports:
-            - ${PORT_ADMINER}:8080
+  node:
+    image: "node:14.15.0-alpine3.12"
+    user: "node"
+    working_dir: /home/node/app/
+    environment:
+      - NODE_ENV
+      - PORT_TEST_SERVER
+      - PORT_TEST_CLIENT
+    volumes:
+      - ./client/:/home/node/app/
+      - ./app/static/:/home/node/static/
+    ports:
+      - ${PORT_TEST_CLIENT}:${PORT_TEST_CLIENT}
+    command: "npm run start"
+  python:
+    build:
+      context: .
+      dockerfile: python.Dockerfile
+    user: "python"
+    working_dir: /home/python/app/
+    environment:
+      - PIPENV_VENV_IN_PROJECT
+      - FLASK_ENV
+      - FLASK_APP
+    volumes:
+      - ./:/home/python/app/
+    ports:
+      - ${PORT_TEST_SERVER}:${PORT_TEST_SERVER}
+    command: "pipenv run python_start"
+  adminer:
+    image: adminer
+    environment:
+      - ADMINER_PLUGINS
+      - PASS_ADMINER
+    volumes:
+      - ./config/login-password-less.php:/var/www/html/plugins-enabled/login-password-less.php
+      - ./website.db:/website.db
+    ports:
+      - ${PORT_ADMINER}:8080
