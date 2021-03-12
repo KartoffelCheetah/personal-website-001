@@ -1,0 +1,10 @@
+<template lang="pug">
+div Home
+</template>
+
+<script lang="ts">
+  import { defineComponent } from 'vue';
+  export default defineComponent({
+    name: 'Home',
+  });
+</script>

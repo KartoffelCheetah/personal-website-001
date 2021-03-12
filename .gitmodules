@@ -1,0 +1,3 @@
+[submodule "client/fonts/fonts"]
+	path = client/fonts/fonts
+	url = https://framagit.org/peppercarrot/fonts.git

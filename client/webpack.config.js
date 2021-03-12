@@ -30,7 +30,7 @@ module.exports = (env, options) => ({
         use: 'vue-loader',
       },
       {
-        test: /\.(woff(2)?|ttf|eot|svg)$/,
+        test: /\.(woff(2)?|ttf|otf|eot|svg)$/,
         include: /fonts/,
         use: {
           loader: 'file-loader',
