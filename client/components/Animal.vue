@@ -5,20 +5,24 @@ div(:class="$style.animal")
 </template>
 
 <script lang="ts">
+
+  import { defineComponent, PropType } from 'vue';
+
   export type AnimalType = {
     name: string;
     image: string;
     title: string;
   };
 
-  export default {
+  export default defineComponent({
     name: 'Animal',
     props: {
       animal: {
-        type: Object as () => AnimalType,
+        type: Object as PropType<AnimalType>,
+        required: true,
       },
     },
-  };
+  });
 </script>
 
 <style module>
