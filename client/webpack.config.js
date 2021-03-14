@@ -60,7 +60,7 @@ module.exports = (env, options) => ({
           {
             loader: 'css-loader',
             options: {
-              modules: true,
+              modules: false,
             },
           },
           'stylus-loader',
@@ -68,7 +68,6 @@ module.exports = (env, options) => ({
       },
     ],
   },
-  // resolve: { extensions: ['.js', '.json', '.vue', '.css' ] },
   plugins: [
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
