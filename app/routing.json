@@ -1,10 +1,6 @@
 {
   "API_PREFIX": "/api",
 
-  "STATIC": "/static",
-
-  "UPLOADS": "/static/uploads",
-
   "USER": {
     "namespace": "user",
     "LOGIN": "/login",

@@ -11,5 +11,5 @@ from typing import Final
 PROJECT_PATH: Final[pathlib.Path] = pathlib.Path('.').absolute()
 
 # Routing data
-with open(PROJECT_PATH/'app/static/routing.json') as ROUTING_FILE:
+with open(PROJECT_PATH/'app/routing.json') as ROUTING_FILE:
     ROUTING: Final[dict] = json.load(ROUTING_FILE)

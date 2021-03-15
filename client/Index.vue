@@ -8,6 +8,7 @@ main.indexBox.indexMain
   p qwertzuiopőúasdfghjkléáűíyxcvbnmöüó
   p QWERTZUIOPŐÚASDFGHJKLÉÁŰÍYXCVBNMÖÜÓ
   br
+  img(v-if="src", :src="src", width="400")
   p I'm a front-end developer.
     | adgnafg dhguifgfigiof experience as a programmer.
     | I enjoy programming in JavaScript and Python3, designing websites and doing 2D art.
@@ -26,6 +27,15 @@ footer.indexBox.indexFooter
 
   export default defineComponent({
     name: 'Index',
+    data () {
+      return {
+        src: '',
+      };
+    },
+    async mounted () {
+      const images = await (await this.$api('get_image_resource_list', {})).json();
+      this.src = 'http://localhost:5000/static/uploads/image_resource/' + images[0].resource;
+    },
   });
 </script>
 <style>
