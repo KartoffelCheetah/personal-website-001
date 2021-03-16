@@ -17,7 +17,7 @@ ns_img_res = api.namespace(
     description='Image resource management',
 )
 
-doc_image = api.model('ImageResource', {
+doc_img = api.model('ImageResource', {
     'resource': fields.String(
         required=False,
         description='Unique resource identifier.',
@@ -35,19 +35,27 @@ doc_image = api.model('ImageResource', {
 
 doc_img_post = api.parser()
 doc_img_post.add_argument(
-        'resource',
-        type=str,
-        help='Unique resource identifier.',
-        location='form',
-        required=False,
-        )
+    'resource',
+    type=str,
+    location='form',
+    required=False,
+    help='Unique resource identifier.',
+)
 doc_img_post.add_argument('imagedata', location='files', type=FileStorage, required=True)
 
+@ns_img_res.route(routing.get('namespace_image', 'image')+'<resource>')
+class ImageResourceResourceByResource(Resource):
+    """Handles image resources"""
+    @api.marshal_with(doc_img, as_list=True)
+    def get(self, resource):
+        """Returns image resource."""
+        return ImageResourceEntity.query.filter_by(resource=resource).all()
+
 @ns_img_res.route(routing.get('namespace_image', 'image'))
-class ImageResourceList(Resource):
+class ImageResourceResource(Resource):
     """Handles image resources"""
 
-    @api.marshal_with(doc_image, as_list=True)
+    @api.marshal_with(doc_img, as_list=True)
     def get(self):
         """Returns all image resources."""
         return ImageResourceEntity.query.all()
@@ -55,7 +63,7 @@ class ImageResourceList(Resource):
     @flask_login.login_required
     @api.doc(security='cookie', body=doc_img_post)
     @api.expect(doc_img_post, as_list=True)
-    @api.marshal_with(doc_image, as_list=True)
+    @api.marshal_with(doc_img, as_list=True)
     def post(self):
         """Adds a new image resource."""
         args = doc_img_post.parse_args()
@@ -63,13 +71,11 @@ class ImageResourceList(Resource):
         filename = args['resource'] or args['imagedata'].filename
 
         if not re.match(ImageResourceEntity.RI_PATTERN, filename):
-            return abort(400)
-
-        if not (ImageResourceEntity.RI_LENGTH['min_length'] < len(filename) < ImageResourceEntity.RI_LENGTH['max_length']):
-            return abort(400)
-
+            return abort(400, f'Filename does not conform to {ImageResourceEntity.RI_PATTERN}')
+        if not ImageResourceEntity.RI_LENGTH['min_length'] < len(filename) < ImageResourceEntity.RI_LENGTH['max_length']:
+            return abort(400, 'Filename length does not conform to length')
         if not os.path.splitext(filename)[1]:
-            return abort(400)
+            return abort(400, 'Filename extension missing')
 
         securefname = get_securefname(filename)
 
