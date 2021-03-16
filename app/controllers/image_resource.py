@@ -18,7 +18,18 @@ ns_img_res = api.namespace(
 )
 
 doc_img = api.model('ImageResource', {
-    'resource': fields.String(
+    '@context': fields.String(
+        'https://schema.org',
+        example='https://schema.org',
+        readonly=True,
+    ),
+    '@type': fields.String(
+        'ImageObject',
+        example='ImageObject',
+        readonly=True,
+    ),
+    'contentUrl': fields.String(
+        attribute='resource',
         required=False,
         description='Unique resource identifier.',
         example='my-image.png',
@@ -43,13 +54,13 @@ doc_img_post.add_argument(
 )
 doc_img_post.add_argument('imagedata', location='files', type=FileStorage, required=True)
 
-@ns_img_res.route(routing.get('namespace_image', 'image')+'<resource>')
+@ns_img_res.route(routing.get('namespace_image', 'image')+'<contentUrl>')
 class ImageResourceResourceByResource(Resource):
     """Handles image resources"""
     @api.marshal_with(doc_img, as_list=True)
-    def get(self, resource):
+    def get(self, contentUrl):
         """Returns image resource."""
-        return ImageResourceEntity.query.filter_by(resource=resource).all()
+        return ImageResourceEntity.query.filter_by(resource=contentUrl).all()
 
 @ns_img_res.route(routing.get('namespace_image', 'image'))
 class ImageResourceResource(Resource):
