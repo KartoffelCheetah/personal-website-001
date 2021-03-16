@@ -2,7 +2,7 @@
 import os
 from flask import Blueprint
 from flask_restx import Api
-from app.definitions import ROUTING
+from app.definitions import routing
 
 api = Api(
     version=os.environ['API_VERSION'],
@@ -11,4 +11,4 @@ api = Api(
     validate=True,
 )
 
-bl_api = Blueprint('api', __name__, url_prefix=ROUTING['API_PREFIX'])
+bl_api = Blueprint('api', __name__, url_prefix=routing.get('api', 'prefix'))

@@ -8,12 +8,12 @@ from flask import current_app
 from flask_restx import Resource, abort, fields
 from flask_sqlalchemy import sqlalchemy
 from app.models.user_entity import UserEntity
-from app.definitions import ROUTING
+from app.definitions import routing
 from app.models.api import api
 from app.managers.user_manager import tick_user_login_count, is_user_below_max_login_count
 
 ns_user: Final[api.namespace] = api.namespace(
-    ROUTING['USER']['namespace'],
+    routing.get('namespace_user', 'namespace'),
     description='User management',
 )
 
@@ -43,7 +43,7 @@ doc_register: Final[api.model] = api.model('Register', {
     ),
 })
 
-@ns_user.route(ROUTING['USER']['LOGIN'])
+@ns_user.route(routing.get('namespace_user', 'login'))
 class Login(Resource):
     """Endpoint"""
 
@@ -71,7 +71,7 @@ class Login(Resource):
             current_app.logger.warning('Invalid password during login: %s', user)
         return abort(401)
 
-@ns_user.route(ROUTING['USER']['LOGOUT'])
+@ns_user.route(routing.get('namespace_user', 'logout'))
 class Logout(Resource):
     """Endpoint"""
 
@@ -82,7 +82,7 @@ class Logout(Resource):
         flask_login.logout_user()
         return {'message': 'You are now logged out!'}
 
-@ns_user.route(ROUTING['USER']['REGISTER'])
+@ns_user.route(routing.get('namespace_user', 'register'))
 class Register(Resource):
     """Endpoint"""
 

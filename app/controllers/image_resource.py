@@ -8,12 +8,12 @@ from flask_restx import Resource, abort, fields
 import flask_login
 from flask_sqlalchemy import sqlalchemy
 from app.models.image_resource_entity import ImageResourceEntity
-from app.definitions import ROUTING
+from app.definitions import routing
 from app.models.api import api
 from app.managers.image_resource_manager import is_conflicting, get_securefname, save_image_resource_to_fs, get_image_resource_entity_from_fs
 
 ns_img_res = api.namespace(
-    ROUTING['RI']['IMAGE']['namespace'],
+    routing.get('namespace_image', 'namespace'),
     description='Image resource management',
 )
 
@@ -43,7 +43,7 @@ doc_img_post.add_argument(
         )
 doc_img_post.add_argument('imagedata', location='files', type=FileStorage, required=True)
 
-@ns_img_res.route(ROUTING['RI']['IMAGE']['LIST'])
+@ns_img_res.route(routing.get('namespace_image', 'image'))
 class ImageResourceList(Resource):
     """Handles image resources"""
 
