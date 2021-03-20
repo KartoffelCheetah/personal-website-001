@@ -58,8 +58,6 @@ class ImageResourceResource(Resource):
     @api.marshal_with(image_resource_model, as_list=True)
     def get(self):
         """Returns all image resources."""
-        current_app.logger.warning(current_app.static_url_path)
-        current_app.logger.warning(current_app.static_folder)
         return ImageResourceEntity.query.all()
 
     @flask_login.login_required
