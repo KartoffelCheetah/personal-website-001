@@ -5,7 +5,7 @@ from flask import current_app
 from flask.cli import AppGroup
 from flask_sqlalchemy import sqlalchemy
 from app.models.image_resource_entity import ImageResourceEntity
-from app.managers.image_resource_manager import thumb_conf, get_image_resource_entity_from_fs, save_image_thubnails_to_fs
+from app.managers.image_resource_manager import ImageProcess, get_image_resource_entity_from_fs, save_image_thubnails_to_fs
 
 image_cli_group = AppGroup('image')
 
@@ -34,7 +34,7 @@ def status():
     else:
         current_app.logger.info('OK! DB is up to date.')
 
-    for conf in thumb_conf:
+    for conf in ImageProcess.thumb_conf:
         th_content = set(os.listdir(conf['path']))
         missing_parents = th_content - fs_content
         missing_thumbnails = fs_content - th_content
