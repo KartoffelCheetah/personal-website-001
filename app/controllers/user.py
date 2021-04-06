@@ -11,6 +11,7 @@ from app.models.user_entity import UserEntity
 from app.definitions import routing
 from app.models.api import api
 from app.managers.user_manager import tick_user_login_count, is_user_below_max_login_count
+from ._flask_utils import only_production
 
 ns_user: Final[api.namespace] = api.namespace(
     routing.get('namespace_user', 'namespace'),
@@ -87,21 +88,20 @@ class Register(Resource):
     """Endpoint"""
 
     @api.doc(body=doc_register)
+    @only_production
     def post(self):
         """Registers new user"""
-        if os.environ['FLASK_ENV'] == 'development':
-            new_user = UserEntity(
-                username=api.payload['username'],
-                email=api.payload['email'],
-                password_hash=UserEntity.get_hashed_password(api.payload['password']),
-            )
-            database = current_app.config['database']
-            try:
-                database.session.add(new_user)
-                database.session.commit()
-            except sqlalchemy.exc.IntegrityError:
-                current_app.logger.exception('Registration integrity error in db.')
-                return abort(500)
-            current_app.logger.warning('New user is successfully registered: %s', new_user)
-            return {'message': 'Registered!'}
-        return abort(404)
+        new_user = UserEntity(
+            username=api.payload['username'],
+            email=api.payload['email'],
+            password_hash=UserEntity.get_hashed_password(api.payload['password']),
+        )
+        database = current_app.config['database']
+        try:
+            database.session.add(new_user)
+            database.session.commit()
+        except sqlalchemy.exc.IntegrityError:
+            current_app.logger.exception('Registration integrity error in db.')
+            return abort(500)
+        current_app.logger.warning('New user is successfully registered: %s', new_user)
+        return {'message': 'Registered!'}
