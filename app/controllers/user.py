@@ -1,6 +1,5 @@
 #pylint: disable=R0201
 """User Controller"""
-import os
 from datetime import datetime
 from typing import Final
 import flask_login
@@ -11,7 +10,7 @@ from app.models.user_entity import UserEntity
 from app.definitions import routing
 from app.models.api import api
 from app.managers.user_manager import tick_user_login_count, is_user_below_max_login_count
-from ._flask_utils import only_production
+from app.controllers._flask_utils import only_development
 
 ns_user: Final[api.namespace] = api.namespace(
     routing.get('namespace_user', 'namespace'),
@@ -49,6 +48,7 @@ class Login(Resource):
     """Endpoint"""
 
     @api.doc(body=doc_login)
+    @only_development
     def post(self):
         """Tries to login user with username and password"""
         current_app.logger.warning('Login attempt with username: %s', api.payload['username'])
@@ -78,6 +78,7 @@ class Logout(Resource):
 
     @flask_login.login_required
     @api.doc(security='cookie')
+    @only_development
     def get(self):
         """Logs out user with the session"""
         flask_login.logout_user()
@@ -88,7 +89,7 @@ class Register(Resource):
     """Endpoint"""
 
     @api.doc(body=doc_register)
-    @only_production
+    @only_development
     def post(self):
         """Registers new user"""
         new_user = UserEntity(

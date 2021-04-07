@@ -11,6 +11,6 @@ def _is_enabled(is_enab: bool) -> Callable:
         return func if is_enab else aborter
     return wrapper
 
-def only_production(func: Callable) -> Callable:
+def only_development(func: Callable) -> Callable:
     """Aborts the restx controller in production"""
     return _is_enabled(os.environ['FLASK_ENV'] == 'development')(func)

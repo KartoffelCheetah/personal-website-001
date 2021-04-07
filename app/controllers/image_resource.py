@@ -11,6 +11,7 @@ from app.models.image_resource_entity import ImageResourceEntity
 from app.definitions import routing
 from app.models.api import api
 from app.managers.image_resource_manager import is_conflicting, get_securefname, ImageProcess, save_image_resource_to_fs, get_image_resource_entity_from_fs
+from app.controllers._flask_utils import only_development
 
 ns_img_res = api.namespace(
     routing.get('namespace_image', 'namespace'),
@@ -64,6 +65,7 @@ class ImageResourceResource(Resource):
     @api.doc(security='cookie', body=post_image_parser)
     @api.expect(post_image_parser, as_list=True)
     @api.marshal_with(image_resource_model, as_list=True)
+    @only_development
     def post(self):
         """Adds a new image resource."""
         args = post_image_parser.parse_args()
