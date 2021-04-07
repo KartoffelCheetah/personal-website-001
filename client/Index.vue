@@ -1,8 +1,8 @@
 <template lang="pug">
-header.indexBox
+header.indexBox.indexHeader
   h1.heading1.indexTitle
     span Kartoffel&#8203;Cheetah's
-    span.heading2 website
+    span.heading2 Lair
 main.indexBox.indexMain
   router-view
   p qwertzuiopőúasdfghjkléáűíyxcvbnmöüó
@@ -39,32 +39,44 @@ footer.indexBox.indexFooter
     min-height 100vh
     flex-direction column
     align-items center
-    background var(--darkgray)
+    background var(--darkmahagony)
   .index
     &Title
       display flex
       flex-direction column
       padding-left 8px
-      border-bottom 10px solid var(--brown)
-      border-left 5px solid var(--wheat)
-      background var(--deepdarkbrown) url('./images/instrument.svg')!important;
+      border-bottom 10px double var(--brown)
+      border-right 6px double var(--wheat)
+      border-left 5px double var(--wheat)
+      background var(--deepdarkbrown) url('./images/instrument.svg');
       background-blend-mode saturation
       color black
       text-shadow 1px 1px 2px var(--wheat)
     &Contact
       display flex
-      padding-top 2em
+      padding-top 32px
+      padding-bottom 8px
       gap .8em
     &Box
       width 600px
       max-width 100%
-      background: var(--gray)
+    &Header
+      position relative
+      &::before
+        content ''
+        position absolute
+        top 0
+        right 20px
+        bottom 0
+        width 40px
+        opacity .2
+        background var(--wheat)
     &Footer
       overflow hidden
       border-bottom-left-radius 5px
       border-bottom-right-radius 5px
     &Main
-      padding 5px 8px
+      padding 48px 8px 5px
       flex-grow .5
       @media(max-width: 400px)
         padding 5px 3px
