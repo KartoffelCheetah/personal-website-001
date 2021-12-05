@@ -3,7 +3,7 @@
 import os
 import pathlib
 from typing import Union, Final
-from flask import Flask, Response
+from flask import Flask, Response, request
 from app.models.db import db
 import app.managers.env_manager # loads envs as a side-effect before other imports
 from app.definitions import PROJECT_PATH
@@ -47,11 +47,8 @@ def create_app() -> Flask:
 
   @app.after_request
   def add_cors_headers(response: Response) -> Response:# pylint: disable=unused-variable
-    if os.environ['FLASK_ENV'] == 'development':
-      response.headers.add(
-        'Access-Control-Allow-Origin',
-        f"http://localhost:{os.environ['PORT_TEST_CLIENT']}",
-      )
+    if request.headers.get('origin') in os.environ['CORS_ACAO'].split('|'):
+      response.headers.add('Access-Control-Allow-Origin', request.headers['origin'])
     return response
 
   return app
