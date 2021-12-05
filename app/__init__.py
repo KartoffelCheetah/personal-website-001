@@ -7,12 +7,8 @@ from flask import Flask, Response
 from app.models.db import db
 import app.managers.env_manager # loads envs as a side-effect before other imports
 from app.definitions import PROJECT_PATH
-from app.models.user_entity import UserEntity
 from app.models.api import api, bl_api
-from app.managers.user_manager import load_user
-from app.managers.login_manager import login_manager
 from app.controllers.image_resource import ns_img_res
-from app.controllers.user import ns_user
 from app.commands.image_resource_command import image_cli_group
 
 def create_app() -> Flask:
@@ -41,28 +37,21 @@ def create_app() -> Flask:
 
   db.create_all(app=app)
 
-  login_manager.init_app(app)
-
   api.init_app(bl_api)
 
   app.register_blueprint(bl_api)
-
-  api.add_namespace(ns_user)
 
   api.add_namespace(ns_img_res)
 
   app.cli.add_command(image_cli_group)
 
-  @login_manager.user_loader
-  def flask_login_handler(user_identifier: str) -> Union[UserEntity, None]:# pylint: disable=unused-variable
-    """Handler for login_manager. Gets user from session. If
-    user_identifier is not valid None is returned"""
-    return load_user(user_identifier, app.logger)
-
   @app.after_request
   def add_cors_headers(response: Response) -> Response:# pylint: disable=unused-variable
     if os.environ['FLASK_ENV'] == 'development':
-      response.headers.add('Access-Control-Allow-Origin', f"http://localhost:{os.environ['PORT_TEST_CLIENT']}")
+      response.headers.add(
+        'Access-Control-Allow-Origin',
+        f"http://localhost:{os.environ['PORT_TEST_CLIENT']}",
+      )
     return response
 
   return app
