@@ -8,108 +8,108 @@ from passlib.hash import pbkdf2_sha512
 # timing is handled by session so
 # TimedJSONWebSignatureSerializer is not needed
 from itsdangerous import (
-    BadSignature,
-    SignatureExpired,
-    JSONWebSignatureSerializer as Serializer)
+  BadSignature,
+  SignatureExpired,
+  JSONWebSignatureSerializer as Serializer)
 from flask_login import UserMixin
 from app.models.db import db
 from .abstract_base_entity import AbstractBaseEntity
 
 class UserEntity(AbstractBaseEntity, UserMixin, db.Model):
-    """user table"""
+  """user table"""
 
-    LOGIN_ID_SEPARATOR: str = '->'
-    USERNAME_LENGTH: Dict[str, int] = {'min_length': 6, 'max_length': 64}
-    EMAIL_LENGTH: Dict[str, int] = {'min_length': 5, 'max_length': 128}
-    PASSWORD_LENGTH: Dict[str, int] = {'min_length': 8, 'max_length': 256}
-    #pylint: disable=E1101
-    username = db.Column(db.String(USERNAME_LENGTH['max_length']), unique=True, nullable=False)
-    email = db.Column(db.String(EMAIL_LENGTH['max_length']), unique=True, nullable=False)
-    password_hash = db.Column(db.String(256), nullable=False)
-    login_count = db.Column(db.Integer, nullable=False, default=0)
-    last_try = db.Column(db.DateTime(), nullable=False, default=datetime.datetime.utcnow)
+  LOGIN_ID_SEPARATOR: str = '->'
+  USERNAME_LENGTH: Dict[str, int] = {'min_length': 6, 'max_length': 64}
+  EMAIL_LENGTH: Dict[str, int] = {'min_length': 5, 'max_length': 128}
+  PASSWORD_LENGTH: Dict[str, int] = {'min_length': 8, 'max_length': 256}
+  #pylint: disable=E1101
+  username = db.Column(db.String(USERNAME_LENGTH['max_length']), unique=True, nullable=False)
+  email = db.Column(db.String(EMAIL_LENGTH['max_length']), unique=True, nullable=False)
+  password_hash = db.Column(db.String(256), nullable=False)
+  login_count = db.Column(db.Integer, nullable=False, default=0)
+  last_try = db.Column(db.DateTime(), nullable=False, default=datetime.datetime.utcnow)
 
-    def __repr__(self) -> str:
-        return '<UserEntity %r>' % self.username
+  def __repr__(self) -> str:
+    return '<UserEntity %r>' % self.username
 
-    def is_password_correct(self, password: str) -> bool:
-        """Returns if the password is correct.
+  def is_password_correct(self, password: str) -> bool:
+    """Returns if the password is correct.
 
-        Parameters
-        ----------
-        password : str
-            Password of user.
+    Parameters
+    ----------
+    password : str
+        Password of user.
 
-        Returns
-        -------
-        bool
-            Is password correct?
+    Returns
+    -------
+    bool
+        Is password correct?
 
-        """
-        return pbkdf2_sha512.verify(password, self.password_hash)
+    """
+    return pbkdf2_sha512.verify(password, self.password_hash)
 
-    @staticmethod
-    def get_hashed_password(password: str) -> str:
-        """Gets hashed password from plain text password.
+  @staticmethod
+  def get_hashed_password(password: str) -> str:
+    """Gets hashed password from plain text password.
 
-        Parameters
-        ----------
-        password : str
-            Password of user.
+    Parameters
+    ----------
+    password : str
+        Password of user.
 
-        Returns
-        -------
-        str
-            Hashed password.
+    Returns
+    -------
+    str
+        Hashed password.
 
-        """
-        return pbkdf2_sha512.hash(password)
+    """
+    return pbkdf2_sha512.hash(password)
 
-    def get_id(self) -> str:
-        """Implements UserMixin's get_id method.
-        Uses the hash of the password and the secret_key to authenticate.
-        Whenever password or secret_key changes the data will be unreadable.
+  def get_id(self) -> str:
+    """Implements UserMixin's get_id method.
+    Uses the hash of the password and the secret_key to authenticate.
+    Whenever password or secret_key changes the data will be unreadable.
 
-        Parameters
-        ----------
+    Parameters
+    ----------
 
 
-        Returns
-        -------
-        str
-            Identifier for user.
+    Returns
+    -------
+    str
+        Identifier for user.
 
-        """
+    """
 
-        serializer = Serializer(
-            os.environ['SECRET_KEY'],
-            salt=self.password_hash)
-        # wont validate after pwd is changed
-        pwd_check = serializer.dumps(self.id)
+    serializer = Serializer(
+      os.environ['SECRET_KEY'],
+      salt=self.password_hash)
+    # wont validate after pwd is changed
+    pwd_check = serializer.dumps(self.id)
 
-        return str(self.id) + self.LOGIN_ID_SEPARATOR + pwd_check.decode()
+    return str(self.id) + self.LOGIN_ID_SEPARATOR + pwd_check.decode()
 
-    def session_auth(self, pwd_check: str) -> Union[bool, None]:
-        """Authenticates user.
+  def session_auth(self, pwd_check: str) -> Union[bool, None]:
+    """Authenticates user.
 
-        Parameters
-        ----------
-        pwd_check : str
-            Authentication string.
+    Parameters
+    ----------
+    pwd_check : str
+      Authentication string.
 
-        Returns
-        -------
-        Union[bool, None]
-            Returns if the user is correct.
+    Returns
+    -------
+    Union[bool, None]
+      Returns if the user is correct.
 
-        """
+    """
 
-        serializer = Serializer(
-            os.environ['SECRET_KEY'],
-            salt=self.password_hash)
-        try:
-            return serializer.loads(pwd_check.encode()) == self.id
-        except (BadSignature, SignatureExpired, UnicodeError):
-            #NOTE: SignatureExpired could happen only when using
-            #NOTE: TimedJSONWebSignatureSerializer.
-            return None
+    serializer = Serializer(
+      os.environ['SECRET_KEY'],
+      salt=self.password_hash)
+    try:
+      return serializer.loads(pwd_check.encode()) == self.id
+    except (BadSignature, SignatureExpired, UnicodeError):
+      #NOTE: SignatureExpired could happen only when using
+      #NOTE: TimedJSONWebSignatureSerializer.
+      return None
