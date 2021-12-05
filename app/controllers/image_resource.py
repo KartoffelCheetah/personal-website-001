@@ -12,7 +12,7 @@ ns_img_res = api.namespace(
   description='Image resource management',
 )
 
-image_resource_model = api.model('ImageResource', {
+_image_resource_model = api.model('ImageResource', {
   '@context': fields.String('https://schema.org', example='https://schema.org'),
   '@type': fields.String('ImageObject', example='ImageObject'),
   '@id': fields.String(
@@ -37,19 +37,23 @@ image_resource_model = api.model('ImageResource', {
   'width': fields.Integer()
 })
 
+_parser_get_images = api.parser()
+_parser_get_images.add_argument('names', type=str, action='append', required=True)
+
 @ns_img_res.route(routing.get('namespace_image', 'image')+'<name>')
 class ImageResourceResourceByResource(Resource):
-  """Handles image resources"""
-  @api.marshal_with(image_resource_model, as_list=True)
+  """Handles a single image resource"""
+  @api.marshal_with(_image_resource_model, as_list=True)
   def get(self, name):
-    """Returns image resource."""
+    """Returns an image resource."""
     return ImageResourceEntity.query.filter_by(resource=name).all()
 
 @ns_img_res.route(routing.get('namespace_image', 'image'))
 class ImageResourceResource(Resource):
-  """Handles image resources"""
-
-  @api.marshal_with(image_resource_model, as_list=True)
+  """Handles multiple image resources"""
+  @api.expect(_parser_get_images)
+  @api.marshal_with(_image_resource_model, as_list=True)
   def get(self):
-    """Returns all image resources."""
-    return ImageResourceEntity.query.all()
+    """Returns all filtered image resources."""
+    names = list(_parser_get_images.parse_args()['names'])
+    return ImageResourceEntity.query.filter(ImageResourceEntity.resource.in_(names)).all()

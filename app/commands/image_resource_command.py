@@ -4,7 +4,7 @@ from flask import current_app
 from flask.cli import AppGroup
 from flask_sqlalchemy import sqlalchemy
 from app.models.image_resource_entity import ImageResourceEntity
-from app.managers.image_resource_manager import ImageProcess, get_image_resource_entity_from_fs, save_image_thubnails_to_fs
+from app.managers.image_resource_manager import ImageProcess, get_image_resource_entity_from_fs, save_image_thumbnails_to_fs
 
 image_cli_group = AppGroup('image')
 
@@ -76,7 +76,7 @@ def fs2db():
 
     database.session.add(new_media)
 
-    save_image_thubnails_to_fs(fs_image)
+    save_image_thumbnails_to_fs(fs_image)
 
   try:
     database.session.commit()

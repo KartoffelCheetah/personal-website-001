@@ -33,7 +33,7 @@ def _get_securefname(filename: str) -> str:
   implementation."""
   return secure_filename(filename)
 
-def save_image_thubnails_to_fs(filename: str) -> None:
+def save_image_thumbnails_to_fs(filename: str) -> None:
   """Generates the thumbnails for an image already existing on the fs."""
 
   ipr = ImageProcess(filename)
