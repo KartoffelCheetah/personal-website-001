@@ -43,10 +43,10 @@ _parser_get_images.add_argument('names', type=str, action='append', required=Tru
 @ns_img_res.route(routing.get('namespace_image', 'image')+'<name>')
 class ImageResourceResourceByResource(Resource):
   """Handles a single image resource"""
-  @api.marshal_with(_image_resource_model, as_list=True)
+  @api.marshal_with(_image_resource_model, as_list=False)
   def get(self, name):
     """Returns an image resource."""
-    return ImageResourceEntity.query.filter_by(resource=name).all()
+    return ImageResourceEntity.query.filter_by(resource=name).first()
 
 @ns_img_res.route(routing.get('namespace_image', 'image'))
 class ImageResourceResource(Resource):

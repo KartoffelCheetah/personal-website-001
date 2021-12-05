@@ -29,7 +29,7 @@ div.imageResourceContainer
       };
     },
     async mounted () {
-      const imageObject = (await this.$images).find(({ name }) => name === this.name);
+      const imageObject = await this.$images[this.name];
       if (imageObject) {
         this.src = this.$serverHost+imageObject.contentUrl;
         this.width = imageObject.width;
