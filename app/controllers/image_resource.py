@@ -20,13 +20,12 @@ _image_resource_model = api.model('ImageResource', {
       'api.image_image_resource_resource_by_resource',
       name=ire.resource,
     ),
-    example='/api/image/my-image.png',
+    example='/api/image/hello-example.png',
   ),
   'name': fields.String(attribute='resource'),
   'contentUrl': fields.String(
     attribute=lambda ire: ImageProcess(ire.resource).url,
-    example='my-image.png',
-    pattern=ImageResourceEntity.RI_PATTERN,
+    example='hello-example.png',
     **ImageResourceEntity.RI_LENGTH,
   ),
   'thumbnailUrl': fields.List(

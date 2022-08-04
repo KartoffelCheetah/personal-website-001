@@ -6,8 +6,8 @@ from app.definitions import routing
 
 api = Api(
   version=os.environ['API_VERSION'],
-  title='API of Personal Website',
-  description='The api of the website.',
+  title='API of Personal Website 001',
+  description='You found the api description.',
   validate=True,
 )
 

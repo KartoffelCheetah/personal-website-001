@@ -11,7 +11,7 @@ image_cli_group = AppGroup('image')
 @image_cli_group.command('status')
 def status():
   """Echoes a db/fs status."""
-  db_content = {i.resource for i in ImageResourceEntity.query.all()}
+  db_content = {i[0] for i in ImageResourceEntity.query.with_entities(ImageResourceEntity.resource).all()}
 
   fs_content = set(os.listdir(os.environ['FOLDER_UPLOAD']))
 
@@ -55,7 +55,7 @@ def fs2db():
   """Sync filesystem to database"""
   current_app.logger.info('fs2db startup...')
 
-  db_content = {i.resource for i in ImageResourceEntity.query.all()}
+  db_content = {i[0] for i in ImageResourceEntity.query.with_entities(ImageResourceEntity.resource).all()}
 
   fs_content = set(os.listdir(os.environ['FOLDER_UPLOAD']))
 
