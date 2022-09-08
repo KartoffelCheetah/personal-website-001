@@ -1,13 +1,13 @@
-  FROM docker.io/python:3.8
+FROM docker.io/python:3.8
 
-  RUN groupadd \
-      --gid 1001 python && \
-    useradd \
-      --uid 1001 \
-      --gid python \
-      --shell /bin/bash \
-      --create-home python && \
-    mkdir /home/python/app
+RUN groupadd \
+    --gid 1001 python && \
+  useradd \
+    --uid 1001 \
+    --gid python \
+    --shell /bin/bash \
+    --create-home python && \
+  mkdir /home/python/app
 
 USER python
 

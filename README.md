@@ -9,6 +9,7 @@ docker-compose up
 ## Cli Tasks
 
 ```bash
-docker-compose exec python pipenv run flask image status
-docker-compose exec python pipenv run flask image fs2db
+# podman container exec pw001_python pipenv run flask image --help
+podman container exec pw001_python pipenv run flask image status
+podman container exec pw001_python pipenv run flask image fs2db
 ```
