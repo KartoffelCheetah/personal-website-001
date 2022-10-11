@@ -2,11 +2,13 @@
 
 . ./.env
 
+UID_SERVER=1001
 POD_NAME_TEST=pw001
 IMG_TAG_PYTHON=localhost/${POD_NAME_TEST}__python
 
 podman image build \
   --file ./python.Containerfile \
+  --build-arg UID_SERVER=$UID_SERVER \
   --tag $IMG_TAG_PYTHON
 
 podman pod create \
@@ -21,8 +23,8 @@ podman container run \
   --name ${POD_NAME_TEST}_adminer \
   --env ADMINER_PLUGINS=$ADMINER_PLUGINS \
   --env PASS_ADMINER=$PASS_ADMINER \
-  --volume ./config/login-password-less.php:/var/www/html/plugins-enabled/login-password-less.php:ro \
-  --volume ./database/website.db:/website.db \
+  --volume ./database/login-password-less.php:/var/www/html/plugins-enabled/login-password-less.php:ro \
+  --volume ./database/storage/:/storage/ \
   docker.io/adminer
 
 # 1000:1000 is NODE's
@@ -31,15 +33,17 @@ podman unshare \
     1000:1000 \
     -R \
     ./client/node_modules/ \
-    ./app/static/
+    ./static/
 
-# 1001:1001 is PYTHON's
 podman unshare \
   chown \
-    1001:1001 \
+    $UID_SERVER:$UID_SERVER \
     -R \
-    ./app/static/uploads/ \
-    ./database/
+    ./.venv/ \
+    ./Pipfile \
+    ./Pipfile.lock \
+    ./static/uploads/ \
+    ./database/storage/
 
 podman container run \
   --detach \
@@ -48,7 +52,16 @@ podman container run \
   --env PIPENV_VENV_IN_PROJECT=$PIPENV_VENV_IN_PROJECT \
   --env FLASK_ENV=$FLASK_ENV \
   --env FLASK_APP=$FLASK_APP \
-  --volume ./:/home/python/app/ \
+  --volume ./.venv/:/opt/pw001_server/.venv/ \
+  --volume ./app/:/opt/pw001_server/app/ \
+  --volume ./bin/:/opt/pw001_server/bin/ \
+  --volume ./database/:/var/lib/pw001_server/database/ \
+  --volume ./static/:/var/lib/pw001_server/static/ \
+  --volume ./server.py:/opt/pw001_server/server.py \
+  --volume ./.env:/opt/pw001_server/.env \
+  --volume ./.env.dist:/opt/pw001_server/.env.dist \
+  --volume ./Pipfile:/opt/pw001_server/Pipfile \
+  --volume ./Pipfile.lock:/opt/pw001_server/Pipfile.lock \
   $IMG_TAG_PYTHON
 
 podman container run \
@@ -61,6 +74,6 @@ podman container run \
   --env PORT_TEST_SERVER=$PORT_TEST_SERVER \
   --env PORT_TEST_CLIENT=$PORT_TEST_CLIENT \
   --volume ./client/:/home/node/app/ \
-  --volume ./app/static/:/home/node/static/\
+  --volume ./static/:/home/node/static/\
   docker.io/node:14.15.0-alpine3.12 \
   npm run start

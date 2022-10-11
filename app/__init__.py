@@ -14,7 +14,7 @@ from app.commands.image_resource_command import image_cli_group
 def create_app() -> Flask:
   """Returns the Flask application"""
 
-  app: Final[Flask] = Flask(__name__)
+  app: Final[Flask] = Flask(__name__, static_folder=str(PROJECT_PATH/os.environ['FOLDER_STATIC']))
   # NOTE: FLASK_ENV configuration value is set from ENVIRONMENT variable
   app.config.update(
     SECRET_KEY=os.environ['SECRET_KEY'],
@@ -45,9 +45,11 @@ def create_app() -> Flask:
 
   app.cli.add_command(image_cli_group)
 
+  CORS_ACAO = os.environ['CORS_ACAO'].split()
+
   @app.after_request
-  def add_cors_headers(response: Response) -> Response:# pylint: disable=unused-variable
-    if request.headers.get('origin') in os.environ['CORS_ACAO'].split('|'):
+  def add_cors_headers(response: Response) -> Response:
+    if request.headers.get('origin') in CORS_ACAO:
       response.headers.add('Access-Control-Allow-Origin', request.headers['origin'])
     return response
 

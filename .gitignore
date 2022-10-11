@@ -2,8 +2,8 @@
 node_modules/
 website.db
 website.dbold
-app/static/uploads/image_resource_50
-app/static/uploads/image_resource_25
+static/uploads/image_resource_50
+static/uploads/image_resource_25
 tags
 .tags
 .tags1
