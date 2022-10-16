@@ -3,12 +3,14 @@
 . ./.env
 
 UID_SERVER=1001
+NAME_SERVER=pw001_server
 POD_NAME_TEST=pw001
 IMG_TAG_PYTHON=localhost/${POD_NAME_TEST}__python
 
 podman image build \
   --file ./python.Containerfile \
   --build-arg UID_SERVER=$UID_SERVER \
+  --build-arg NAME_SERVER=$NAME_SERVER \
   --tag $IMG_TAG_PYTHON
 
 podman pod create \
@@ -52,16 +54,17 @@ podman container run \
   --env PIPENV_VENV_IN_PROJECT=$PIPENV_VENV_IN_PROJECT \
   --env FLASK_ENV=$FLASK_ENV \
   --env FLASK_APP=$FLASK_APP \
-  --volume ./.venv/:/opt/pw001_server/.venv/ \
-  --volume ./app/:/opt/pw001_server/app/ \
-  --volume ./bin/:/opt/pw001_server/bin/ \
-  --volume ./database/:/var/lib/pw001_server/database/ \
-  --volume ./static/:/var/lib/pw001_server/static/ \
-  --volume ./server.py:/opt/pw001_server/server.py \
-  --volume ./.env:/opt/pw001_server/.env \
-  --volume ./.env.dist:/opt/pw001_server/.env.dist \
-  --volume ./Pipfile:/opt/pw001_server/Pipfile \
-  --volume ./Pipfile.lock:/opt/pw001_server/Pipfile.lock \
+  --env PORT_TEST_SERVER=$PORT_TEST_SERVER \
+  --volume ./.venv/:/opt/$NAME_SERVER/.venv/ \
+  --volume ./app/:/opt/$NAME_SERVER/app/ \
+  --volume ./bin/:/opt/$NAME_SERVER/bin/ \
+  --volume ./database/:/var/lib/$NAME_SERVER/database/ \
+  --volume ./static/:/var/lib/$NAME_SERVER/static/ \
+  --volume ./server.py:/opt/$NAME_SERVER/server.py \
+  --volume ./.env:/etc/$NAME_SERVER/.env \
+  --volume ./.env.dist:/opt/$NAME_SERVER/.env.dist \
+  --volume ./Pipfile:/opt/$NAME_SERVER/Pipfile \
+  --volume ./Pipfile.lock:/opt/$NAME_SERVER/Pipfile.lock \
   $IMG_TAG_PYTHON
 
 podman container run \

@@ -1,26 +1,27 @@
 FROM docker.io/python:3.8
 
 ARG UID_SERVER
+ARG NAME_SERVER
 
 RUN groupadd \
-    --gid $UID_SERVER pw001_server && \
+    --gid $UID_SERVER $NAME_SERVER && \
   useradd \
     --system \
     --uid $UID_SERVER \
-    --gid pw001_server \
+    --gid $NAME_SERVER \
     --shell /bin/false \
     --create-home \
-    --home-dir /opt/pw001_server \
-    pw001_server && \
-  mkdir /var/lib/pw001_server && \
-  chown -R $UID_SERVER:$UID_SERVER /var/lib/pw001_server
+    --home-dir /opt/$NAME_SERVER \
+    $NAME_SERVER && \
+  mkdir /var/lib/$NAME_SERVER /etc/$NAME_SERVER && \
+  chown -R $UID_SERVER:$UID_SERVER /var/lib/$NAME_SERVER
 
-USER pw001_server
+USER $NAME_SERVER
 
-WORKDIR /opt/pw001_server
+WORKDIR /opt/$NAME_SERVER
 
-# pipenv will be intalled to ~/.locale/bin/
-ENV PATH="/opt/pw001_server/.local/bin/:${PATH}"
+# pipenv will be intalled to ~/.local/bin/
+ENV PATH="/opt/${NAME_SERVER}/.local/bin/:${PATH}"
 
 RUN pip install --user \
   'pipenv==2020.08.13'
