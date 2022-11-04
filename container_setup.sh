@@ -43,7 +43,7 @@ podman unshare \
     1000:1000 \
     -R \
     ./client/node_modules/ \
-    ./static/
+    ./static/client/
 
 podman unshare \
   chown \

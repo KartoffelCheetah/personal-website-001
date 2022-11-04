@@ -61,13 +61,7 @@ def fs2db():
 
   images2sync = fs_content - db_content
 
-  images2sync_len = len(images2sync)
-
-  if images2sync_len < 200:
-    current_app.logger.info('images2sync %s' % images2sync)
-
-  else:
-    current_app.logger.info('images2sync %s number' % images2sync_len)
+  current_app.logger.info('images2sync %s' % images2sync)
 
   database = current_app.config['database']
 

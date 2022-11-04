@@ -4,6 +4,7 @@ website.db
 website.dbold
 static/uploads/image_resource_50
 static/uploads/image_resource_25
+static/client
 tags
 .tags
 .tags1

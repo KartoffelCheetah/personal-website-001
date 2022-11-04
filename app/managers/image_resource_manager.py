@@ -21,7 +21,7 @@ class ImageProcess:
   ]
 
   def __init__(self, unsafe_name, path=os.environ['FOLDER_UPLOAD'], size=lambda s: s):
-    if not _is_filename_secure(unsafe_name):
+    if not _is_filename_ok(unsafe_name):
       raise ValueError(f'filename did not pass validation: {unsafe_name}')
     self.name: str = unsafe_name
     self.fpath: str = os.path.join(path, self.name)
@@ -30,9 +30,8 @@ class ImageProcess:
     if path == os.environ['FOLDER_UPLOAD']:
       self.thumbnails: list = [ImageProcess(self.name, **conf) for conf in self.thumb_conf]
 
-def _is_filename_secure(filename: str) -> bool:
-  """Returns a filename which is safe to use. Currently uses werkzeug's
-  implementation."""
+def _is_filename_ok(filename: str) -> bool:
+  """Returns if a filename is ok to use."""
   return re.sub('_|-|\.', '', filename).isalnum()
 
 def save_image_thumbnails_to_fs(filename: str) -> None:

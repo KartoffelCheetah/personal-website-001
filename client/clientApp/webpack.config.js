@@ -18,7 +18,7 @@ module.exports = (env, options) => {
     output: {
       filename: '[name].[contenthash:8].js',
       chunkFilename: '[name].[chunkhash:8].bundle.js',
-      path: path.resolve(__dirname, '..', '..', 'static'),
+      path: path.resolve(__dirname, '..', '..', 'static', 'client'),
     },
     module: {
       rules: [
