@@ -7,7 +7,7 @@ from flask import Flask, Response, request
 from app.models.db import db
 import app.managers.env_manager # loads envs as a side-effect before other imports
 from app.definitions import PROJECT_PATH
-from app.models.api import api, bl_api
+from app.models.api import api_website, bl_api
 from app.controllers.image_resource import ns_img_res
 from app.commands.image_resource_command import image_cli_group
 
@@ -37,11 +37,11 @@ def create_app() -> Flask:
 
   db.create_all(app=app)
 
-  api.init_app(bl_api)
+  api_website.init_app(bl_api)
 
   app.register_blueprint(bl_api)
 
-  api.add_namespace(ns_img_res)
+  api_website.add_namespace(ns_img_res)
 
   app.cli.add_command(image_cli_group)
 

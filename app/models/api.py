@@ -4,7 +4,7 @@ from flask import Blueprint
 from flask_restx import Api
 from app.definitions import routing
 
-api = Api(
+api_website = Api(
   version=os.environ['API_VERSION'],
   title='API of Personal Website 001',
   description='You found the api description.',
