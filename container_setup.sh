@@ -30,6 +30,14 @@ podman container run \
   docker.io/adminer
 
 # 1000:1000 is NODE's
+
+podman unshare \
+  chown \
+    1000:1000 \
+    ./client/ \
+    ./client/package-lock.json \
+    ./client/package.json
+
 podman unshare \
   chown \
     1000:1000 \

@@ -1,11 +1,11 @@
 {
   "name": "client",
   "version": "0.0.0",
-  "main": "index.ts",
+  "main": "clientApp/index.ts",
   "scripts": {
-    "start": "bin/start.sh",
-    "dev": "webpack serve",
-    "prod": "webpack"
+    "start": "clientApp/bin/start.sh",
+    "dev": "webpack serve --config clientApp/webpack.config.js",
+    "prod": "webpack --config clientApp/webpack.config.js"
   },
   "author": "KartoffelCheetah",
   "license": "MIT",
@@ -16,6 +16,7 @@
     "css-loader": "^5.0.2",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.2.0",
+    "mini-css-extract-plugin": "^2.6.1",
     "pug": "^3.0.0",
     "pug-plain-loader": "^1.1.0",
     "style-loader": "^2.0.0",
