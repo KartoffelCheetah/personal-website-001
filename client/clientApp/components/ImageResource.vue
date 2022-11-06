@@ -1,8 +1,20 @@
 <template lang="pug">
 p {{ width }} x {{ height }}
-div.imageResourceContainer
-  img.imageResourceImg(v-for="t in thumbnails" :key="t" :src="t", alt="", :width="width")
-  img.imageResourceImg.imageResourceMain(:src="src", :alt="alt")
+div.imageResourceContainer(
+    :style="{ paddingTop }",
+  )
+  img.imageResourceImg(
+    v-for="t in thumbnails",
+    :key="t"
+    :src="t",
+    alt="",
+    aria-hidden="true",
+  )
+  img.imageResourceImg(
+    :src="src",
+    :alt="alt",
+    loading="lazy",
+  )
 </template>
 
 <script lang="ts">
@@ -22,6 +34,7 @@ div.imageResourceContainer
     },
     data () {
       return {
+        paddingTop: '0',
         src: '',
         width: 0,
         height: 0,
@@ -34,6 +47,7 @@ div.imageResourceContainer
         this.src = this.$serverHost+imageObject.contentUrl;
         this.width = imageObject.width;
         this.height = imageObject.height;
+        this.paddingTop = `${imageObject.height / imageObject.width * 100}%`;
         this.thumbnails = imageObject.thumbnailUrl.map(t => this.$serverHost+t);
       }
     },
@@ -47,8 +61,7 @@ div.imageResourceContainer
     &Img
       position absolute
       top 0
+      width: 100%;
       max-width 100%
       max-height 100%
-    &Main
-      position relative
 </style>
