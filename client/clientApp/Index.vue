@@ -3,6 +3,7 @@ header.indexBox.indexHeader
   h1.heading1.indexTitle
     span Kartoffel&#8203;Cheetah's
     span.heading2 Lair
+  fractal-tree(:size-w="36", :size-h="60", style="position: absolute;top:0;right:22px;")
 main.indexBox.indexMain
   router-view
   p qwertzuiopőúasdfghjkléáűíyxcvbnmöüó
@@ -27,10 +28,14 @@ footer.indexBox.indexFooter
 <script lang="ts">
   import { defineComponent } from 'vue';
   import ImageResource from './components/ImageResource.vue';
+  import FractalTree from './components/FractalTree.vue';
 
   export default defineComponent({
     name: 'Index',
-    components: { ImageResource },
+    components: {
+      ImageResource,
+      FractalTree,
+    },
   });
 </script>
 <style>
@@ -50,8 +55,8 @@ footer.indexBox.indexFooter
       border-left 5px double var(--wheat)
       background var(--deepdarkbrown) url('./images/instrument.svg');
       background-blend-mode saturation
-      color black
-      text-shadow 1px 1px 2px var(--wheat)
+      color var(--darksalmon)
+      text-shadow 1px 1px black
     &Contact
       display flex
       padding-top 32px

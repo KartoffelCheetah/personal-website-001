@@ -1,5 +1,4 @@
 <template lang="pug">
-p {{ width }} x {{ height }}
 div.imageResourceContainer(
     :style="{ paddingTop }",
   )
@@ -36,8 +35,6 @@ div.imageResourceContainer(
       return {
         paddingTop: '0',
         src: '',
-        width: 0,
-        height: 0,
         thumbnails: [] as string[],
       };
     },
@@ -45,8 +42,6 @@ div.imageResourceContainer(
       const imageObject = await this.$images[this.name];
       if (imageObject) {
         this.src = this.$serverHost+imageObject.contentUrl;
-        this.width = imageObject.width;
-        this.height = imageObject.height;
         this.paddingTop = `${imageObject.height / imageObject.width * 100}%`;
         this.thumbnails = imageObject.thumbnailUrl.map(t => this.$serverHost+t);
       }
