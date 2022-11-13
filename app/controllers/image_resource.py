@@ -1,6 +1,6 @@
 #pylint: disable=R0201
 """Image Resource Controller"""
-from flask import url_for
+from flask import url_for, abort
 from flask_restx import Resource, fields
 from app.models.image_resource_entity import ImageResourceEntity
 from app.definitions import routing
@@ -45,7 +45,11 @@ class ImageResourceResourceByResource(Resource):
   @api_website.marshal_with(_image_resource_model, as_list=False)
   def get(self, name):
     """Returns an image resource."""
-    return ImageResourceEntity.query.filter_by(resource=name).first()
+    image_resource = ImageResourceEntity.query.filter_by(resource=name).first()
+    if image_resource:
+      return image_resource
+    else:
+      abort(404)
 
 @ns_img_res.route(routing.get('namespace_image', 'image'))
 class ImageResourceResource(Resource):
