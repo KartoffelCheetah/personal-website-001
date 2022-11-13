@@ -1,13 +1,17 @@
 <template lang="pug">
 div
-  p I'm a front-end developer.
-    | adgnafg dhguifgfigiof experience as a programmer.
-    | I enjoy programming in JavaScript and Python3, designing websites and doing 2D art.
-    | Whenever possible I use open-source software on Linux. 🐧
-  br
+  p
+    | Hey, I'm <b>KartoffelCheetah</b> :) !
+    | Front-end webdev working from Budapest, Hungary.
+    | I'm a staunch supporter of software accessibility
+    | and an advocate for Open Source solutions.
+  p
+    | Currently I'm working in the e-commerce field.
+    | Linux is my choice of OS both for work and for personal use.
+    | I also dabble a bit in 2D art.
+  h2.heading3 Contact
+  p TODO
   image-resource(name="Circe_by_John_Collier.jpg", alt="circe")
-  image-resource(name="Flamber-Bougault.jpg", alt="old ship")
-  image-resource(name="Alma_Tadema_Spring.jpg", alt="high res classsical painting")
 </template>
 
 <script lang="ts">
