@@ -35,6 +35,7 @@ footer.indexBox.indexFooter
     background var(--darkmahagony)
   .index
     &Title
+      font-family var(--font-decorated)
       display flex
       flex-direction column
       padding-left 8px
@@ -65,12 +66,13 @@ footer.indexBox.indexFooter
         opacity .2
         background var(--wheat)
     &Footer
+      position sticky
+      top 100vh
       overflow hidden
       border-bottom-left-radius 5px
       border-bottom-right-radius 5px
     &Main
       padding 48px 8px 5px
-      flex-grow .5
       @media(max-width: 400px)
         padding 5px 3px
 </style>
