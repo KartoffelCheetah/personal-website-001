@@ -13,7 +13,7 @@ ns_img_res = api_website.namespace(
 )
 
 def create_image_resource_model(thumbnail_levels):
-	return api_website.model('ImageResource', {
+	return api_website.model(f'ImageResource{thumbnail_levels}', {
 		'@context': fields.String('https://schema.org', example='https://schema.org'),
 		'@type': fields.String('ImageObject', example='ImageObject'),
 		'@id': fields.String(
