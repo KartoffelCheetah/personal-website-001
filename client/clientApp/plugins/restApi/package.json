@@ -1,4 +1,4 @@
 {
-  "type": "module",
-  "main": "indexRestApi.ts"
+	"type": "module",
+	"main": "indexRestApi.ts"
 }

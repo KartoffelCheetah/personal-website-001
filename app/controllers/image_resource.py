@@ -1,6 +1,7 @@
 #pylint: disable=R0201
 """Image Resource Controller"""
-from flask import url_for, abort
+from urllib.parse import urljoin
+from flask import current_app, url_for, abort, request
 from flask_restx import Resource, fields
 from app.models.image_resource_entity import ImageResourceEntity
 from app.definitions import routing
@@ -17,16 +18,16 @@ def create_image_resource_model(thumbnail_levels):
 		'@context': fields.String('https://schema.org', example='https://schema.org'),
 		'@type': fields.String('ImageObject', example='ImageObject'),
 		'@id': fields.String(
-			attribute=lambda imd: url_for(
+			attribute=lambda imd: urljoin(request.host_url, url_for(
 				'api.image_image_resource_resource_by_resource',
 				thid=imd.thid,
 				name=imd.filename,
-			),
+			)),
 			example='/api/image/hello-example.png',
 		),
 		'name': fields.String(attribute='filename'),
 		'contentUrl': fields.String(
-			attribute=lambda imd: imd.relative_url,
+			attribute=lambda imd: urljoin(request.host_url, str(imd.relative_url)),
 			example='hello-example.png',
 			**ImageResourceEntity.RI_LENGTH,
 		),
