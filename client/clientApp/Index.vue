@@ -8,21 +8,35 @@ main.indexBox.indexMain
 	router-view
 footer.indexBox.indexFooter
 	ul.indexContact
-		li
-			a.link(href="https://github.com/KartoffelCheetah") GitHub
-		li
-			a.link(href="https://gitlab.com/KartoffelCheetah") GitLab
-		li TODO tanuki and octocat for the links
-		li GPG?
+		li(v-for=`
+			i in [
+				{ href: 'https://github.com/KartoffelCheetah', alt: 'GitHub', img: githubLogo },
+				{ href: 'https://gitlab.com/KartoffelCheetah', alt: 'GitLab', img: gitlabLogo },
+			]
+			`
+			:key="i.href"
+		)
+			a.kcLink.indexLink(target="_blank", href="i.href")
+				span.indexContactLogo(v-html="i.img")
+				| {{ i.alt }}
+		li.indexLink GPG?
 </template>
 <script lang="ts">
 	import { defineComponent } from 'vue';
 	import FractalTree from './components/FractalTree.vue';
+	import gitlabLogo from '!kc_inline_svg_loader!./images/gitlab_logo.svg';
+	import githubLogo from '!kc_inline_svg_loader!./images/github_logo.svg';
 
 	export default defineComponent({
 		name: 'Index',
 		components: {
 			FractalTree,
+		},
+		data () {
+			return {
+				gitlabLogo,
+				githubLogo,
+			};
 		},
 	});
 </script>
@@ -75,4 +89,12 @@ footer.indexBox.indexFooter
 			padding 48px 8px 5px
 			@media(max-width: 400px)
 				padding 5px 3px
+		&Link
+			display inline-flex !important
+			align-items center
+			gap 6px
+		&ContactLogo > svg
+			width 40px
+			height 40px
+			fill currentColor
 </style>

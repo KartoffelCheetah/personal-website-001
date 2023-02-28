@@ -11,6 +11,12 @@ module.exports = (env, options) => {
 		throw new Error(`process.env.NODE_ENV is not valid, expected one of: ${[...validNodeEnvs]}, received: ${process.env.NODE_ENV}`);
 	}
 	return {
+		resolveLoader: {
+			modules: [
+				path.resolve(__dirname, './webpack_loaders'),
+				path.resolve(__dirname, '..', 'node_modules'),
+			],
+		},
 		entry: [
 			path.resolve(__dirname, 'index.ts'),
 			path.resolve(__dirname, 'index.styl'),
