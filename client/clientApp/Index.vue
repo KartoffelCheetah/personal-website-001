@@ -16,7 +16,7 @@ footer.indexBox.indexFooter
 			`
 			:key="i.href"
 		)
-			a.kcLink.indexLink(target="_blank", href="i.href")
+			a.kcLink.indexLink(target="_blank", :href="i.href")
 				span.indexContactLogo(v-html="i.img")
 				| {{ i.alt }}
 		li.indexLink GPG?
