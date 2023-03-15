@@ -1,8 +1,8 @@
 <template lang="pug">
 header.indexBox.indexHeader
-	h1.heading1.indexTitle
+	h1.kcHeading1.indexTitle
 		span Kartoffel&#8203;Cheetah's
-		span.heading2 Lair
+		span.kcHeading2 Lair
 	fractal-tree(:size-w="36", :size-h="60", style="position: absolute;top:0;right:22px;")
 main.indexBox.indexMain
 	router-view
