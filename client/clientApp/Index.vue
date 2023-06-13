@@ -10,8 +10,8 @@ footer.indexBox.indexFooter
 	ul.indexContact
 		li(v-for=`
 			i in [
-				{ href: 'https://github.com/KartoffelCheetah', alt: 'GitHub', img: githubLogo },
-				{ href: 'https://gitlab.com/KartoffelCheetah', alt: 'GitLab', img: gitlabLogo },
+				{ href: 'https://github.com/KartoffelCheetah', alt: 'My GitHub profile', img: githubLogo },
+				{ href: 'https://gitlab.com/KartoffelCheetah', alt: 'My GitLab profile', img: gitlabLogo },
 			]
 			`
 			:key="i.href"
