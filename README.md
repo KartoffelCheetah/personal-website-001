@@ -3,7 +3,12 @@
 ## Setup
 
 ```bash
-docker-compose up
+git submodule init
+git submodule update
+cp .env.dist .env
+# edit the .env file
+mkdir .venv database/storage
+./container_setup.sh
 ```
 
 ## Cli Tasks
