@@ -6,6 +6,8 @@ header.indexBox.indexHeader
 	fractal-tree(:size-w="36", :size-h="60", style="position: absolute;top:0;right:22px;")
 main.indexBox.indexMain
 	router-view
+	- for (var x = 0; x < 4; x++)
+		div(class='indexCorner indexCorner' + x)
 footer.indexBox.indexFooter
 	ul.indexContact
 		li(v-for=`
@@ -44,9 +46,12 @@ footer.indexBox.indexFooter
 	#index
 		display flex
 		min-height 100vh
+		gap 12px
 		flex-direction column
 		align-items center
 		background var(--darkmahagony)
+		@media(max-width: 600px)
+			gap 0
 	.index
 		&Title
 			font-family var(--font-decorated)
@@ -62,7 +67,7 @@ footer.indexBox.indexFooter
 			text-shadow 1px 1px black
 		&Contact
 			display flex
-			padding-top 32px
+			padding-top 20px
 			padding-bottom 8px
 			gap .8em
 		&Box
@@ -86,7 +91,13 @@ footer.indexBox.indexFooter
 			border-bottom-left-radius 5px
 			border-bottom-right-radius 5px
 		&Main
-			padding 48px 8px 5px
+			position relative
+			padding 45px
+			background #400000
+			box-shadow inset 0 0 8px var(--wheat)
+			@media(max-width: 600px)
+				padding 36px 8px 5px
+				box-shadow inset 0 0 1px var(--wheat)
 			@media(max-width: 400px)
 				padding 5px 3px
 		&Link
@@ -97,4 +108,31 @@ footer.indexBox.indexFooter
 			width 40px
 			height 40px
 			fill currentColor
+		&Corner
+			--cornerSize 63px
+			--cornerOffset -5px
+			position absolute
+			width var(--cornerSize)
+			height var(--cornerSize)
+			background url('./images/corner_small.png')
+			background-size var(--cornerSize)
+
+			@media(max-width: 600px)
+				display none
+
+			&0
+				top var(--cornerOffset)
+				left var(--cornerOffset)
+			&1
+				top var(--cornerOffset)
+				right var(--cornerOffset)
+				transform rotate(90deg)
+			&2
+				bottom var(--cornerOffset)
+				right var(--cornerOffset)
+				transform rotate(180deg)
+			&3
+				bottom var(--cornerOffset)
+				left var(--cornerOffset)
+				transform rotate(270deg)
 </style>

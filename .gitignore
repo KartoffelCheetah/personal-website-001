@@ -12,3 +12,5 @@ tags
 .env*
 !.env*.dist
 .mypy_cache
+*.kra~
+*.png~
